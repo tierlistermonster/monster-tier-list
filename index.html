@@ -764,21 +764,31 @@
       const currentList = myData[currentMode];
 
       if (!selectedProductId) {
+        // Nincs kiválasztva semmi, kiválasztjuk ezt
         selectedProductId = clickedId;
       } else if (selectedProductId === clickedId) {
+        // Ha ugyanarra kattintunk, megszüntetjük a kiválasztást
         selectedProductId = null;
       } else {
+        // Már volt egy kiválasztva, áthelyezzük/beszúrjuk ehhez képest
         const sourceIndex = currentList.findIndex(i => i.id === selectedProductId);
         const targetIndex = currentList.findIndex(i => i.id === clickedId);
         
         if (sourceIndex !== -1 && targetIndex !== -1) {
-          const tempT = currentList[sourceIndex].t;
-          currentList[sourceIndex].t = currentList[targetIndex].t;
-          currentList[targetIndex].t = tempT;
+          const sourceItem = currentList[sourceIndex];
+          const targetItem = currentList[targetIndex];
 
-          const tempObj = currentList[sourceIndex];
-          currentList[sourceIndex] = currentList[targetIndex];
-          currentList[targetIndex] = tempObj;
+          // Állítsuk be az új tier-t a célpont alapján
+          sourceItem.t = targetItem.t;
+
+          // Kivesszük a forrást a listából
+          currentList.splice(sourceIndex, 1);
+
+          // Újra megkeressük a célpont indexét (mivel a splice miatt eltolódhatott)
+          const newTargetIndex = currentList.findIndex(i => i.id === clickedId);
+          
+          // Beszúrjuk a célpont elé/mögé
+          currentList.splice(newTargetIndex, 0, sourceItem);
 
           updatePositions(currentMode);
           saveToFirebase();
@@ -1507,4 +1517,3 @@
   </script>
 </body>
 </html>
-    
