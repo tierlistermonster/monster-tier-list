@@ -69,6 +69,7 @@
     }
     .mode-btn.active { background: #007aff; color: #fff; border-color: #007aff; }
     .mode-btn.pictures-tab-btn.active { background: #30d158; color: #000; border-color: #30d158; }
+    .mode-btn.collected-tab-btn.active { background: #af52de; color: #fff; border-color: #af52de; }
 
     .dropdown-container {
       position: relative;
@@ -397,7 +398,123 @@
       text-transform: uppercase;
     }
 
-    /* Modal / Fullscreen Viewer styles */
+    /* Collected items list styles */
+    .collected-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+      max-width: 800px;
+    }
+    .collected-item-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface);
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #3a3a3c;
+    }
+    .collected-item-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      flex: 1;
+    }
+    .collected-item-img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+    }
+    .collected-item-name {
+      font-size: 14px;
+      font-weight: bold;
+      color: #fff;
+    }
+    /* Kisebb, tiszta indikátor pötty */
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: #555;
+      flex-shrink: 0;
+      box-shadow: 0 0 3px rgba(0,0,0,0.5);
+    }
+    .status-dot.active {
+      background-color: var(--accent);
+      box-shadow: 0 0 6px rgba(48, 209, 88, 0.8);
+    }
+
+    /* Action Modal / Popup styles */
+    .action-modal {
+      display: none;
+      position: fixed;
+      z-index: 10000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(5px);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .action-modal.show {
+      display: flex;
+    }
+    .action-modal-box {
+      background: var(--surface);
+      border: 1px solid #3a3a3c;
+      border-radius: 12px;
+      padding: 20px;
+      width: 100%;
+      max-width: 320px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      box-sizing: border-box;
+      text-align: center;
+    }
+    .action-modal-img {
+      width: 70px;
+      height: 70px;
+      object-fit: contain;
+      margin-bottom: 10px;
+    }
+    .action-modal-title {
+      font-size: 16px;
+      font-weight: bold;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .action-modal-status {
+      font-size: 12px;
+      color: #8e8e93;
+      margin-bottom: 16px;
+    }
+    .action-modal-btns {
+      display: flex;
+      gap: 8px;
+      width: 100%;
+    }
+    .action-modal-btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 13px;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-add { background: var(--accent); color: #000; }
+    .btn-remove { background: var(--danger); color: #fff; }
+    .btn-close-modal { background: #2c2c2e; color: #8e8e93; border: 1px solid #444; width: 100%; margin-top: 8px; }
+
+    /* Fullscreen Image Modal */
     .image-modal {
       display: none;
       position: fixed;
@@ -480,6 +597,7 @@
         <button class="sub-mode-btn" onclick="switchMode('drivers')">Drivers</button>
       </div>
     </div>
+    <button id="mode-collected-btn" class="mode-btn collected-tab-btn" onclick="switchMode('collected')">🎯 Collected</button>
     <button id="mode-pictures-btn" class="mode-btn pictures-tab-btn" onclick="switchMode('pictures')">🖼️ Pictures</button>
   </div>
 
@@ -487,6 +605,29 @@
     <button class="tab-btn active" onclick="switchTab('group', this)">📊 Group Tier</button>
     <button class="tab-btn" onclick="switchTab('my', this)">✏️ My Tier</button>
     <button class="tab-btn" onclick="switchTab('friends', this)">👥 Friends</button>
+  </div>
+
+  <!-- Collected Tab Content -->
+  <div id="tab-collected" class="tab-content">
+    <div class="sub-nav-tabs">
+      <button class="sub-tab-btn active" onclick="switchCollectedSubTab('my', this)">✏️ My Collection</button>
+      <button class="sub-tab-btn" onclick="switchCollectedSubTab('friends', this)">👥 Friends Collection</button>
+    </div>
+
+    <div id="sub-tab-my-collected" class="sub-tab-content active">
+      <div id="my-collected-grid" class="collected-grid"></div>
+    </div>
+
+    <div id="sub-tab-friends-collected" class="sub-tab-content">
+      <div class="friend-picker" style="margin-bottom: 8px;">
+        <label style="font-size: 11px; font-weight: bold; color: #8e8e93; text-transform: uppercase;">Select Friend:</label>
+        <select id="friend-collected-select" class="friend-select-box" onchange="renderFriendCollectedView()"></select>
+      </div>
+      <div id="friend-collected-grid" class="collected-grid"></div>
+      <div id="no-friend-collected-msg" class="no-friends-msg" style="display: none;">
+        👥 No friends added yet in this room.
+      </div>
+    </div>
   </div>
 
   <div id="tab-pictures" class="tab-content">
@@ -548,6 +689,19 @@
     </div>
     <div id="no-friends-msg" class="no-friends-msg" style="display: none;">
       👥 No friends added yet in this room.
+    </div>
+  </div>
+
+  <!-- Action Modal for Collection -->
+  <div id="actionModal" class="action-modal">
+    <div class="action-modal-box">
+      <img id="modalProductImg" class="action-modal-img" src="" alt="Product">
+      <div id="modalProductName" class="action-modal-title">Product Name</div>
+      <div id="modalProductStatus" class="action-modal-status">Status: Not collected</div>
+      <div id="modalActionButtons" class="action-modal-btns">
+        <!-- Dinamikusan töltődik -->
+      </div>
+      <button class="action-modal-btn btn-close-modal" onclick="closeActionModal()">Cancel</button>
     </div>
   </div>
 
@@ -621,6 +775,7 @@
       nitro: products.map(p => ({ id: p.id, t: 0, p: 0 })),
       drivers: products.map(p => ({ id: p.id, t: 0, p: 0 }))
     };
+    let myCollected = {}; // id -> boolean
     let myPictures = []; 
     let selectedProductId = null; 
 
@@ -697,6 +852,7 @@
       
       document.getElementById('mode-5-btn').classList.toggle('active', mode === 5);
       document.getElementById('mode-10-btn').classList.toggle('active', mode === 10);
+      document.getElementById('mode-collected-btn').classList.toggle('active', mode === 'collected');
       document.getElementById('mode-pictures-btn').classList.toggle('active', mode === 'pictures');
       
       const dropdownBtn = document.getElementById('dropdown-main-btn');
@@ -723,12 +879,14 @@
       const tierTabsContainer = document.querySelector('.nav-tabs');
       const unassignedSection = document.querySelector('.unassigned-section');
 
-      if (mode === 'pictures') {
+      if (mode === 'pictures' || mode === 'collected') {
         tierTabsContainer.style.display = 'none';
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        document.getElementById('tab-pictures').classList.add('active');
+        document.getElementById(`tab-${mode}`).classList.add('active');
         unassignedSection.style.display = 'none';
-        renderPicturesView();
+        
+        if (mode === 'pictures') renderPicturesView();
+        if (mode === 'collected') renderCollectedView();
       } else {
         tierTabsContainer.style.display = 'flex';
         const activeTierTabBtn = document.querySelector('.nav-tabs button.active');
@@ -745,6 +903,10 @@
     function renderActiveTab() {
       if (currentMode === 'pictures') {
         renderPicturesView();
+        return;
+      }
+      if (currentMode === 'collected') {
+        renderCollectedView();
         return;
       }
       const activeTab = document.querySelector('.tab-content.active').id;
@@ -937,10 +1099,15 @@
                 });
               }
             }
+
+            if (remoteData.collected) {
+              if (typeof remoteData.collected === 'object') {
+                myCollected = remoteData.collected;
+              }
+            }
           }
         }
 
-        // Automatikusan ellenőrizzük az összes módot, hogy minden termék benne legyen a listákban
         ['5', '10', ...catKeys].forEach(m => {
           const beforeLen = myData[m].length;
           ensureAllProductsExist(myData[m]);
@@ -952,9 +1119,9 @@
 
         updateFriendDropdown();
         updateFriendPicturesDropdown();
+        updateFriendCollectedDropdown();
         renderActiveTab();
 
-        // Ha újonnan felvett termék miatt bővült a lista, automatikusan mentsük is el a Firebase-be
         if (needsSave && userName) {
           saveToFirebase();
         }
@@ -976,6 +1143,7 @@
       roomData = {};
       selectedProductId = null;
       myPictures = [];
+      myCollected = {};
       const catKeys = Object.keys(categoryNames);
       myData = {
         5: products.map(p => ({ id: p.id, t: 0, p: 0 })),
@@ -988,6 +1156,7 @@
       renderActiveTab();
       updateFriendDropdown();
       updateFriendPicturesDropdown();
+      updateFriendCollectedDropdown();
       
       switchMode(5);
     }
@@ -1007,7 +1176,8 @@
 
       db.ref(`rooms/${room}/${userName}`).set({
         tierLists: tierListsSave,
-        pictures: myPictures
+        pictures: myPictures,
+        collected: myCollected
       });
     }
 
@@ -1033,6 +1203,11 @@
         return allPics;
       }
       return [];
+    }
+
+    function getUserCollected(userObj) {
+      if (!userObj || !userObj.collected) return {};
+      return userObj.collected;
     }
 
     function updateFriendDropdown() {
@@ -1080,8 +1255,29 @@
       }
     }
 
+    function updateFriendCollectedDropdown() {
+      const select = document.getElementById('friend-collected-select');
+      const noFriendCollectedMsg = document.getElementById('no-friend-collected-msg');
+      
+      const myName = document.getElementById('name-input').value.trim();
+      const friendNames = Object.keys(roomData).filter(name => name !== myName);
+
+      select.innerHTML = '';
+      if (friendNames.length === 0) {
+        noFriendCollectedMsg.style.display = 'block';
+      } else {
+        noFriendCollectedMsg.style.display = 'none';
+        friendNames.forEach(name => {
+          const opt = document.createElement('option');
+          opt.value = name; opt.innerText = name;
+          select.appendChild(opt);
+        });
+        renderFriendCollectedView();
+      }
+    }
+
     function renderMyView() {
-      if (currentMode === 'pictures') return;
+      if (currentMode === 'pictures' || currentMode === 'collected') return;
       buildBoard('my-board', true);
       const unassignedZone = document.querySelector('.unassigned-zone');
       unassignedZone.innerHTML = '';
@@ -1141,7 +1337,7 @@
     }
 
     function renderFriendView() {
-      if (currentMode === 'pictures') return;
+      if (currentMode === 'pictures' || currentMode === 'collected') return;
       
       const name = document.getElementById('friend-select').value;
       if (!name || !roomData[name]) return;
@@ -1373,7 +1569,7 @@
     }
 
     function renderGroupView() {
-      if (currentMode === 'pictures') return;
+      if (currentMode === 'pictures' || currentMode === 'collected') return;
       buildBoard('group-board', false);
       const podium = document.getElementById('podium');
       podium.innerHTML = '';
@@ -1540,7 +1736,7 @@
       document.getElementById(`tab-${tabId}`).classList.add('active');
 
       const unassignedSection = document.querySelector('.unassigned-section');
-      if (tabId === 'my') {
+      if (tabId === 'my' && currentMode !== 'pictures' && currentMode !== 'collected') {
         unassignedSection.style.display = 'block';
       } else {
         unassignedSection.style.display = 'none';
@@ -1549,9 +1745,155 @@
       renderActiveTab();
     }
 
+    function switchCollectedSubTab(subTabId, btn) {
+      document.querySelectorAll('#tab-collected .sub-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#tab-collected .sub-tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(`sub-tab-friends-collected`).style.display = (subTabId === 'friends') ? 'block' : 'none';
+      document.getElementById(`sub-tab-my-collected`).style.display = (subTabId === 'my') ? 'block' : 'none';
+      document.getElementById(`sub-tab-${subTabId}-collected`).classList.add('active');
+      if (subTabId === 'friends') {
+        renderFriendCollectedView();
+      }
+    }
+
+    function renderCollectedView() {
+      const grid = document.getElementById('my-collected-grid');
+      grid.innerHTML = '';
+
+      const sortedProducts = [...products].sort((a, b) => {
+        const aVal = myCollected[a.id] ? 1 : 0;
+        const bVal = myCollected[b.id] ? 1 : 0;
+        return bVal - aVal;
+      });
+
+      sortedProducts.forEach(prod => {
+        const row = document.createElement('div');
+        row.className = 'collected-item-row';
+
+        const info = document.createElement('div');
+        info.className = 'collected-item-info';
+        info.onclick = () => openActionModal(prod);
+
+        const img = document.createElement('img');
+        img.src = prod.img;
+        img.className = 'collected-item-img';
+
+        const name = document.createElement('div');
+        name.className = 'collected-item-name';
+        name.innerText = prod.name;
+
+        info.appendChild(img);
+        info.appendChild(name);
+
+        const dot = document.createElement('div');
+        dot.className = 'status-dot';
+        if (myCollected[prod.id]) {
+          dot.classList.add('active');
+        }
+
+        row.appendChild(info);
+        row.appendChild(dot);
+        grid.appendChild(row);
+      });
+    }
+
+    function renderFriendCollectedView() {
+      const friendName = document.getElementById('friend-collected-select').value;
+      const grid = document.getElementById('friend-collected-grid');
+      grid.innerHTML = '';
+
+      if (!friendName || !roomData[friendName]) {
+        return;
+      }
+
+      const friendCollected = getUserCollected(roomData[friendName]);
+
+      const sortedProducts = [...products].sort((a, b) => {
+        const aVal = friendCollected[a.id] ? 1 : 0;
+        const bVal = friendCollected[b.id] ? 1 : 0;
+        return bVal - aVal;
+      });
+
+      sortedProducts.forEach(prod => {
+        const row = document.createElement('div');
+        row.className = 'collected-item-row';
+
+        const info = document.createElement('div');
+        info.className = 'collected-item-info';
+
+        const img = document.createElement('img');
+        img.src = prod.img;
+        img.className = 'collected-item-img';
+
+        const name = document.createElement('div');
+        name.className = 'collected-item-name';
+        name.innerText = prod.name;
+
+        info.appendChild(img);
+        info.appendChild(name);
+
+        const dot = document.createElement('div');
+        dot.className = 'status-dot';
+        if (friendCollected[prod.id]) {
+          dot.classList.add('active');
+        }
+
+        row.appendChild(info);
+        row.appendChild(dot);
+        grid.appendChild(row);
+      });
+    }
+
+    function openActionModal(prod) {
+      const modal = document.getElementById('actionModal');
+      const modalImg = document.getElementById('modalProductImg');
+      const modalName = document.getElementById('modalProductName');
+      const modalStatus = document.getElementById('modalProductStatus');
+      const modalBtns = document.getElementById('modalActionButtons');
+
+      modalImg.src = prod.img;
+      modalName.innerText = prod.name;
+
+      const isCollected = !!myCollected[prod.id];
+      modalStatus.innerText = isCollected ? 'Status: Collected' : 'Status: Not collected';
+
+      modalBtns.innerHTML = '';
+      if (isCollected) {
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'action-modal-btn btn-remove';
+        removeBtn.innerText = 'Remove';
+        removeBtn.onclick = () => {
+          myCollected[prod.id] = false;
+          saveToFirebase();
+          closeActionModal();
+          renderCollectedView();
+        };
+        modalBtns.appendChild(removeBtn);
+      } else {
+        const addBtn = document.createElement('button');
+        addBtn.className = 'action-modal-btn btn-add';
+        addBtn.innerText = 'Add';
+        addBtn.onclick = () => {
+          myCollected[prod.id] = true;
+          saveToFirebase();
+          closeActionModal();
+          renderCollectedView();
+        };
+        modalBtns.appendChild(addBtn);
+      }
+
+      modal.classList.add('show');
+    }
+
+    function closeActionModal() {
+      const modal = document.getElementById('actionModal');
+      modal.classList.remove('show');
+    }
+
     function switchPictureSubTab(subTabId, btn) {
-      document.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.sub-tab-content').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('#tab-pictures .sub-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#tab-pictures .sub-tab-content').forEach(c => c.classList.remove('active'));
       btn.classList.add('active');
       document.getElementById(`sub-tab-${subTabId}-pictures`).classList.add('active');
       if (subTabId === 'friends') {
