@@ -138,6 +138,24 @@
     .tab-content { display: none; width: 100%; max-width: 800px; }
     .tab-content.active { display: block; }
 
+    /* Collection Counter Header */
+    .collection-counter {
+      background: var(--surface);
+      border: 1px solid #3a3a3c;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 10px;
+      font-size: 13px;
+      font-weight: bold;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .collection-counter span {
+      color: var(--accent);
+    }
+
     .tier-board { display: flex; flex-direction: column; gap: 4px; background: #000; padding: 4px; border-radius: 8px; width: 100%; box-sizing: border-box; }
     .tier-row { display: flex; background: var(--surface); min-height: 58px; border-radius: 6px; overflow: hidden; align-items: stretch; }
     .tier-badge {
@@ -432,7 +450,6 @@
       font-weight: bold;
       color: #fff;
     }
-    /* Kisebb, tiszta indikátor pötty */
     .status-dot {
       width: 10px;
       height: 10px;
@@ -597,7 +614,7 @@
         <button class="sub-mode-btn" onclick="switchMode('drivers')">Drivers</button>
       </div>
     </div>
-    <button id="mode-collected-btn" class="mode-btn collected-tab-btn" onclick="switchMode('collected')">🎯 Collected</button>
+    <button id="mode-collected-btn" class="mode-btn collected-tab-btn" onclick="switchMode('collected')">🎯 Tasted</button>
     <button id="mode-pictures-btn" class="mode-btn pictures-tab-btn" onclick="switchMode('pictures')">🖼️ Pictures</button>
   </div>
 
@@ -610,11 +627,14 @@
   <!-- Collected Tab Content -->
   <div id="tab-collected" class="tab-content">
     <div class="sub-nav-tabs">
-      <button class="sub-tab-btn active" onclick="switchCollectedSubTab('my', this)">✏️ My Collection</button>
-      <button class="sub-tab-btn" onclick="switchCollectedSubTab('friends', this)">👥 Friends Collection</button>
+      <button class="sub-tab-btn active" onclick="switchCollectedSubTab('my', this)">✏️ My Tasted</button>
+      <button class="sub-tab-btn" onclick="switchCollectedSubTab('friends', this)">👥 Friend Tasted</button>
     </div>
 
     <div id="sub-tab-my-collected" class="sub-tab-content active">
+      <div class="collection-counter">
+        <span>Tasted:</span> <span id="my-collection-count">0 / 0</span>
+      </div>
       <div id="my-collected-grid" class="collected-grid"></div>
     </div>
 
@@ -622,6 +642,9 @@
       <div class="friend-picker" style="margin-bottom: 8px;">
         <label style="font-size: 11px; font-weight: bold; color: #8e8e93; text-transform: uppercase;">Select Friend:</label>
         <select id="friend-collected-select" class="friend-select-box" onchange="renderFriendCollectedView()"></select>
+      </div>
+      <div class="collection-counter">
+        <span>Tasted:</span> <span id="friend-collection-count">0 / 0</span>
       </div>
       <div id="friend-collected-grid" class="collected-grid"></div>
       <div id="no-friend-collected-msg" class="no-friends-msg" style="display: none;">
@@ -697,7 +720,7 @@
     <div class="action-modal-box">
       <img id="modalProductImg" class="action-modal-img" src="" alt="Product">
       <div id="modalProductName" class="action-modal-title">Product Name</div>
-      <div id="modalProductStatus" class="action-modal-status">Status: Not collected</div>
+      <div id="modalProductStatus" class="action-modal-status">Status: Not tasted</div>
       <div id="modalActionButtons" class="action-modal-btns">
         <!-- Dinamikusan töltődik -->
       </div>
@@ -775,7 +798,7 @@
       nitro: products.map(p => ({ id: p.id, t: 0, p: 0 })),
       drivers: products.map(p => ({ id: p.id, t: 0, p: 0 }))
     };
-    let myCollected = {}; // id -> boolean
+    let myCollected = {}; 
     let myPictures = []; 
     let selectedProductId = null; 
 
@@ -1761,6 +1784,10 @@
       const grid = document.getElementById('my-collected-grid');
       grid.innerHTML = '';
 
+      const totalCount = products.length;
+      const collectedCount = Object.values(myCollected).filter(val => val === true).length;
+      document.getElementById('my-collection-count').innerText = `${collectedCount} / ${totalCount}`;
+
       const sortedProducts = [...products].sort((a, b) => {
         const aVal = myCollected[a.id] ? 1 : 0;
         const bVal = myCollected[b.id] ? 1 : 0;
@@ -1803,11 +1830,17 @@
       const grid = document.getElementById('friend-collected-grid');
       grid.innerHTML = '';
 
+      const totalCount = products.length;
+      const countEl = document.getElementById('friend-collection-count');
+
       if (!friendName || !roomData[friendName]) {
+        countEl.innerText = `0 / ${totalCount}`;
         return;
       }
 
       const friendCollected = getUserCollected(roomData[friendName]);
+      const friendCollectedCount = Object.values(friendCollected).filter(val => val === true).length;
+      countEl.innerText = `${friendCollectedCount} / ${totalCount}`;
 
       const sortedProducts = [...products].sort((a, b) => {
         const aVal = friendCollected[a.id] ? 1 : 0;
@@ -1856,7 +1889,7 @@
       modalName.innerText = prod.name;
 
       const isCollected = !!myCollected[prod.id];
-      modalStatus.innerText = isCollected ? 'Status: Collected' : 'Status: Not collected';
+      modalStatus.innerText = isCollected ? 'Status: Tasted' : 'Status: Not tasted';
 
       modalBtns.innerHTML = '';
       if (isCollected) {
