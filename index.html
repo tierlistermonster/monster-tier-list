@@ -544,13 +544,12 @@
         <select id="friend-select" class="friend-select-box" onchange="renderFriendView()"></select>
       </div>
       
-      <!-- Barát saját listája és dobogója -->
+      <!-- Barát saját listája -->
       <div class="section-title">Friend's Tier List</div>
       <div id="friend-board" class="tier-board"></div>
-      <div id="friend-podium" class="podium-container"></div>
 
       <!-- Kettőtök közös listája és dobogója -->
-      <div class="section-title">Combined Tier List (You & Friend)</div>
+      <div class="section-title" id="combined-title">Comparison with Friend</div>
       <div id="combined-board" class="tier-board"></div>
       <div id="combined-podium" class="podium-container"></div>
     </div>
@@ -1102,14 +1101,16 @@
     function renderFriendView() {
       if (currentMode === 'pictures') return;
       
-      // 1. Barát tier tábla és dobogó
-      buildBoard('friend-board', false);
-      const podium = document.getElementById('friend-podium');
-      podium.innerHTML = '';
-      
       const name = document.getElementById('friend-select').value;
       if (!name || !roomData[name]) return;
 
+      // Frissítjük a címet a barát nevével
+      const combinedTitle = document.getElementById('combined-title');
+      combinedTitle.innerText = `comparison with ${name}`;
+
+      // 1. Barát saját tier táblája (dobogó nélkül)
+      buildBoard('friend-board', false);
+      
       const userSubmissions = getSubmissionsForMode(roomData[name], currentMode);
       if (!userSubmissions) return;
 
@@ -1176,51 +1177,11 @@
         }
       });
 
-      const sortedFriendItems = [];
-      const levelNums = levels.map(l => l.level).sort((a,b) => b - a);
-      levelNums.forEach(tLevel => {
-        if (groupTiers[tLevel]) {
-          groupTiers[tLevel].forEach(item => sortedFriendItems.push(item));
-        }
-      });
-
-      const top5 = sortedFriendItems.slice(0, 5);
-      if (top5.length > 0) {
-        const podiumOrderIndices = [];
-        if (top5.length >= 1) podiumOrderIndices.push(0);
-        if (top5.length >= 2) podiumOrderIndices.push(1);
-        if (top5.length >= 3) podiumOrderIndices.push(2);
-        if (top5.length >= 4) podiumOrderIndices.push(3);
-        if (top5.length >= 5) podiumOrderIndices.push(4);
-
-        podiumOrderIndices.forEach(originalIndex => {
-          const item = top5[originalIndex];
-          const rank = originalIndex + 1;
-
-          const col = document.createElement('div');
-          col.className = 'podium-column';
-
-          const img = createImgElement(item.id, false);
-          if (img) {
-            img.className = 'tier-img podium-img';
-            col.appendChild(img);
-          }
-
-          const step = document.createElement('div');
-          step.className = `podium-step step-${rank}`;
-          step.innerText = `#${rank}`;
-          col.appendChild(step);
-
-          podium.appendChild(col);
-        });
-      }
-
       // 2. Kettőtök közös (combined) tier táblája és dobogója
       buildBoard('combined-board', false);
       const combinedPodium = document.getElementById('combined-podium');
       combinedPodium.innerHTML = '';
 
-      const myName = document.getElementById('name-input').value.trim();
       const mySubmissions = myData[currentMode];
       const friendSubmissions = userSubmissions;
 
@@ -1333,6 +1294,7 @@
       });
 
       const sortedCombinedItems = [];
+      const levelNums = levels.map(l => l.level).sort((a,b) => b - a);
       levelNums.forEach(tLevel => {
         if (combinedTiers[tLevel]) {
           combinedTiers[tLevel].forEach(item => sortedCombinedItems.push(item));
