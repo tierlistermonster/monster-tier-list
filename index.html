@@ -433,80 +433,6 @@
     .custom-upload-btn:hover {
       background: #005ec4;
     }
-
-    /* Comparison styles */
-    .comparison-section {
-      margin-top: 16px;
-      background: var(--surface);
-      border: 1px solid #3a3a3c;
-      border-radius: 8px;
-      padding: 10px;
-      box-sizing: border-box;
-    }
-    .comparison-title {
-      font-size: 13px;
-      font-weight: bold;
-      color: #fff;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-      text-align: center;
-    }
-    .comparison-row {
-      display: flex;
-      align-items: center;
-      background: #121212;
-      border-radius: 6px;
-      margin-bottom: 4px;
-      padding: 4px;
-      min-height: 52px;
-      gap: 6px;
-    }
-    .comparison-label {
-      width: 42px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 12px;
-      color: #000;
-      border-radius: 4px;
-      height: 46px;
-      flex-shrink: 0;
-    }
-    .comparison-sides {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .comparison-side-row {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      overflow-x: auto;
-      min-height: 22px;
-    }
-    .comparison-side-label {
-      font-size: 9px;
-      font-weight: bold;
-      color: #8e8e93;
-      width: 55px;
-      flex-shrink: 0;
-    }
-    .comparison-side-zone {
-      display: flex;
-      gap: 4px;
-      align-items: center;
-      overflow-x: auto;
-      flex: 1;
-    }
-    .comparison-img {
-      height: 38px;
-      width: 38px;
-      object-fit: contain;
-      border-radius: 4px;
-      flex-shrink: 0;
-    }
   </style>
 
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -609,13 +535,9 @@
         <label style="font-size: 11px; font-weight: bold; color: #8e8e93; text-transform: uppercase;">Select Friend:</label>
         <select id="friend-select" class="friend-select-box" onchange="renderFriendView()"></select>
       </div>
+      <!-- Barát tier táblája és saját dobogója -->
       <div id="friend-board" class="tier-board"></div>
-      
-      <!-- Közös összehasonlító szekció a barát listája alatt -->
-      <div id="comparison-section" class="comparison-section">
-        <div id="comparison-title" class="comparison-title">Comparison</div>
-        <div id="comparison-container"></div>
-      </div>
+      <div id="friend-podium" class="podium-container"></div>
     </div>
     <div id="no-friends-msg" class="no-friends-msg" style="display: none;">
       👥 No friends added yet in this room.
@@ -1165,8 +1087,15 @@
     function renderFriendView() {
       if (currentMode === 'pictures') return;
       buildBoard('friend-board', false);
-      const name = document.getElementById('friend-select').value;
+      const podium = document.getElementById('friend-podium');
+      podium.innerHTML = '';
       
+      const name = document.getElementById('friend-select').value;
+      if (!name || !roomData[name]) return;
+
+      const userSubmissions = getSubmissionsForMode(roomData[name], currentMode);
+      if (!userSubmissions) return;
+
       const isCategory = (typeof currentMode === 'string' && categoryNames[currentMode]);
       const activeProds = getActiveProducts();
       const activeIds = activeProds.map(p => p.id);
@@ -1194,17 +1123,6 @@
         });
       }
 
-      if (!name || !roomData[name]) {
-        document.getElementById('comparison-section').style.display = 'none';
-        return;
-      }
-
-      const userSubmissions = getSubmissionsForMode(roomData[name], currentMode);
-      if (!userSubmissions) {
-        document.getElementById('comparison-section').style.display = 'none';
-        return;
-      }
-
       const friendItems = [...userSubmissions]
         .filter(item => !isCategory || activeIds.includes(item.id))
         .sort((a, b) => {
@@ -1212,10 +1130,21 @@
           return a.p - b.p;
         });
 
-      getCurrentTierLevels().forEach(tl => {
-        const zone = document.querySelector(`#friend-board .tier-zone[data-tier="${tl.level}"]`);
+      const groupTiers = {};
+      const levels = getCurrentTierLevels();
+      levels.forEach(tl => groupTiers[tl.level] = []);
+
+      friendItems.forEach(item => {
+        if (item.t > 0 && groupTiers[item.t]) {
+          groupTiers[item.t].push(item);
+        }
+      });
+
+      Object.keys(groupTiers).forEach(tLevel => {
+        groupTiers[tLevel].sort((a, b) => a.p - b.p);
+        const zone = document.querySelector(`#friend-board .tier-zone[data-tier="${tLevel}"]`);
         if (zone) {
-          friendItems.filter(item => item.t === tl.level).forEach(item => {
+          groupTiers[tLevel].forEach(item => {
             const wrappers = zone.querySelectorAll('.slot-wrapper');
             const emptyWrapper = Array.from(wrappers).find(w => !w.querySelector('.tier-img'));
             const img = createImgElement(item.id, false);
@@ -1230,84 +1159,45 @@
         }
       });
 
-      // Render Comparison section under the friend's board
-      renderComparisonView(name, friendItems);
-    }
-
-    function renderComparisonView(friendName, friendItems) {
-      const compSection = document.getElementById('comparison-section');
-      const compTitle = document.getElementById('comparison-title');
-      const compContainer = document.getElementById('comparison-container');
-      
-      compSection.style.display = 'block';
-      compTitle.innerText = `Comparison with ${friendName}`;
-      compContainer.innerHTML = '';
-
-      const levels = getCurrentTierLevels();
-      const mySubmissions = myData[currentMode] || [];
-      const isCategory = (typeof currentMode === 'string' && categoryNames[currentMode]);
-      const activeProds = getActiveProducts();
-      const activeIds = activeProds.map(p => p.id);
-
-      levels.forEach(tl => {
-        const compRow = document.createElement('div');
-        compRow.className = 'comparison-row';
-
-        const badge = document.createElement('div');
-        badge.className = `comparison-label ${tl.class}`;
-        badge.innerText = tl.label;
-        compRow.appendChild(badge);
-
-        const sides = document.createElement('div');
-        sides.className = 'comparison-sides';
-
-        // My row inside tier
-        const mySideRow = document.createElement('div');
-        mySideRow.className = 'comparison-side-row';
-        const mySideLabel = document.createElement('div');
-        mySideLabel.className = 'comparison-side-label';
-        mySideLabel.innerText = 'You:';
-        const mySideZone = document.createElement('div');
-        mySideZone.className = 'comparison-side-zone';
-
-        const myFiltered = mySubmissions
-          .filter(i => (!isCategory || activeIds.includes(i.id)) && i.t === tl.level)
-          .sort((a,b) => a.p - b.p);
-
-        myFiltered.forEach(item => {
-          const img = createImgElement(item.id, false, 'comparison-img');
-          if (img) mySideZone.appendChild(img);
-        });
-
-        mySideRow.appendChild(mySideLabel);
-        mySideRow.appendChild(mySideZone);
-        sides.appendChild(mySideRow);
-
-        // Friend row inside tier
-        const friendSideRow = document.createElement('div');
-        friendSideRow.className = 'comparison-side-row';
-        const friendSideLabel = document.createElement('div');
-        friendSideLabel.className = 'comparison-side-label';
-        friendSideLabel.innerText = `${friendName}:`;
-        const friendSideZone = document.createElement('div');
-        friendSideZone.className = 'comparison-side-zone';
-
-        const friendFiltered = friendItems
-          .filter(i => i.t === tl.level)
-          .sort((a,b) => a.p - b.p);
-
-        friendFiltered.forEach(item => {
-          const img = createImgElement(item.id, false, 'comparison-img');
-          if (img) friendSideZone.appendChild(img);
-        });
-
-        friendSideRow.appendChild(friendSideLabel);
-        friendSideRow.appendChild(friendSideZone);
-        sides.appendChild(friendSideRow);
-
-        compRow.appendChild(sides);
-        compContainer.appendChild(compRow);
+      // Podiums generálása a barát listájához is
+      const sortedFriendItems = [];
+      const levelNums = levels.map(l => l.level).sort((a,b) => b - a);
+      levelNums.forEach(tLevel => {
+        if (groupTiers[tLevel]) {
+          groupTiers[tLevel].forEach(item => sortedFriendItems.push(item));
+        }
       });
+
+      const top5 = sortedFriendItems.slice(0, 5);
+      if (top5.length > 0) {
+        const podiumOrderIndices = [];
+        if (top5.length >= 1) podiumOrderIndices.push(0);
+        if (top5.length >= 2) podiumOrderIndices.push(1);
+        if (top5.length >= 3) podiumOrderIndices.push(2);
+        if (top5.length >= 4) podiumOrderIndices.push(3);
+        if (top5.length >= 5) podiumOrderIndices.push(4);
+
+        podiumOrderIndices.forEach(originalIndex => {
+          const item = top5[originalIndex];
+          const rank = originalIndex + 1;
+
+          const col = document.createElement('div');
+          col.className = 'podium-column';
+
+          const img = createImgElement(item.id, false);
+          if (img) {
+            img.className = 'tier-img podium-img';
+            col.appendChild(img);
+          }
+
+          const step = document.createElement('div');
+          step.className = `podium-step step-${rank}`;
+          step.innerText = `#${rank}`;
+          col.appendChild(step);
+
+          podium.appendChild(col);
+        });
+      }
     }
 
     function renderGroupView() {
