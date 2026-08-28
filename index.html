@@ -321,53 +321,6 @@
     .sub-tab-content { display: none; width: 100%; }
     .sub-tab-content.active { display: block; }
 
-    .monster-select-list {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      max-height: 250px;
-      overflow-y: auto;
-      background: var(--surface);
-      padding: 6px;
-      border-radius: 8px;
-      border: 1px solid #3a3a3c;
-      box-sizing: border-box;
-    }
-    .monster-list-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: #2c2c2e;
-      padding: 6px 10px;
-      border-radius: 6px;
-      cursor: pointer;
-      position: relative;
-    }
-    .monster-list-item.active {
-      background: #007aff;
-    }
-    .monster-list-img {
-      width: 32px;
-      height: 32px;
-      object-fit: contain;
-    }
-    .monster-list-name {
-      font-size: 13px;
-      font-weight: bold;
-      flex: 1;
-    }
-    .status-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #555;
-      flex-shrink: 0;
-    }
-    .status-dot.uploaded {
-      background: var(--accent);
-      box-shadow: 0 0 6px var(--accent);
-    }
-
     .picture-upload-box {
       margin-top: 10px;
       background: var(--surface);
@@ -397,6 +350,7 @@
       border-radius: 6px;
       border: 1px solid #444;
       background: #2c2c2e;
+      cursor: pointer;
     }
     .delete-pic-btn {
       position: absolute;
@@ -415,6 +369,7 @@
       align-items: center;
       justify-content: center;
       box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+      z-index: 5;
     }
     .custom-upload-btn {
       display: inline-flex;
@@ -440,6 +395,50 @@
       color: #8e8e93;
       margin: 12px 0 6px 0;
       text-transform: uppercase;
+    }
+
+    /* Modal / Fullscreen Viewer styles */
+    .image-modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.9);
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .image-modal.show {
+      display: flex;
+    }
+    .image-modal img {
+      max-width: 100%;
+      max-height: 85vh;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+    }
+    .image-modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: var(--danger);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   </style>
 
@@ -497,9 +496,7 @@
     </div>
 
     <div id="sub-tab-my-pictures" class="sub-tab-content active">
-      <div class="monster-select-list" id="my-pictures-monster-list"></div>
-      <div class="picture-upload-box" id="my-upload-box" style="display: none;">
-        <label style="font-size: 12px; font-weight: bold; color: #8e8e93;" id="selected-monster-label"></label>
+      <div class="picture-upload-box" style="display: flex;">
         <label class="custom-upload-btn">
           📷 Upload Picture
           <input type="file" id="picture-file-input" accept="image/*" onchange="handleImageUpload(event)" style="display: none;">
@@ -513,9 +510,7 @@
         <label style="font-size: 11px; font-weight: bold; color: #8e8e93; text-transform: uppercase;">Select Friend:</label>
         <select id="friend-pictures-select" class="friend-select-box" onchange="renderFriendPicturesView()"></select>
       </div>
-      <div class="monster-select-list" id="friend-pictures-monster-list"></div>
-      <div class="picture-upload-box" id="friend-pictures-box" style="display: none;">
-        <label style="font-size: 12px; font-weight: bold; color: #8e8e93;" id="friend-selected-monster-label"></label>
+      <div class="picture-upload-box" id="friend-pictures-box" style="display: flex;">
         <div class="picture-grid" id="friend-uploaded-pictures-grid"></div>
       </div>
       <div id="no-friend-pics-msg" class="no-friends-msg" style="display: none;">
@@ -544,11 +539,9 @@
         <select id="friend-select" class="friend-select-box" onchange="renderFriendView()"></select>
       </div>
       
-      <!-- Barát saját listája -->
       <div class="section-title">Friend's Tier List</div>
       <div id="friend-board" class="tier-board"></div>
 
-      <!-- Kettőtök közös listája és dobogója -->
       <div class="section-title" id="combined-title">Comparison with Friend</div>
       <div id="combined-board" class="tier-board"></div>
       <div id="combined-podium" class="podium-container"></div>
@@ -556,6 +549,12 @@
     <div id="no-friends-msg" class="no-friends-msg" style="display: none;">
       👥 No friends added yet in this room.
     </div>
+  </div>
+
+  <!-- Fullscreen Image Modal -->
+  <div id="imageModal" class="image-modal" onclick="closeModal()">
+    <button class="image-modal-close" onclick="closeModal()">✕</button>
+    <img id="modalImg" src="" alt="Full size preview">
   </div>
 
   <script>
@@ -622,10 +621,8 @@
       nitro: products.map(p => ({ id: p.id, t: 0, p: 0 })),
       drivers: products.map(p => ({ id: p.id, t: 0, p: 0 }))
     };
-    let myPictures = {};
+    let myPictures = []; // Mostantól tömb a szabad képekhez
     let selectedProductId = null; 
-    let selectedPictureMonsterId = null;
-    let selectedFriendPictureMonsterId = null;
 
     const tierLevels5 = [
       { level: 5, label: '5★', class: 'badge-5-5' }, 
@@ -912,7 +909,15 @@
             }
 
             if (remoteData.pictures) {
-              myPictures = remoteData.pictures;
+              // Ha régen objektum volt, átalakítjuk tömbbé biztonság kedvéért
+              if (Array.isArray(remoteData.pictures)) {
+                myPictures = remoteData.pictures;
+              } else {
+                myPictures = [];
+                Object.values(remoteData.pictures).forEach(arr => {
+                  if (Array.isArray(arr)) myPictures.push(...arr);
+                });
+              }
             }
           }
           ['5', '10', ...catKeys].forEach(m => updatePositions(m));
@@ -938,9 +943,7 @@
       
       roomData = {};
       selectedProductId = null;
-      selectedPictureMonsterId = null;
-      selectedFriendPictureMonsterId = null;
-      myPictures = {};
+      myPictures = [];
       const catKeys = Object.keys(categoryNames);
       myData = {
         5: products.map(p => ({ id: p.id, t: 0, p: 0 })),
@@ -988,9 +991,16 @@
     }
 
     function getUserPictures(userObj) {
-      if (!userObj) return {};
-      if (userObj.pictures) return userObj.pictures;
-      return {};
+      if (!userObj) return [];
+      if (userObj.pictures) {
+        if (Array.isArray(userObj.pictures)) return userObj.pictures;
+        const allPics = [];
+        Object.values(userObj.pictures).forEach(arr => {
+          if (Array.isArray(arr)) allPics.push(...arr);
+        });
+        return allPics;
+      }
+      return [];
     }
 
     function updateFriendDropdown() {
@@ -1104,11 +1114,9 @@
       const name = document.getElementById('friend-select').value;
       if (!name || !roomData[name]) return;
 
-      // Frissítjük a címet a barát nevével
       const combinedTitle = document.getElementById('combined-title');
       combinedTitle.innerText = `comparison with ${name}`;
 
-      // 1. Barát saját tier táblája (dobogó nélkül)
       buildBoard('friend-board', false);
       
       const userSubmissions = getSubmissionsForMode(roomData[name], currentMode);
@@ -1177,7 +1185,6 @@
         }
       });
 
-      // 2. Kettőtök közös (combined) tier táblája és dobogója
       buildBoard('combined-board', false);
       const combinedPodium = document.getElementById('combined-podium');
       combinedPodium.innerHTML = '';
@@ -1521,82 +1528,40 @@
     }
 
     function renderPicturesView() {
-      const listContainer = document.getElementById('my-pictures-monster-list');
-      listContainer.innerHTML = '';
-
-      products.forEach(prod => {
-        const item = document.createElement('div');
-        item.className = 'monster-list-item';
-        if (selectedPictureMonsterId === prod.id) {
-          item.classList.add('active');
-        }
-        item.onclick = () => {
-          selectedPictureMonsterId = prod.id;
-          renderPicturesView();
-        };
-
-        const img = document.createElement('img');
-        img.src = prod.img;
-        img.className = 'monster-list-img';
-
-        const name = document.createElement('div');
-        name.className = 'monster-list-name';
-        name.innerText = prod.name;
-
-        const hasUploaded = myPictures[prod.id] && myPictures[prod.id].length > 0;
-        const dot = document.createElement('div');
-        dot.className = `status-dot ${hasUploaded ? 'uploaded' : ''}`;
-
-        item.appendChild(img);
-        item.appendChild(name);
-        item.appendChild(dot);
-        listContainer.appendChild(item);
-      });
-
-      const uploadBox = document.getElementById('my-upload-box');
-      const label = document.getElementById('selected-monster-label');
       const grid = document.getElementById('my-uploaded-pictures-grid');
       grid.innerHTML = '';
 
-      if (selectedPictureMonsterId) {
-        uploadBox.style.display = 'flex';
-        const prod = products.find(p => p.id === selectedPictureMonsterId);
-        label.innerText = `Upload picture for: ${prod ? prod.name : ''}`;
+      myPictures.forEach((base64, index) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'uploaded-picture-wrapper';
 
-        const pics = (myPictures[selectedPictureMonsterId] || []);
-        pics.forEach((base64, index) => {
-          const wrapper = document.createElement('div');
-          wrapper.className = 'uploaded-picture-wrapper';
+        const picImg = document.createElement('img');
+        picImg.src = base64;
+        picImg.className = 'uploaded-picture-card';
+        picImg.onclick = () => openModal(base64);
 
-          const picImg = document.createElement('img');
-          picImg.src = base64;
-          picImg.className = 'uploaded-picture-card';
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'delete-pic-btn';
+        deleteBtn.innerText = '✕';
+        deleteBtn.onclick = (e) => {
+          e.stopPropagation();
+          removePicture(index);
+        };
 
-          const deleteBtn = document.createElement('button');
-          deleteBtn.className = 'delete-pic-btn';
-          deleteBtn.innerText = '✕';
-          deleteBtn.onclick = () => removePicture(selectedPictureMonsterId, index);
-
-          wrapper.appendChild(picImg);
-          wrapper.appendChild(deleteBtn);
-          grid.appendChild(wrapper);
-        });
-      } else {
-        uploadBox.style.display = 'none';
-      }
+        wrapper.appendChild(picImg);
+        wrapper.appendChild(deleteBtn);
+        grid.appendChild(wrapper);
+      });
     }
 
     function handleImageUpload(e) {
       const file = e.target.files[0];
-      if (!file || !selectedPictureMonsterId) return;
+      if (!file) return;
 
       const reader = new FileReader();
       reader.onload = function(event) {
         const base64 = event.target.result;
-        if (!myPictures[selectedPictureMonsterId]) {
-          myPictures[selectedPictureMonsterId] = [];
-        }
-        myPictures[selectedPictureMonsterId].push(base64);
+        myPictures.push(base64);
         saveToFirebase();
         renderPicturesView();
         document.getElementById('picture-file-input').value = '';
@@ -1604,82 +1569,46 @@
       reader.readAsDataURL(file);
     }
 
-    function removePicture(monsterId, index) {
-      if (myPictures[monsterId]) {
-        myPictures[monsterId].splice(index, 1);
-        if (myPictures[monsterId].length === 0) {
-          delete myPictures[monsterId];
-        }
-        saveToFirebase();
-        renderPicturesView();
-      }
+    function removePicture(index) {
+      myPictures.splice(index, 1);
+      saveToFirebase();
+      renderPicturesView();
     }
 
     function renderFriendPicturesView() {
       const friendName = document.getElementById('friend-pictures-select').value;
-      const listContainer = document.getElementById('friend-pictures-monster-list');
-      listContainer.innerHTML = '';
-
-      const uploadBox = document.getElementById('friend-pictures-box');
-      const label = document.getElementById('friend-selected-monster-label');
       const grid = document.getElementById('friend-uploaded-pictures-grid');
       grid.innerHTML = '';
 
       if (!friendName || !roomData[friendName]) {
-        uploadBox.style.display = 'none';
         return;
       }
 
-      const friendPicsObj = getUserPictures(roomData[friendName]);
+      const friendPics = getUserPictures(roomData[friendName]);
 
-      products.forEach(prod => {
-        const item = document.createElement('div');
-        item.className = 'monster-list-item';
-        if (selectedFriendPictureMonsterId === prod.id) {
-          item.classList.add('active');
-        }
-        item.onclick = () => {
-          selectedFriendPictureMonsterId = prod.id;
-          renderFriendPicturesView();
-        };
+      friendPics.forEach(base64 => {
+        const picImg = document.createElement('img');
+        picImg.src = base64;
+        picImg.className = 'uploaded-picture-card';
+        picImg.onclick = () => openModal(base64);
 
-        const img = document.createElement('img');
-        img.src = prod.img;
-        img.className = 'monster-list-img';
-
-        const name = document.createElement('div');
-        name.className = 'monster-list-name';
-        name.innerText = prod.name;
-
-        const hasUploaded = friendPicsObj[prod.id] && friendPicsObj[prod.id].length > 0;
-        const dot = document.createElement('div');
-        dot.className = `status-dot ${hasUploaded ? 'uploaded' : ''}`;
-
-        item.appendChild(img);
-        item.appendChild(name);
-        item.appendChild(dot);
-        listContainer.appendChild(item);
+        const wrapper = document.createElement('div');
+        wrapper.className = 'uploaded-picture-wrapper';
+        wrapper.appendChild(picImg);
+        grid.appendChild(wrapper);
       });
+    }
 
-      if (selectedFriendPictureMonsterId) {
-        uploadBox.style.display = 'flex';
-        const prod = products.find(p => p.id === selectedFriendPictureMonsterId);
-        label.innerText = `${friendName}'s pictures for: ${prod ? prod.name : ''}`;
+    function openModal(src) {
+      const modal = document.getElementById('imageModal');
+      const modalImg = document.getElementById('modalImg');
+      modalImg.src = src;
+      modal.classList.add('show');
+    }
 
-        const pics = (friendPicsObj[selectedFriendPictureMonsterId] || []);
-        pics.forEach(base64 => {
-          const picImg = document.createElement('img');
-          picImg.src = base64;
-          picImg.className = 'uploaded-picture-card';
-
-          const wrapper = document.createElement('div');
-          wrapper.className = 'uploaded-picture-wrapper';
-          wrapper.appendChild(picImg);
-          grid.appendChild(wrapper);
-        });
-      } else {
-        uploadBox.style.display = 'none';
-      }
+    function closeModal() {
+      const modal = document.getElementById('imageModal');
+      modal.classList.remove('show');
     }
 
     window.addEventListener('DOMContentLoaded', () => {
