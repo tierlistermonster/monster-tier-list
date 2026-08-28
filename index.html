@@ -621,7 +621,7 @@
       nitro: products.map(p => ({ id: p.id, t: 0, p: 0 })),
       drivers: products.map(p => ({ id: p.id, t: 0, p: 0 }))
     };
-    let myPictures = []; // Mostantól tömb a szabad képekhez
+    let myPictures = []; 
     let selectedProductId = null; 
 
     const tierLevels5 = [
@@ -871,6 +871,15 @@
       return img;
     }
 
+    function ensureAllProductsExist(list) {
+      products.forEach(prod => {
+        const exists = list.some(item => item.id === prod.id);
+        if (!exists) {
+          list.push({ id: prod.id, t: 0, p: 0 });
+        }
+      });
+    }
+
     function connectToRoom() {
       const room = document.getElementById('room-input').value.trim();
       const userName = document.getElementById('name-input').value.trim();
@@ -888,6 +897,8 @@
         roomData = snapshot.val() || {};
         
         const catKeys = Object.keys(categoryNames);
+        let needsSave = false;
+
         if (userName && roomData[userName]) {
           const remoteData = roomData[userName];
           if (remoteData) {
@@ -895,21 +906,28 @@
               const tl = remoteData.tierLists;
               if (Array.isArray(tl)) {
                 myData[5] = tl;
+                ensureAllProductsExist(myData[5]);
               } else {
                 ['5', '10', ...catKeys].forEach(m => {
-                  if (tl[m]) myData[m] = tl[m];
+                  if (tl[m]) {
+                    myData[m] = tl[m];
+                    ensureAllProductsExist(myData[m]);
+                  }
                 });
               }
             } else if (Array.isArray(remoteData)) {
               myData[5] = remoteData;
+              ensureAllProductsExist(myData[5]);
             } else {
               ['5', '10', ...catKeys].forEach(m => {
-                if (remoteData[m]) myData[m] = remoteData[m];
+                if (remoteData[m]) {
+                  myData[m] = remoteData[m];
+                  ensureAllProductsExist(myData[m]);
+                }
               });
             }
 
             if (remoteData.pictures) {
-              // Ha régen objektum volt, átalakítjuk tömbbé biztonság kedvéért
               if (Array.isArray(remoteData.pictures)) {
                 myPictures = remoteData.pictures;
               } else {
@@ -920,12 +938,26 @@
               }
             }
           }
-          ['5', '10', ...catKeys].forEach(m => updatePositions(m));
         }
+
+        // Automatikusan ellenőrizzük az összes módot, hogy minden termék benne legyen a listákban
+        ['5', '10', ...catKeys].forEach(m => {
+          const beforeLen = myData[m].length;
+          ensureAllProductsExist(myData[m]);
+          if (myData[m].length !== beforeLen) {
+            needsSave = true;
+          }
+          updatePositions(m);
+        });
 
         updateFriendDropdown();
         updateFriendPicturesDropdown();
         renderActiveTab();
+
+        // Ha újonnan felvett termék miatt bővült a lista, automatikusan mentsük is el a Firebase-be
+        if (needsSave && userName) {
+          saveToFirebase();
+        }
       });
     }
 
