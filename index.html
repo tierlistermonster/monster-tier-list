@@ -214,6 +214,7 @@
       align-items: flex-end;
       gap: 4px;
       margin-top: 10px;
+      margin-bottom: 20px;
       padding: 10px 6px 6px 6px;
       background: var(--surface);
       border-radius: 8px;
@@ -433,6 +434,13 @@
     .custom-upload-btn:hover {
       background: #005ec4;
     }
+    .section-title {
+      font-size: 13px;
+      font-weight: bold;
+      color: #8e8e93;
+      margin: 12px 0 6px 0;
+      text-transform: uppercase;
+    }
   </style>
 
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -535,9 +543,16 @@
         <label style="font-size: 11px; font-weight: bold; color: #8e8e93; text-transform: uppercase;">Select Friend:</label>
         <select id="friend-select" class="friend-select-box" onchange="renderFriendView()"></select>
       </div>
-      <!-- Barát tier táblája és saját dobogója -->
+      
+      <!-- Barát saját listája és dobogója -->
+      <div class="section-title">Friend's Tier List</div>
       <div id="friend-board" class="tier-board"></div>
       <div id="friend-podium" class="podium-container"></div>
+
+      <!-- Kettőtök közös listája és dobogója -->
+      <div class="section-title">Combined Tier List (You & Friend)</div>
+      <div id="combined-board" class="tier-board"></div>
+      <div id="combined-podium" class="podium-container"></div>
     </div>
     <div id="no-friends-msg" class="no-friends-msg" style="display: none;">
       👥 No friends added yet in this room.
@@ -1086,6 +1101,8 @@
 
     function renderFriendView() {
       if (currentMode === 'pictures') return;
+      
+      // 1. Barát tier tábla és dobogó
       buildBoard('friend-board', false);
       const podium = document.getElementById('friend-podium');
       podium.innerHTML = '';
@@ -1099,9 +1116,10 @@
       const isCategory = (typeof currentMode === 'string' && categoryNames[currentMode]);
       const activeProds = getActiveProducts();
       const activeIds = activeProds.map(p => p.id);
+      const levels = getCurrentTierLevels();
 
       if (isCategory) {
-        getCurrentTierLevels().forEach(tl => {
+        levels.forEach(tl => {
           const zone = document.querySelector(`#friend-board .tier-zone[data-tier="${tl.level}"]`);
           if (zone) {
             activeIds.forEach((id, index) => {
@@ -1131,7 +1149,6 @@
         });
 
       const groupTiers = {};
-      const levels = getCurrentTierLevels();
       levels.forEach(tl => groupTiers[tl.level] = []);
 
       friendItems.forEach(item => {
@@ -1159,7 +1176,6 @@
         }
       });
 
-      // Podiums generálása a barát listájához is
       const sortedFriendItems = [];
       const levelNums = levels.map(l => l.level).sort((a,b) => b - a);
       levelNums.forEach(tLevel => {
@@ -1196,6 +1212,161 @@
           col.appendChild(step);
 
           podium.appendChild(col);
+        });
+      }
+
+      // 2. Kettőtök közös (combined) tier táblája és dobogója
+      buildBoard('combined-board', false);
+      const combinedPodium = document.getElementById('combined-podium');
+      combinedPodium.innerHTML = '';
+
+      const myName = document.getElementById('name-input').value.trim();
+      const mySubmissions = myData[currentMode];
+      const friendSubmissions = userSubmissions;
+
+      const combinedStats = {};
+      const targetProds = isCategory ? activeProds : products;
+      targetProds.forEach(p => combinedStats[p.id] = { id: p.id, starSum: 0, posSum: 0, count: 0 });
+
+      [mySubmissions, friendSubmissions].forEach(sub => {
+        if (sub) {
+          sub.forEach(item => {
+            if (combinedStats[item.id] && item.t > 0) {
+              combinedStats[item.id].starSum += item.t;
+              combinedStats[item.id].posSum += item.p;
+              combinedStats[item.id].count += 1;
+            }
+          });
+        }
+      });
+
+      const combinedProcessed = Object.values(combinedStats).filter(s => s.count > 0).map(s => ({
+        id: s.id, 
+        avgStars: s.starSum / s.count, 
+        avgPos: s.posSum / s.count,
+        posPoints: s.posSum,
+        count: s.count
+      }));
+
+      const combinedTiers = {};
+      levels.forEach(tl => combinedTiers[tl.level] = []);
+
+      combinedProcessed.forEach(i => {
+        if (currentMode === 5) {
+          if (i.avgStars >= 4.5) combinedTiers[5].push(i);
+          else if (i.avgStars >= 3.5) combinedTiers[4].push(i);
+          else if (i.avgStars >= 2.5) combinedTiers[3].push(i);
+          else if (i.avgStars >= 1.5) combinedTiers[2].push(i);
+          else combinedTiers[1].push(i);
+        } else if (currentMode === 10) {
+          let rounded = Math.round(i.avgStars);
+          if (rounded < 1) rounded = 1;
+          if (rounded > 10) rounded = 10;
+          if (combinedTiers[rounded]) {
+            combinedTiers[rounded].push(i);
+          } else {
+            combinedTiers[1].push(i);
+          }
+        } else {
+          combinedTiers[1].push(i);
+        }
+      });
+
+      if (isCategory) {
+        levels.forEach(tl => {
+          const zone = document.querySelector(`#combined-board .tier-zone[data-tier="${tl.level}"]`);
+          if (zone) {
+            activeIds.forEach((id, index) => {
+              const wrapper = document.createElement('div');
+              wrapper.className = 'slot-wrapper';
+
+              const slot = document.createElement('div');
+              slot.className = 'slot-cell';
+
+              const numBox = document.createElement('div');
+              numBox.className = 'slot-number-box';
+              numBox.innerText = index + 1;
+
+              wrapper.appendChild(slot);
+              wrapper.appendChild(numBox);
+              zone.appendChild(wrapper);
+            });
+          }
+        });
+      }
+
+      Object.keys(combinedTiers).forEach(tLevel => {
+        if (isCategory) {
+          combinedTiers[tLevel].sort((a, b) => {
+            if (a.avgPos !== b.avgPos) return a.avgPos - b.avgPos;
+            if (b.count !== a.count) return b.count - a.count;
+            const prodA = products.find(p => p.id === a.id).name;
+            const prodB = products.find(p => p.id === b.id).name;
+            return prodA.localeCompare(prodB);
+          });
+        } else {
+          combinedTiers[tLevel].sort((a, b) => {
+            if (a.posPoints !== b.posPoints) return a.posPoints - b.posPoints;
+            if (b.avgStars !== a.avgStars) return b.avgStars - a.avgStars;
+            if (b.count !== a.count) return b.count - a.count;
+            const prodA = products.find(p => p.id === a.id).name;
+            const prodB = products.find(p => p.id === b.id).name;
+            return prodA.localeCompare(prodB);
+          });
+        }
+
+        const zone = document.querySelector(`#combined-board .tier-zone[data-tier="${tLevel}"]`);
+        if (zone) {
+          combinedTiers[tLevel].forEach(item => {
+            const wrappers = zone.querySelectorAll('.slot-wrapper');
+            const emptyWrapper = Array.from(wrappers).find(w => !w.querySelector('.tier-img'));
+            const img = createImgElement(item.id, false);
+            if (emptyWrapper && img) {
+              const slot = emptyWrapper.querySelector('.slot-cell');
+              slot.classList.add('has-item');
+              slot.appendChild(img);
+            } else if (img) {
+              zone.appendChild(img);
+            }
+          });
+        }
+      });
+
+      const sortedCombinedItems = [];
+      levelNums.forEach(tLevel => {
+        if (combinedTiers[tLevel]) {
+          combinedTiers[tLevel].forEach(item => sortedCombinedItems.push(item));
+        }
+      });
+
+      const combinedTop5 = sortedCombinedItems.slice(0, 5);
+      if (combinedTop5.length > 0) {
+        const podiumOrderIndices = [];
+        if (combinedTop5.length >= 1) podiumOrderIndices.push(0);
+        if (combinedTop5.length >= 2) podiumOrderIndices.push(1);
+        if (combinedTop5.length >= 3) podiumOrderIndices.push(2);
+        if (combinedTop5.length >= 4) podiumOrderIndices.push(3);
+        if (combinedTop5.length >= 5) podiumOrderIndices.push(4);
+
+        podiumOrderIndices.forEach(originalIndex => {
+          const item = combinedTop5[originalIndex];
+          const rank = originalIndex + 1;
+
+          const col = document.createElement('div');
+          col.className = 'podium-column';
+
+          const img = createImgElement(item.id, false);
+          if (img) {
+            img.className = 'tier-img podium-img';
+            col.appendChild(img);
+          }
+
+          const step = document.createElement('div');
+          step.className = `podium-step step-${rank}`;
+          step.innerText = `#${rank}`;
+          col.appendChild(step);
+
+          combinedPodium.appendChild(col);
         });
       }
     }
