@@ -885,17 +885,17 @@
     let currentMode = 5; 
     let roomData = {};
     let currentConnectionRef = null; 
+    
+    // Alapértelmezett inicializálás az összes kategóriához, hogy ne szálljon el hibával
+    const categoryKeys = ['energy', 'ultra', 'juiced', 'rehab', 'java', 'nitro', 'drivers'];
     let myData = {
       5: products.map(p => ({ id: p.id, t: 0, p: 0 })),
-      10: products.map(p => ({ id: p.id, t: 0, p: 0 })),
-      energy: products.map(p => ({ id: p.id, t: 0, p: 0 })),
-      ultra: products.map(p => ({ id: p.id, t: 0, p: 0 })),
-      juiced: products.map(p => ({ id: p.id, t: 0, p: 0 })),
-      rehab: products.map(p => ({ id: p.id, t: 0, p: 0 })),
-      java: products.map(p => ({ id: p.id, t: 0, p: 0 })),
-      nitro: products.map(p => ({ id: p.id, t: 0, p: 0 })),
-      drivers: products.map(p => ({ id: p.id, t: 0, p: 0 }))
+      10: products.map(p => ({ id: p.id, t: 0, p: 0 }))
     };
+    categoryKeys.forEach(cat => {
+      myData[cat] = products.filter(p => p.category === cat).map(p => ({ id: p.id, t: 0, p: 0 }));
+    });
+
     let myCollected = {}; 
     let myPictures = []; 
     let myCaffeineHistory = [];
@@ -1019,7 +1019,9 @@
         if (currentMode === 'caffeine') renderCaffeineView();
         return;
       }
-      const activeTab = document.querySelector('.tab-content.active').id;
+      const activeTabEl = document.querySelector('.tab-content.active');
+      if (!activeTabEl) return;
+      const activeTab = activeTabEl.id;
       if (activeTab === 'tab-group') renderGroupView();
       if (activeTab === 'tab-my') renderMyView();
       if (activeTab === 'tab-friends') renderFriendView();
@@ -1027,6 +1029,7 @@
 
     function buildBoard(containerId, isInteractive = false) {
       const container = document.getElementById(containerId);
+      if (!container) return;
       container.innerHTML = '';
       getCurrentTierLevels().forEach(tl => {
         const row = document.createElement('div');
@@ -1117,9 +1120,10 @@
       return img;
     }
 
-    function ensureAllProductsExist(list) {
+    function ensureAllProductsExist(list, mode) {
       if (!Array.isArray(list)) return;
-      products.forEach(prod => {
+      const targetProds = (typeof mode === 'string' && categoryNames[mode]) ? products.filter(p => p.category === mode) : products;
+      targetProds.forEach(prod => {
         if (!list.some(item => item.id === prod.id)) list.push({ id: prod.id, t: 0, p: 0 });
       });
     }
@@ -1137,7 +1141,6 @@
       currentConnectionRef = db.ref('rooms/' + room);
       currentConnectionRef.on('value', (snapshot) => {
         roomData = snapshot.val() || {};
-        const catKeys = Object.keys(categoryNames);
         let needsSave = false;
 
         if (userName && roomData[userName]) {
@@ -1145,10 +1148,10 @@
           if (remoteData.tierLists) {
             const tl = remoteData.tierLists;
             if (Array.isArray(tl)) {
-              myData[5] = tl; ensureAllProductsExist(myData[5]);
+              myData[5] = tl; ensureAllProductsExist(myData[5], 5);
             } else {
-              ['5', '10', ...catKeys].forEach(m => {
-                if (tl[m]) { myData[m] = tl[m]; ensureAllProductsExist(myData[m]); }
+              ['5', '10', ...categoryKeys].forEach(m => {
+                if (tl[m]) { myData[m] = tl[m]; ensureAllProductsExist(myData[m], m); }
               });
             }
           }
@@ -1157,10 +1160,12 @@
           if (remoteData.caffeineHistory) myCaffeineHistory = Array.isArray(remoteData.caffeineHistory) ? remoteData.caffeineHistory : [];
         }
 
-        ['5', '10', ...catKeys].forEach(m => {
-          if (!myData[m]) myData[m] = products.map(p => ({ id: p.id, t: 0, p: 0 }));
+        ['5', '10', ...categoryKeys].forEach(m => {
+          if (!myData[m]) {
+            myData[m] = (typeof m === 'string' && categoryNames[m]) ? products.filter(p => p.category === m).map(p => ({ id: p.id, t: 0, p: 0 })) : products.map(p => ({ id: p.id, t: 0, p: 0 }));
+          }
           const beforeLen = myData[m].length;
-          ensureAllProductsExist(myData[m]);
+          ensureAllProductsExist(myData[m], m);
           if (myData[m].length !== beforeLen) needsSave = true;
           updatePositions(m);
         });
@@ -1181,7 +1186,7 @@
       document.getElementById('room-input').value = ''; document.getElementById('name-input').value = '';
       roomData = {}; selectedProductId = null; myPictures = []; myCollected = {}; myCaffeineHistory = [];
       myData = { 5: products.map(p => ({ id: p.id, t: 0, p: 0 })), 10: products.map(p => ({ id: p.id, t: 0, p: 0 })) };
-      Object.keys(categoryNames).forEach(k => { myData[k] = products.map(p => ({ id: p.id, t: 0, p: 0 })); });
+      categoryKeys.forEach(k => { myData[k] = products.filter(p => p.category === k).map(p => ({ id: p.id, t: 0, p: 0 })); });
       renderActiveTab();
       updateFriendDropdown(); updateFriendPicturesDropdown(); updateFriendCollectedDropdown(); updateFriendCaffeineDropdown();
       switchMode(5);
@@ -1193,7 +1198,7 @@
       if (!room || !userName) return;
 
       const tierListsSave = { '5': myData[5], '10': myData[10] };
-      Object.keys(categoryNames).forEach(k => { tierListsSave[k] = myData[k]; });
+      categoryKeys.forEach(k => { tierListsSave[k] = myData[k]; });
 
       db.ref(`rooms/${room}/${userName}`).set({
         tierLists: tierListsSave,
@@ -1235,9 +1240,11 @@
 
       select.innerHTML = '';
       if (friendNames.length === 0) {
-        friendContainer.style.display = 'none'; noFriendsMsg.style.display = 'block';
+        if(friendContainer) friendContainer.style.display = 'none'; 
+        if(noFriendsMsg) noFriendsMsg.style.display = 'block';
       } else {
-        friendContainer.style.display = 'block'; noFriendsMsg.style.display = 'none';
+        if(friendContainer) friendContainer.style.display = 'block'; 
+        if(noFriendsMsg) noFriendsMsg.style.display = 'none';
         friendNames.forEach(name => {
           const opt = document.createElement('option'); opt.value = name; opt.innerText = name; select.appendChild(opt);
         });
@@ -1251,9 +1258,9 @@
       const friendNames = Object.keys(roomData).filter(name => name !== document.getElementById('name-input').value.trim());
       select.innerHTML = '';
       if (friendNames.length === 0) {
-        noFriendPicsMsg.style.display = 'block';
+        if(noFriendPicsMsg) noFriendPicsMsg.style.display = 'block';
       } else {
-        noFriendPicsMsg.style.display = 'none';
+        if(noFriendPicsMsg) noFriendPicsMsg.style.display = 'none';
         friendNames.forEach(name => {
           const opt = document.createElement('option'); opt.value = name; opt.innerText = name; select.appendChild(opt);
         });
@@ -1267,9 +1274,9 @@
       const friendNames = Object.keys(roomData).filter(name => name !== document.getElementById('name-input').value.trim());
       select.innerHTML = '';
       if (friendNames.length === 0) {
-        noFriendCollectedMsg.style.display = 'block';
+        if(noFriendCollectedMsg) noFriendCollectedMsg.style.display = 'block';
       } else {
-        noFriendCollectedMsg.style.display = 'none';
+        if(noFriendCollectedMsg) noFriendCollectedMsg.style.display = 'none';
         friendNames.forEach(name => {
           const opt = document.createElement('option'); opt.value = name; opt.innerText = name; select.appendChild(opt);
         });
@@ -1283,9 +1290,9 @@
       const friendNames = Object.keys(roomData).filter(name => name !== document.getElementById('name-input').value.trim());
       select.innerHTML = '';
       if (friendNames.length === 0) {
-        noFriendCaffeineMsg.style.display = 'block';
+        if(noFriendCaffeineMsg) noFriendCaffeineMsg.style.display = 'block';
       } else {
-        noFriendCaffeineMsg.style.display = 'none';
+        if(noFriendCaffeineMsg) noFriendCaffeineMsg.style.display = 'none';
         friendNames.forEach(name => {
           const opt = document.createElement('option'); opt.value = name; opt.innerText = name; select.appendChild(opt);
         });
@@ -1302,8 +1309,10 @@
     }
 
     function filterDrinkMenu() {
-      const query = document.getElementById('drink-search-input').value.toLowerCase();
+      const queryInput = document.getElementById('drink-search-input');
+      const query = queryInput ? queryInput.value.toLowerCase() : '';
       const drinkMenu = document.getElementById('caffeine-drink-menu');
+      if(!drinkMenu) return;
       drinkMenu.innerHTML = '';
       
       const filtered = products.filter(p => p.name.toLowerCase().includes(query));
@@ -1320,7 +1329,7 @@
       const maxLimit = 400;
       const circumference = 418.4;
       let offset = circumference - (Math.min(displayMg, maxLimit) / maxLimit) * circumference;
-      ringProgress.style.strokeDashoffset = offset;
+      if(ringProgress) ringProgress.style.strokeDashoffset = offset;
 
       let colorHex = '#30d158'; 
       let glowRgba = 'rgba(48, 209, 88, 0.6)';
@@ -1328,28 +1337,23 @@
       if (displayMg > 400) {
         colorHex = 'var(--danger)';
         glowRgba = 'rgba(255, 69, 58, 0.6)';
-        ringProgress.style.stroke = 'var(--danger)';
-        statusText.style.color = 'var(--danger)';
-        statusText.innerText = 'High Limit Exceeded!';
+        if(ringProgress) ringProgress.style.stroke = 'var(--danger)';
+        if(statusText) { statusText.style.color = 'var(--danger)'; statusText.innerText = 'High Limit Exceeded!'; }
       } else if (displayMg > 200) {
         colorHex = '#ffcc00';
         glowRgba = 'rgba(255, 204, 0, 0.6)';
-        ringProgress.style.stroke = '#ffcc00';
-        statusText.style.color = '#ffcc00';
-        statusText.innerText = 'Moderate Level';
+        if(ringProgress) ringProgress.style.stroke = '#ffcc00';
+        if(statusText) { statusText.style.color = '#ffcc00'; statusText.innerText = 'Moderate Level'; }
       } else {
         colorHex = '#30d158';
         glowRgba = 'rgba(48, 209, 88, 0.6)';
-        ringProgress.style.stroke = '#30d158';
-        statusText.style.color = '#30d158';
-        statusText.innerText = 'Safe Level';
+        if(ringProgress) ringProgress.style.stroke = '#30d158';
+        if(statusText) { statusText.style.color = '#30d158'; statusText.innerText = 'Safe Level'; }
       }
 
-      ringProgress.style.stroke = colorHex;
-      totalValEl.style.color = colorHex;
-      totalValEl.style.textShadow = `0 0 10px ${glowRgba}`;
-      lightningSvg.style.fill = colorHex;
-      lightningSvg.style.filter = `drop-shadow(0 0 6px ${glowRgba})`;
+      if(ringProgress) ringProgress.style.stroke = colorHex;
+      if(totalValEl) { totalValEl.style.color = colorHex; totalValEl.style.textShadow = `0 0 10px ${glowRgba}`; }
+      if(lightningSvg) { lightningSvg.style.fill = colorHex; lightningSvg.style.filter = `drop-shadow(0 0 6px ${glowRgba})`; }
     }
 
     function renderCaffeineView() {
@@ -1361,10 +1365,8 @@
       const historyList = document.getElementById('caffeine-history-list');
 
       let allTimeTotalMg = 0;
-      myCaffeineHistory.forEach(item => {
-        allTimeTotalMg += item.mg;
-      });
-      allTimeValEl.innerText = `${allTimeTotalMg} mg`;
+      myCaffeineHistory.forEach(item => { allTimeTotalMg += item.mg; });
+      if(allTimeValEl) allTimeValEl.innerText = `${allTimeTotalMg} mg`;
 
       const now = Date.now();
       const halfLifeMs = 5 * 60 * 60 * 1000;
@@ -1379,29 +1381,32 @@
       });
 
       const displayMg = Math.round(currentActiveMg);
-      totalValEl.innerText = displayMg;
+      if(totalValEl) totalValEl.innerText = displayMg;
 
       updateCounterTheme(displayMg, ringProgress, totalValEl, lightningSvg, statusText);
       filterDrinkMenu();
 
-      historyList.innerHTML = '';
-      if (myCaffeineHistory.length === 0) {
-        historyList.innerHTML = '<div class="empty-msg">No caffeine logged today.</div>';
-        return;
-      }
+      if(historyList) {
+        historyList.innerHTML = '';
+        if (myCaffeineHistory.length === 0) {
+          historyList.innerHTML = '<div class="empty-msg">No caffeine logged today.</div>';
+          return;
+        }
 
-      myCaffeineHistory.forEach((item, index) => {
-        const dateObj = new Date(item.timestamp);
-        const timeStr = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-        const row = document.createElement('div');
-        row.className = 'history-item';
-        row.innerHTML = `<span><strong>${item.name}</strong> (${item.ml} ml, <strong>${item.mg} mg</strong>) at ${timeStr}</span><button class="delete-history-btn" onclick="removeCaffeineLog(${index})">✕</button>`;
-        historyList.appendChild(row);
-      });
+        myCaffeineHistory.forEach((item, index) => {
+          const dateObj = new Date(item.timestamp);
+          const timeStr = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+          const row = document.createElement('div');
+          row.className = 'history-item';
+          row.innerHTML = `<span><strong>${item.name}</strong> (${item.ml} ml, <strong>${item.mg} mg</strong>) at ${timeStr}</span><button class="delete-history-btn" onclick="removeCaffeineLog(${index})">✕</button>`;
+          historyList.appendChild(row);
+        });
+      }
     }
 
     function renderFriendCaffeineView() {
-      const friendName = document.getElementById('friend-caffeine-select').value;
+      const friendSelect = document.getElementById('friend-caffeine-select');
+      const friendName = friendSelect ? friendSelect.value : '';
       const totalValEl = document.getElementById('friend-caffeine-total-val');
       const allTimeValEl = document.getElementById('friend-caffeine-alltime-val');
       const ringProgress = document.getElementById('friend-caffeine-ring-progress');
@@ -1410,20 +1415,18 @@
       const historyList = document.getElementById('friend-caffeine-history-list');
 
       if (!friendName || !roomData[friendName]) {
-        totalValEl.innerText = '0';
-        allTimeValEl.innerText = '0 mg';
-        ringProgress.style.strokeDashoffset = '418.4';
+        if(totalValEl) totalValEl.innerText = '0';
+        if(allTimeValEl) allTimeValEl.innerText = '0 mg';
+        if(ringProgress) ringProgress.style.strokeDashoffset = '418.4';
         updateCounterTheme(0, ringProgress, totalValEl, lightningSvg, statusText);
-        historyList.innerHTML = '<div class="empty-msg">No caffeine logged today.</div>';
+        if(historyList) historyList.innerHTML = '<div class="empty-msg">No caffeine logged today.</div>';
         return;
       }
 
       const friendHistory = getUserCaffeine(roomData[friendName]);
       let allTimeTotalMg = 0;
-      friendHistory.forEach(item => {
-        allTimeTotalMg += item.mg;
-      });
-      allTimeValEl.innerText = `${allTimeTotalMg} mg`;
+      friendHistory.forEach(item => { allTimeTotalMg += item.mg; });
+      if(allTimeValEl) allTimeValEl.innerText = `${allTimeTotalMg} mg`;
 
       const now = Date.now();
       const halfLifeMs = 5 * 60 * 60 * 1000;
@@ -1438,24 +1441,26 @@
       });
 
       const displayMg = Math.round(currentActiveMg);
-      totalValEl.innerText = displayMg;
+      if(totalValEl) totalValEl.innerText = displayMg;
 
       updateCounterTheme(displayMg, ringProgress, totalValEl, lightningSvg, statusText);
 
-      historyList.innerHTML = '';
-      if (friendHistory.length === 0) {
-        historyList.innerHTML = '<div class="empty-msg">No caffeine logged today.</div>';
-        return;
-      }
+      if(historyList) {
+        historyList.innerHTML = '';
+        if (friendHistory.length === 0) {
+          historyList.innerHTML = '<div class="empty-msg">No caffeine logged today.</div>';
+          return;
+        }
 
-      friendHistory.forEach(item => {
-        const dateObj = new Date(item.timestamp);
-        const timeStr = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-        const row = document.createElement('div');
-        row.className = 'history-item';
-        row.innerHTML = `<span><strong>${item.name}</strong> (${item.ml} ml, <strong>${item.mg} mg</strong>) at ${timeStr}</span>`;
-        historyList.appendChild(row);
-      });
+        friendHistory.forEach(item => {
+          const dateObj = new Date(item.timestamp);
+          const timeStr = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+          const row = document.createElement('div');
+          row.className = 'history-item';
+          row.innerHTML = `<span><strong>${item.name}</strong> (${item.ml} ml, <strong>${item.mg} mg</strong>) at ${timeStr}</span>`;
+          historyList.appendChild(row);
+        });
+      }
     }
 
     function openCaffeineModal(prod) {
@@ -1509,13 +1514,16 @@
       if (['pictures', 'collected', 'caffeine'].includes(currentMode)) return;
       buildBoard('my-board', true);
       const unassignedZone = document.querySelector('.unassigned-zone');
+      if(!unassignedZone) return;
       unassignedZone.innerHTML = '';
 
       const isCategory = (typeof currentMode === 'string' && categoryNames[currentMode]);
       const activeProds = getActiveProducts();
       const activeIds = activeProds.map(p => p.id);
       
-      if (!myData[currentMode]) myData[currentMode] = products.map(p => ({ id: p.id, t: 0, p: 0 }));
+      if (!myData[currentMode]) {
+        myData[currentMode] = isCategory ? products.filter(p => p.category === currentMode).map(p => ({ id: p.id, t: 0, p: 0 })) : products.map(p => ({ id: p.id, t: 0, p: 0 }));
+      }
       const sortedData = [...myData[currentMode]].filter(item => !isCategory || activeIds.includes(item.id)).sort((a, b) => a.t !== b.t ? a.t - b.t : a.p - b.p);
 
       sortedData.filter(item => item.t === 0).forEach(item => {
@@ -1549,10 +1557,12 @@
 
     function renderFriendView() {
       if (['pictures', 'collected', 'caffeine'].includes(currentMode)) return;
-      const name = document.getElementById('friend-select').value;
+      const friendSelect = document.getElementById('friend-select');
+      const name = friendSelect ? friendSelect.value : '';
       if (!name || !roomData[name]) return;
 
-      document.getElementById('combined-title').innerText = `Comparison with ${name}`;
+      const combinedTitle = document.getElementById('combined-title');
+      if(combinedTitle) combinedTitle.innerText = `Comparison with ${name}`;
       buildBoard('friend-board', false);
       
       const userSubmissions = getSubmissionsForMode(roomData[name], currentMode);
@@ -1598,13 +1608,15 @@
         }
       });
       buildBoard('combined-board', false);
-      document.getElementById('combined-podium').innerHTML = '';
+      const combinedPodium = document.getElementById('combined-podium');
+      if(combinedPodium) combinedPodium.innerHTML = '';
     }
 
     function renderGroupView() {
       if (['pictures', 'collected', 'caffeine'].includes(currentMode)) return;
       buildBoard('group-board', false);
       const podium = document.getElementById('podium');
+      if(!podium) return;
       podium.innerHTML = '';
 
       const allSubmissions = [];
@@ -1697,26 +1709,33 @@
     function switchTab(tabId, btn) {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById(`tab-${tabId}`).classList.add('active');
-      document.querySelector('.unassigned-section').style.display = (tabId === 'my' && !['pictures', 'collected', 'caffeine'].includes(currentMode)) ? 'block' : 'none';
+      if(btn) btn.classList.add('active');
+      const targetTab = document.getElementById(`tab-${tabId}`);
+      if(targetTab) targetTab.classList.add('active');
+      const unassignedSec = document.querySelector('.unassigned-section');
+      if(unassignedSec) unassignedSec.style.display = (tabId === 'my' && !['pictures', 'collected', 'caffeine'].includes(currentMode)) ? 'block' : 'none';
       renderActiveTab();
     }
 
     function switchCollectedSubTab(subTabId, btn) {
       document.querySelectorAll('#tab-collected .sub-tab-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('#tab-collected .sub-tab-content').forEach(c => c.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById(`sub-tab-friends-collected`).style.display = (subTabId === 'friends') ? 'block' : 'none';
-      document.getElementById(`sub-tab-my-collected`).style.display = (subTabId === 'my') ? 'block' : 'none';
-      document.getElementById(`sub-tab-${subTabId}-collected`).classList.add('active');
+      if(btn) btn.classList.add('active');
+      const friendCol = document.getElementById(`sub-tab-friends-collected`);
+      const myCol = document.getElementById(`sub-tab-my-collected`);
+      if(friendCol) friendCol.style.display = (subTabId === 'friends') ? 'block' : 'none';
+      if(myCol) myCol.style.display = (subTabId === 'my') ? 'block' : 'none';
+      const targetSub = document.getElementById(`sub-tab-${subTabId}-collected`);
+      if(targetSub) targetSub.classList.add('active');
       if (subTabId === 'friends') renderFriendCollectedView();
     }
 
     function renderCollectedView() {
       const grid = document.getElementById('my-collected-grid');
+      if(!grid) return;
       grid.innerHTML = '';
-      document.getElementById('my-collection-count').innerText = `${Object.values(myCollected).filter(val => val === true).length} / ${products.length}`;
+      const countEl = document.getElementById('my-collection-count');
+      if(countEl) countEl.innerText = `${Object.values(myCollected).filter(val => val === true).length} / ${products.length}`;
 
       [...products].sort((a, b) => (myCollected[b.id] ? 1 : 0) - (myCollected[a.id] ? 1 : 0)).forEach(prod => {
         const row = document.createElement('div'); row.className = 'collected-item-row';
@@ -1728,14 +1747,16 @@
     }
 
     function renderFriendCollectedView() {
-      const friendName = document.getElementById('friend-collected-select').value;
+      const friendSelect = document.getElementById('friend-collected-select');
+      const friendName = friendSelect ? friendSelect.value : '';
       const grid = document.getElementById('friend-collected-grid');
+      if(!grid) return;
       grid.innerHTML = '';
       const countEl = document.getElementById('friend-collection-count');
 
-      if (!friendName || !roomData[friendName]) { countEl.innerText = `0 / ${products.length}`; return; }
+      if (!friendName || !roomData[friendName]) { if(countEl) countEl.innerText = `0 / ${products.length}`; return; }
       const friendCollected = getUserCollected(roomData[friendName]);
-      countEl.innerText = `${Object.values(friendCollected).filter(val => val === true).length} / ${products.length}`;
+      if(countEl) countEl.innerText = `${Object.values(friendCollected).filter(val => val === true).length} / ${products.length}`;
 
       [...products].sort((a, b) => (friendCollected[b.id] ? 1 : 0) - (friendCollected[a.id] ? 1 : 0)).forEach(prod => {
         const row = document.createElement('div'); row.className = 'collected-item-row';
@@ -1767,13 +1788,15 @@
     function switchPictureSubTab(subTabId, btn) {
       document.querySelectorAll('#tab-pictures .sub-tab-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('#tab-pictures .sub-tab-content').forEach(c => c.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById(`sub-tab-${subTabId}-pictures`).classList.add('active');
+      if(btn) btn.classList.add('active');
+      const targetSub = document.getElementById(`sub-tab-${subTabId}-pictures`);
+      if(targetSub) targetSub.classList.add('active');
       if (subTabId === 'friends') renderFriendPicturesView();
     }
 
     function renderPicturesView() {
       const grid = document.getElementById('my-uploaded-pictures-grid');
+      if(!grid) return;
       grid.innerHTML = '';
       myPictures.forEach((base64, index) => {
         const wrapper = document.createElement('div'); wrapper.className = 'uploaded-picture-wrapper';
@@ -1790,7 +1813,8 @@
         myPictures.push(event.target.result);
         saveToFirebase();
         renderPicturesView();
-        document.getElementById('picture-file-input').value = '';
+        const fileInput = document.getElementById('picture-file-input');
+        if(fileInput) fileInput.value = '';
       };
       reader.readAsDataURL(file);
     }
@@ -1802,8 +1826,10 @@
     }
 
     function renderFriendPicturesView() {
-      const friendName = document.getElementById('friend-pictures-select').value;
+      const friendSelect = document.getElementById('friend-pictures-select');
+      const friendName = friendSelect ? friendSelect.value : '';
       const grid = document.getElementById('friend-uploaded-pictures-grid');
+      if(!grid) return;
       grid.innerHTML = '';
       if (!friendName || !roomData[friendName]) return;
 
@@ -1850,8 +1876,13 @@
       const savedName = localStorage.getItem('monster_name');
       if (savedRoom) document.getElementById('room-input').value = savedRoom;
       if (savedName) document.getElementById('name-input').value = savedName;
-      renderActiveTab();
-      if (savedRoom && savedName) connectToRoom();
+      
+      // Alapértelmezett nézet beállítása
+      switchTab('group', document.querySelector('.nav-tabs button.tab-btn'));
+      
+      if (savedRoom && savedName) {
+        connectToRoom();
+      }
     });
   </script>
 </body>
