@@ -886,8 +886,22 @@
     let roomData = {};
     let currentConnectionRef = null; 
     
-    // Alapértelmezett inicializálás az összes kategóriához, hogy ne szálljon el hibával
     const categoryKeys = ['energy', 'ultra', 'juiced', 'rehab', 'java', 'nitro', 'drivers'];
+    
+    // Helyi mentések betöltése localStorage-ból, hogy ne vesszenek el adatok offline vagy hiba esetén sem
+    function loadLocalCache() {
+      try {
+        const cachedMyData = localStorage.getItem('monster_my_data');
+        if (cachedMyData) myData = JSON.parse(cachedMyData);
+        const cachedCollected = localStorage.getItem('monster_collected');
+        if (cachedCollected) myCollected = JSON.parse(cachedCollected);
+        const cachedPictures = localStorage.getItem('monster_pictures');
+        if (cachedPictures) myPictures = JSON.parse(cachedPictures);
+        const cachedCaffeine = localStorage.getItem('monster_caffeine');
+        if (cachedCaffeine) myCaffeineHistory = JSON.parse(cachedCaffeine);
+      } catch(e) { console.error('Cache load error', e); }
+    }
+
     let myData = {
       5: products.map(p => ({ id: p.id, t: 0, p: 0 })),
       10: products.map(p => ({ id: p.id, t: 0, p: 0 }))
@@ -899,6 +913,8 @@
     let myCollected = {}; 
     let myPictures = []; 
     let myCaffeineHistory = [];
+    loadLocalCache();
+
     let selectedProductId = null; 
     let caffeineSelectedDrink = null;
 
@@ -1195,6 +1211,15 @@
     function saveToFirebase() {
       const room = document.getElementById('room-input').value.trim();
       const userName = document.getElementById('name-input').value.trim();
+      
+      // Helyi mentés frissítése azonnal, így semmi sem vész el
+      try {
+        localStorage.setItem('monster_my_data', JSON.stringify(myData));
+        localStorage.setItem('monster_collected', JSON.stringify(myCollected));
+        localStorage.setItem('monster_pictures', JSON.stringify(myPictures));
+        localStorage.setItem('monster_caffeine', JSON.stringify(myCaffeineHistory));
+      } catch(e) {}
+
       if (!room || !userName) return;
 
       const tierListsSave = { '5': myData[5], '10': myData[10] };
@@ -1348,7 +1373,7 @@
         colorHex = '#30d158';
         glowRgba = 'rgba(48, 209, 88, 0.6)';
         if(ringProgress) ringProgress.style.stroke = '#30d158';
-        if(statusText) { statusText.style.color = '#30d158'; statusText.innerText = 'Safe Level'; }
+        if(statusText) { statusText.style.color = 'var(--accent)'; statusText.innerText = 'Safe Level'; }
       }
 
       if(ringProgress) ringProgress.style.stroke = colorHex;
@@ -1877,8 +1902,8 @@
       if (savedRoom) document.getElementById('room-input').value = savedRoom;
       if (savedName) document.getElementById('name-input').value = savedName;
       
-      // Alapértelmezett nézet beállítása
       switchTab('group', document.querySelector('.nav-tabs button.tab-btn'));
+      renderActiveTab();
       
       if (savedRoom && savedName) {
         connectToRoom();
