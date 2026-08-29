@@ -33,7 +33,7 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background-color: var(--bg-dark); color: #fff; margin: 0; padding: 10px;
       display: flex; flex-direction: column; align-items: center;
-      padding-bottom: 140px;
+      padding-bottom: 150px;
       user-select: none; -webkit-user-select: none;
     }
 
@@ -61,7 +61,7 @@
       background: var(--danger); color: #fff; flex: 1;
     }
 
-    .mode-tabs { display: flex; gap: 6px; margin-bottom: 8px; width: 100%; max-width: 800px; flex-wrap: wrap; }
+    .mode-tabs { display: flex; gap: 6px; margin-bottom: 8px; width: 100%; max-width: 800px; flex-wrap: wrap; align-items: center; }
     .mode-btn {
       background: #222224; color: #8e8e93; border: 1px solid #3a3a3c; padding: 8px;
       border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 12px; flex: 1; text-align: center;
@@ -70,6 +70,7 @@
     .mode-btn.active { background: #007aff; color: #fff; border-color: #007aff; }
     .mode-btn.pictures-tab-btn.active { background: #30d158; color: #000; border-color: #30d158; }
     .mode-btn.collected-tab-btn.active { background: #af52de; color: #fff; border-color: #af52de; }
+    .mode-btn.caffeine-tab-btn.active { background: #ff9500; color: #000; border-color: #ff9500; }
 
     .dropdown-container {
       position: relative;
@@ -138,26 +139,21 @@
     .tab-content { display: none; width: 100%; max-width: 800px; }
     .tab-content.active { display: block; }
 
-    /* Collection Counter Header */
-    .collection-counter {
+    .app-card {
       background: var(--surface);
       border: 1px solid #3a3a3c;
-      border-radius: 8px;
-      padding: 10px 14px;
-      margin-bottom: 10px;
-      font-size: 13px;
-      font-weight: bold;
-      color: #fff;
+      border-radius: 12px;
+      padding: 12px;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .collection-counter span {
-      color: var(--accent);
+      flex-direction: column;
+      gap: 10px;
+      box-sizing: border-box;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+      width: 100%;
     }
 
     .tier-board { display: flex; flex-direction: column; gap: 4px; background: #000; padding: 4px; border-radius: 8px; width: 100%; box-sizing: border-box; }
-    .tier-row { display: flex; background: var(--surface); min-height: 58px; border-radius: 6px; overflow: hidden; align-items: stretch; }
+    .tier-row { display: flex; background: #161618; min-height: 58px; border-radius: 6px; overflow: hidden; align-items: stretch; }
     .tier-badge {
       width: 42px; display: flex; align-items: center; justify-content: center;
       font-weight: 800; font-size: 13px; color: #000; flex-shrink: 0;
@@ -232,10 +228,9 @@
       justify-content: center;
       align-items: flex-end;
       gap: 4px;
-      margin-top: 10px;
-      margin-bottom: 20px;
+      margin-top: 4px;
       padding: 10px 6px 6px 6px;
-      background: var(--surface);
+      background: #161618;
       border-radius: 8px;
       border: 1px solid #3a3a3c;
       box-sizing: border-box;
@@ -281,7 +276,7 @@
       z-index: 1000;
       background: rgba(28, 28, 30, 0.98); 
       backdrop-filter: blur(10px);
-      padding: 6px 10px; 
+      padding: 8px 10px; 
       border-top: 1px solid #3a3a3c; 
       box-shadow: 0 -4px 20px rgba(0,0,0,0.8);
       box-sizing: border-box;
@@ -302,7 +297,6 @@
       align-items: center;
       cursor: pointer;
     }
-
     .unassigned-zone::-webkit-scrollbar { height: 4px; }
     .unassigned-zone::-webkit-scrollbar-thumb { background: #444; border-radius: 2px; }
 
@@ -340,22 +334,150 @@
     .sub-tab-content { display: none; width: 100%; }
     .sub-tab-content.active { display: block; }
 
+    /* Caffeine Tab Specific Styles */
+    .caffeine-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+    }
+    .counter-display-wrapper {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 5px 0;
+    }
+    .counter-ring-svg {
+      position: absolute;
+      top: 0; left: 0;
+      width: 150px; height: 150px;
+      transform: rotate(-90deg);
+    }
+    .counter-ring-bg {
+      fill: none;
+      stroke: #2c2c2e;
+      stroke-width: 8;
+    }
+    .counter-ring-progress {
+      fill: none;
+      stroke: #30d158;
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-dasharray: 418.4;
+      stroke-dashoffset: 418.4;
+      transition: stroke-dashoffset 0.5s ease;
+    }
+    .counter-display {
+      width: 130px; height: 130px; border-radius: 50%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: #151517; box-shadow: inset 0 4px 10px rgba(0,0,0,0.7);
+      z-index: 2;
+    }
+    .counter-lightning-svg {
+      width: 22px; height: 22px; fill: #30d158; margin-bottom: -2px;
+      filter: drop-shadow(0 0 6px rgba(48, 209, 88, 0.6));
+      transition: fill 0.3s ease;
+    }
+    .counter-value { 
+      font-size: 34px; font-weight: 900; color: #30d158; line-height: 1; 
+      text-shadow: 0 0 10px rgba(48, 209, 88, 0.6);
+      transition: color 0.3s ease, text-shadow 0.3s ease;
+    }
+    .counter-label { font-size: 9px; color: #8e8e93; text-transform: uppercase; margin-top: 2px; font-weight: 700; }
+    
+    .drink-search-input {
+      background: #2c2c2e; color: #fff; border: 1px solid #444; padding: 8px 10px;
+      border-radius: 8px; font-size: 13px; width: 100%; box-sizing: border-box; outline: none;
+      margin-bottom: 4px;
+    }
+
+    .drink-menu-scroll {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      gap: 8px;
+      padding: 4px 2px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .drink-menu-scroll::-webkit-scrollbar { height: 4px; }
+    .drink-menu-scroll::-webkit-scrollbar-thumb { background: #444; border-radius: 2px; }
+
+    .drink-menu-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #242426;
+      border: 2px solid #3a3a3c;
+      border-radius: 8px;
+      padding: 6px;
+      cursor: pointer;
+      flex-shrink: 0;
+      width: 90px;
+      height: 85px;
+      justify-content: flex-start;
+      gap: 4px;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .drink-menu-card:hover { border-color: #ff9500; transform: scale(1.03); }
+    .drink-menu-card img { height: 42px; width: 42px; object-fit: contain; border-radius: 6px; }
+    .drink-menu-card .drink-title {
+      font-size: 10px; font-weight: bold; color: #fff; text-align: center;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;
+    }
+    .drink-menu-card .drink-mg {
+      font-size: 9px; color: #ff9500; font-weight: bold;
+    }
+
+    .caffeine-stats-bar {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      background: #242426;
+      border: 1px solid #3a3a3c;
+      padding: 8px 12px;
+      border-radius: 8px;
+      box-sizing: border-box;
+      align-items: center;
+      font-size: 11px;
+      font-weight: bold;
+      color: #8e8e93;
+    }
+
+    .history-list { display: flex; flex-direction: column; gap: 6px; width: 100%; max-height: 140px; overflow-y: auto; }
+    .history-item {
+      background: #242426; border: 1px solid #3a3a3c; padding: 6px 10px; border-radius: 6px; display: flex;
+      justify-content: space-between; align-items: center; font-size: 11px;
+    }
+    .delete-history-btn {
+      background: none; border: none; color: var(--danger); cursor: pointer;
+      font-size: 13px; font-weight: bold; padding: 0 4px;
+    }
+
     .picture-upload-box {
-      margin-top: 10px;
+      margin-top: 6px;
       background: var(--surface);
       padding: 12px;
       border-radius: 8px;
       border: 1px solid #3a3a3c;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 6px;
       box-sizing: border-box;
+      width: 100%;
     }
     .picture-grid {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin-top: 8px;
+      margin-top: 4px;
     }
     .uploaded-picture-wrapper {
       position: relative;
@@ -391,22 +513,25 @@
       z-index: 5;
     }
     .custom-upload-btn {
-      display: inline-flex;
+      display: flex;
       align-items: center;
       justify-content: center;
       background: #007aff;
       color: #fff;
-      padding: 8px 14px;
+      padding: 10px 14px;
       border-radius: 6px;
       font-weight: bold;
-      font-size: 12px;
+      font-size: 13px;
       cursor: pointer;
       border: none;
-      transition: background 0.2s;
-      width: fit-content;
+      width: 100%;
+      box-sizing: border-box;
+      gap: 8px;
     }
-    .custom-upload-btn:hover {
-      background: #005ec4;
+    .custom-upload-btn svg {
+      width: 16px;
+      height: 16px;
+      fill: #ffffff;
     }
     .section-title {
       font-size: 13px;
@@ -416,163 +541,53 @@
       text-transform: uppercase;
     }
 
-    /* Collected items list styles */
-    .collected-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      width: 100%;
-      max-width: 800px;
-    }
+    /* Collected list */
+    .collected-grid { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 800px; }
     .collected-item-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--surface);
-      padding: 8px 12px;
-      border-radius: 8px;
-      border: 1px solid #3a3a3c;
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--surface); padding: 8px 12px; border-radius: 8px; border: 1px solid #3a3a3c;
     }
-    .collected-item-info {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      cursor: pointer;
-      flex: 1;
-    }
-    .collected-item-img {
-      width: 40px;
-      height: 40px;
-      object-fit: contain;
-    }
-    .collected-item-name {
-      font-size: 14px;
-      font-weight: bold;
-      color: #fff;
-    }
-    .status-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background-color: #555;
-      flex-shrink: 0;
-      box-shadow: 0 0 3px rgba(0,0,0,0.5);
-    }
-    .status-dot.active {
-      background-color: var(--accent);
-      box-shadow: 0 0 6px rgba(48, 209, 88, 0.8);
-    }
+    .collected-item-info { display: flex; align-items: center; gap: 12px; cursor: pointer; flex: 1; }
+    .collected-item-img { width: 40px; height: 40px; object-fit: contain; border-radius: 6px; }
+    .collected-item-name { font-size: 14px; font-weight: bold; color: #fff; }
+    .status-dot { width: 10px; height: 10px; border-radius: 50%; background-color: #555; flex-shrink: 0; }
+    .status-dot.active { background-color: var(--accent); box-shadow: 0 0 6px rgba(48, 209, 88, 0.8); }
 
-    /* Action Modal / Popup styles */
-    .action-modal {
-      display: none;
-      position: fixed;
-      z-index: 10000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(5px);
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      box-sizing: border-box;
+    /* Modals */
+    .action-modal, .image-modal, .caffeine-modal {
+      display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.75); backdrop-filter: blur(5px);
+      align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;
     }
-    .action-modal.show {
-      display: flex;
-    }
+    .action-modal.show, .image-modal.show, .caffeine-modal.show { display: flex; }
     .action-modal-box {
-      background: var(--surface);
-      border: 1px solid #3a3a3c;
-      border-radius: 12px;
-      padding: 20px;
-      width: 100%;
-      max-width: 320px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-      box-sizing: border-box;
-      text-align: center;
+      background: var(--surface); border: 1px solid #3a3a3c; border-radius: 12px; padding: 20px;
+      width: 100%; max-width: 320px; display: flex; flex-direction: column; align-items: center; text-align: center;
     }
-    .action-modal-img {
-      width: 70px;
-      height: 70px;
-      object-fit: contain;
-      margin-bottom: 10px;
-    }
-    .action-modal-title {
-      font-size: 16px;
-      font-weight: bold;
-      color: #fff;
-      margin-bottom: 4px;
-    }
-    .action-modal-status {
-      font-size: 12px;
-      color: #8e8e93;
-      margin-bottom: 16px;
-    }
-    .action-modal-btns {
-      display: flex;
-      gap: 8px;
-      width: 100%;
-    }
+    .action-modal-img { width: 70px; height: 70px; object-fit: contain; margin-bottom: 10px; border-radius: 8px; }
+    .action-modal-title { font-size: 16px; font-weight: bold; color: #fff; margin-bottom: 4px; }
+    .action-modal-status { font-size: 12px; color: #8e8e93; margin-bottom: 16px; }
+    .action-modal-btns { display: flex; gap: 8px; width: 100%; }
     .action-modal-btn {
-      flex: 1;
-      padding: 10px;
-      border-radius: 8px;
-      font-weight: bold;
-      font-size: 13px;
-      cursor: pointer;
-      border: none;
+      flex: 1; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; border: none;
     }
     .btn-add { background: var(--accent); color: #000; }
     .btn-remove { background: var(--danger); color: #fff; }
     .btn-close-modal { background: #2c2c2e; color: #8e8e93; border: 1px solid #444; width: 100%; margin-top: 8px; }
+    
+    .caffeine-input-group {
+      display: flex; flex-direction: column; gap: 6px; width: 100%; text-align: left; margin-bottom: 12px;
+    }
+    .caffeine-input-group label { font-size: 11px; font-weight: bold; color: #8e8e93; text-transform: uppercase; }
+    .caffeine-input-group input {
+      background: #2c2c2e; color: #fff; border: 1px solid #444; padding: 8px;
+      border-radius: 6px; font-size: 14px; outline: none; width: 100%; box-sizing: border-box;
+    }
 
-    /* Fullscreen Image Modal */
-    .image-modal {
-      display: none;
-      position: fixed;
-      z-index: 9999;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.9);
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      padding: 20px;
-      box-sizing: border-box;
-    }
-    .image-modal.show {
-      display: flex;
-    }
-    .image-modal img {
-      max-width: 100%;
-      max-height: 85vh;
-      object-fit: contain;
-      border-radius: 8px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.8);
-    }
+    .image-modal img { max-width: 100%; max-height: 85vh; object-fit: contain; border-radius: 8px; }
     .image-modal-close {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: var(--danger);
-      color: #fff;
-      border: none;
-      border-radius: 50%;
-      width: 36px;
-      height: 36px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      position: absolute; top: 20px; right: 20px; background: var(--danger); color: #fff;
+      border: none; border-radius: 50%; width: 36px; height: 36px; font-size: 16px; font-weight: bold; cursor: pointer;
     }
   </style>
 
@@ -616,6 +631,7 @@
     </div>
     <button id="mode-collected-btn" class="mode-btn collected-tab-btn" onclick="switchMode('collected')">🎯 Tasted</button>
     <button id="mode-pictures-btn" class="mode-btn pictures-tab-btn" onclick="switchMode('pictures')">🖼️ Pictures</button>
+    <button id="mode-caffeine-btn" class="mode-btn caffeine-tab-btn" onclick="switchMode('caffeine')">⚡ Caffeine</button>
   </div>
 
   <div class="nav-tabs">
@@ -630,45 +646,41 @@
       <button class="sub-tab-btn active" onclick="switchCollectedSubTab('my', this)">✏️ My Tasted</button>
       <button class="sub-tab-btn" onclick="switchCollectedSubTab('friends', this)">👥 Friend Tasted</button>
     </div>
-
     <div id="sub-tab-my-collected" class="sub-tab-content active">
-      <div class="collection-counter">
-        <span>Tasted:</span> <span id="my-collection-count">0 / 0</span>
+      <div class="collection-counter" style="background:var(--surface); border:1px solid #3a3a3c; border-radius:8px; padding:10px 14px; margin-bottom:10px; font-size:13px; font-weight:bold; display:flex; justify-content:space-between;">
+        <span>Tasted:</span> <span id="my-collection-count" style="color:var(--accent);">0 / 0</span>
       </div>
       <div id="my-collected-grid" class="collected-grid"></div>
     </div>
-
     <div id="sub-tab-friends-collected" class="sub-tab-content">
       <div class="friend-picker" style="margin-bottom: 8px;">
         <label style="font-size: 11px; font-weight: bold; color: #8e8e93; text-transform: uppercase;">Select Friend:</label>
         <select id="friend-collected-select" class="friend-select-box" onchange="renderFriendCollectedView()"></select>
       </div>
-      <div class="collection-counter">
-        <span>Tasted:</span> <span id="friend-collection-count">0 / 0</span>
+      <div class="collection-counter" style="background:var(--surface); border:1px solid #3a3a3c; border-radius:8px; padding:10px 14px; margin-bottom:10px; font-size:13px; font-weight:bold; display:flex; justify-content:space-between;">
+        <span>Tasted:</span> <span id="friend-collection-count" style="color:var(--accent);">0 / 0</span>
       </div>
       <div id="friend-collected-grid" class="collected-grid"></div>
-      <div id="no-friend-collected-msg" class="no-friends-msg" style="display: none;">
-        👥 No friends added yet in this room.
-      </div>
+      <div id="no-friend-collected-msg" class="no-friends-msg" style="display: none;">👥 No friends added yet in this room.</div>
     </div>
   </div>
 
+  <!-- Pictures Tab Content -->
   <div id="tab-pictures" class="tab-content">
     <div class="sub-nav-tabs">
       <button class="sub-tab-btn active" onclick="switchPictureSubTab('my', this)">✏️ My Pictures</button>
       <button class="sub-tab-btn" onclick="switchPictureSubTab('friends', this)">👥 Friends Pictures</button>
     </div>
-
     <div id="sub-tab-my-pictures" class="sub-tab-content active">
       <div class="picture-upload-box" style="display: flex;">
         <label class="custom-upload-btn">
-          📷 Upload Picture
+          <svg viewBox="0 0 24 24"><path d="M20 10.5h-6.5V4h-3v6.5H4v3h6.5V20h3v-6.5H20v-3z"/></svg>
+          Upload Picture
           <input type="file" id="picture-file-input" accept="image/*" onchange="handleImageUpload(event)" style="display: none;">
         </label>
         <div class="picture-grid" id="my-uploaded-pictures-grid"></div>
       </div>
     </div>
-
     <div id="sub-tab-friends-pictures" class="sub-tab-content">
       <div class="friend-picker" style="margin-bottom: 8px;">
         <label style="font-size: 11px; font-weight: bold; color: #8e8e93; text-transform: uppercase;">Select Friend:</label>
@@ -677,13 +689,98 @@
       <div class="picture-upload-box" id="friend-pictures-box" style="display: flex;">
         <div class="picture-grid" id="friend-uploaded-pictures-grid"></div>
       </div>
-      <div id="no-friend-pics-msg" class="no-friends-msg" style="display: none;">
-        👥 No friends added yet in this room.
-      </div>
+      <div id="no-friend-pics-msg" class="no-friends-msg" style="display: none;">👥 No friends added yet in this room.</div>
     </div>
   </div>
 
-  <div id="tab-group" class="tab-content active">
+  <!-- Caffeine Tab Content -->
+  <div id="tab-caffeine" class="tab-content">
+    <div class="sub-nav-tabs">
+      <button class="sub-tab-btn active" onclick="switchCaffeineSubTab('my', this)">✏️ My Caffeine</button>
+      <button class="sub-tab-btn" onclick="switchCaffeineSubTab('friends', this)">👥 Friends Caffeine</button>
+    </div>
+    
+    <!-- My Caffeine Sub Tab -->
+    <div id="sub-tab-my-caffeine" class="sub-tab-content active">
+      <div class="app-card">
+        <div class="caffeine-wrapper">
+          
+          <div class="caffeine-stats-bar">
+            <span>All-time Total:</span>
+            <strong id="caffeine-alltime-val" style="color:#ff9500;">0 mg</strong>
+          </div>
+
+          <div class="counter-display-wrapper">
+            <svg class="counter-ring-svg" viewBox="0 0 150 150">
+              <circle class="counter-ring-bg" cx="75" cy="75" r="66"></circle>
+              <circle id="caffeine-ring-progress" class="counter-ring-progress" cx="75" cy="75" r="66"></circle>
+            </svg>
+            <div class="counter-display">
+              <svg id="caffeine-lightning-svg" class="counter-lightning-svg" viewBox="0 0 24 24"><path d="M13 2L3 14h7v8l10-12h-7V2z"/></svg>
+              <div id="caffeine-total-val" class="counter-value">0</div>
+              <div class="counter-label">mg active</div>
+            </div>
+          </div>
+
+          <div class="caffeine-stats-bar">
+            <span>Daily Limit: <strong style="color:#fff;">400 mg</strong></span>
+            <span id="caffeine-status-text" style="color:var(--accent);">Safe level</span>
+          </div>
+
+          <div class="section-title" style="align-self: flex-start; margin: 4px 0;">Add Drink</div>
+          <input type="text" id="drink-search-input" class="drink-search-input" placeholder="Search drink..." oninput="filterDrinkMenu()">
+          <div id="caffeine-drink-menu" class="drink-menu-scroll"></div>
+
+          <div class="section-title" style="align-self: flex-start; margin: 4px 0;">Today's Log</div>
+          <div id="caffeine-history-list" class="history-list">
+            <div class="empty-msg">No caffeine logged today.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Friends Caffeine Sub Tab -->
+    <div id="sub-tab-friends-caffeine" class="sub-tab-content">
+      <div class="friend-picker" style="margin-bottom: 8px;">
+        <label style="font-size: 11px; font-weight: bold; color: #8e8e93; text-transform: uppercase;">Select Friend:</label>
+        <select id="friend-caffeine-select" class="friend-select-box" onchange="renderFriendCaffeineView()"></select>
+      </div>
+      <div class="app-card">
+        <div class="caffeine-wrapper">
+          
+          <div class="caffeine-stats-bar">
+            <span>All-time Total:</span>
+            <strong id="friend-caffeine-alltime-val" style="color:#ff9500;">0 mg</strong>
+          </div>
+
+          <div class="counter-display-wrapper">
+            <svg class="counter-ring-svg" viewBox="0 0 150 150">
+              <circle class="counter-ring-bg" cx="75" cy="75" r="66"></circle>
+              <circle id="friend-caffeine-ring-progress" class="counter-ring-progress" cx="75" cy="75" r="66"></circle>
+            </svg>
+            <div class="counter-display">
+              <svg id="friend-caffeine-lightning-svg" class="counter-lightning-svg" viewBox="0 0 24 24"><path d="M13 2L3 14h7v8l10-12h-7V2z"/></svg>
+              <div id="friend-caffeine-total-val" class="counter-value">0</div>
+              <div class="counter-label">mg active</div>
+            </div>
+          </div>
+
+          <div class="caffeine-stats-bar">
+            <span>Daily Limit: <strong style="color:#fff;">400 mg</strong></span>
+            <span id="friend-caffeine-status-text" style="color:var(--accent);">Safe level</span>
+          </div>
+
+          <div class="section-title" style="align-self: flex-start; margin: 4px 0;">Friend's Log</div>
+          <div id="friend-caffeine-history-list" class="history-list">
+            <div class="empty-msg">No caffeine logged today.</div>
+          </div>
+        </div>
+      </div>
+      <div id="no-friend-caffeine-msg" class="no-friends-msg" style="display: none; margin-top: 10px;">👥 No friends added yet in this room.</div>
+    </div>
+  </div>
+
+  <div id="tab-group" class="tab-content">
     <div id="group-board" class="tier-board"></div>
     <div id="podium" class="podium-container"></div>
   </div>
@@ -702,17 +799,13 @@
         <label style="font-size: 11px; font-weight: bold; color: #8e8e93; text-transform: uppercase;">Select Friend:</label>
         <select id="friend-select" class="friend-select-box" onchange="renderFriendView()"></select>
       </div>
-      
       <div class="section-title">Friend's Tier List</div>
       <div id="friend-board" class="tier-board"></div>
-
       <div class="section-title" id="combined-title">Comparison with Friend</div>
       <div id="combined-board" class="tier-board"></div>
       <div id="combined-podium" class="podium-container"></div>
     </div>
-    <div id="no-friends-msg" class="no-friends-msg" style="display: none;">
-      👥 No friends added yet in this room.
-    </div>
+    <div id="no-friends-msg" class="no-friends-msg" style="display: none;">👥 No friends added yet in this room.</div>
   </div>
 
   <!-- Action Modal for Collection -->
@@ -721,10 +814,28 @@
       <img id="modalProductImg" class="action-modal-img" src="" alt="Product">
       <div id="modalProductName" class="action-modal-title">Product Name</div>
       <div id="modalProductStatus" class="action-modal-status">Status: Not tasted</div>
-      <div id="modalActionButtons" class="action-modal-btns">
-        <!-- Dinamikusan töltődik -->
-      </div>
+      <div id="modalActionButtons" class="action-modal-btns"></div>
       <button class="action-modal-btn btn-close-modal" onclick="closeActionModal()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Caffeine Add Modal -->
+  <div id="caffeineModal" class="caffeine-modal">
+    <div class="action-modal-box">
+      <img id="caffeineModalImg" class="action-modal-img" src="" alt="Drink">
+      <div id="caffeineModalName" class="action-modal-title">Drink Name</div>
+      <div class="caffeine-input-group" style="margin-top: 10px;">
+        <label>Time Consumed:</label>
+        <input type="time" id="caffeineInputTime">
+      </div>
+      <div class="caffeine-input-group">
+        <label>Amount (ml):</label>
+        <input type="number" id="caffeineInputMl" value="500" min="50" max="2000" step="50">
+      </div>
+      <div class="action-modal-btns">
+        <button class="action-modal-btn btn-add" onclick="confirmAddCaffeine()">Add</button>
+      </div>
+      <button class="action-modal-btn btn-close-modal" onclick="closeCaffeineModal()">Cancel</button>
     </div>
   </div>
 
@@ -750,38 +861,38 @@
     const db = firebase.database();
 
     const products = [
-      { id: '1',  name: 'Aussie Lemonade',         img: 'Aussie Lemonade.png',         category: 'juiced' },
-      { id: '2',  name: 'Bad Apple',               img: 'Bad Apple.png',               category: 'juiced' },
-      { id: '3',  name: 'Energy Zero Sugar',       img: 'Energy Zero Sugar.png',       category: 'energy' },
-      { id: '4',  name: 'Energy',                  img: 'Energy.png',                  category: 'energy' },
-      { id: '5',  name: 'Full Throttle',           img: 'Full Throttle.png',           category: 'drivers' },
-      { id: '6',  name: 'Khaotic',                 img: 'Khaotic.png',                 category: 'juiced' },
-      { id: '7',  name: 'Lando Norris',            img: 'Lando Norris.png',            category: 'drivers' },
-      { id: '8',  name: 'Mango Loco',              img: 'Mango Loco.png',              category: 'juiced' },
-      { id: '9',  name: 'Monarch',                 img: 'Monarch.png',                 category: 'juiced' },
-      { id: '10', name: 'Nitro Cosmic Peach',      img: 'Nitro Cosmic Peach.png',      category: 'nitro' },
-      { id: '11', name: 'Nitro Super Dry',         img: 'Nitro Super Dry.png',         category: 'nitro' },
-      { id: '12', name: 'Pacific Punch',           img: 'Pacific Punch.png',           category: 'juiced' },
-      { id: '13', name: 'Pipeline Punch',          img: 'Pipeline Punch.png',          category: 'juiced' },
-      { id: '14', name: 'Rehab Lemonade Tea',      img: 'Rehab Lemonade Tea.png',      category: 'rehab' },
-      { id: '15', name: 'Rehab Peach Tea',         img: 'Rehab Peach Tea.png',         category: 'rehab' },
-      { id: '16', name: 'Rio Punch',               img: 'Rio Punch.png',               category: 'juiced' },
-      { id: '17', name: 'Ultra Black',             img: 'Ultra Black.png',             category: 'ultra' },
-      { id: '18', name: 'Ultra Fantasy Ruby Red',  img: 'Ultra Fantasy Ruby Red.png',  category: 'ultra' },
-      { id: '19', name: 'Ultra Fiesta Mango',      img: 'Ultra Fiesta Mango.png',      category: 'ultra' },
-      { id: '20', name: 'Ultra Golden Pineapple',  img: 'Ultra Golden Pineapple.png',  category: 'ultra' },
-      { id: '21', name: 'Ultra Paradise',          img: 'Ultra Paradise.png',          category: 'ultra' },
-      { id: '22', name: 'Ultra Peachy Keen',       img: 'Ultra Peachy Keen.png',       category: 'ultra' },
-      { id: '23', name: 'Ultra Rosa',              img: 'Ultra Rosa.png',              category: 'ultra' },
-      { id: '24', name: 'Ultra Strawberry Dreams', img: 'Ultra Strawberry Dreams.png', category: 'ultra' },
-      { id: '25', name: 'Ultra Vice Guava',        img: 'Ultra Vice Guava.png',        category: 'ultra' },
-      { id: '26', name: 'Ultra Violet',            img: 'Ultra Violet.png',            category: 'ultra' },
-      { id: '27', name: 'Ultra Watermelon',        img: 'Ultra Watermelon.png',        category: 'ultra' },
-      { id: '28', name: 'Ultra Zero',              img: 'Ultra Zero.png',              category: 'ultra' },
-      { id: '29', name: 'Viking Berry',            img: 'Viking Berry.png',            category: 'juiced' },
-      { id: '30', name: 'VR46 Doctor',             img: 'VR46 Doctor.png',             category: 'drivers' },
-      { id: '31', name: 'VR46 Zero',               img: 'VR46 Zero.png',               category: 'drivers' },
-      { id: '32', name: 'Ultra Red',               img: 'Ultra Red.png',               category: 'ultra' }
+      { id: '1',  name: 'Aussie Lemonade',         img: 'Aussie Lemonade.png',         category: 'juiced', caffeinePer100ml: 32 },
+      { id: '2',  name: 'Bad Apple',               img: 'Bad Apple.png',               category: 'juiced', caffeinePer100ml: 32 },
+      { id: '3',  name: 'Energy Zero Sugar',       img: 'Energy Zero Sugar.png',       category: 'energy', caffeinePer100ml: 32 },
+      { id: '4',  name: 'Energy',                  img: 'Energy.png',                  category: 'energy', caffeinePer100ml: 32 },
+      { id: '5',  name: 'Full Throttle',           img: 'Full Throttle.png',           category: 'drivers', caffeinePer100ml: 30 },
+      { id: '6',  name: 'Khaotic',                 img: 'Khaotic.png',                 category: 'juiced', caffeinePer100ml: 32 },
+      { id: '7',  name: 'Lando Norris',            img: 'Lando Norris.png',            category: 'drivers', caffeinePer100ml: 32 },
+      { id: '8',  name: 'Mango Loco',              img: 'Mango Loco.png',              category: 'juiced', caffeinePer100ml: 32 },
+      { id: '9',  name: 'Monarch',                 img: 'Monarch.png',                 category: 'juiced', caffeinePer100ml: 32 },
+      { id: '10', name: 'Nitro Cosmic Peach',      img: 'Nitro Cosmic Peach.png',      category: 'nitro', caffeinePer100ml: 32 },
+      { id: '11', name: 'Nitro Super Dry',         img: 'Nitro Super Dry.png',         category: 'nitro', caffeinePer100ml: 32 },
+      { id: '12', name: 'Pacific Punch',           img: 'Pacific Punch.png',           category: 'juiced', caffeinePer100ml: 32 },
+      { id: '13', name: 'Pipeline Punch',          img: 'Pipeline Punch.png',          category: 'juiced', caffeinePer100ml: 32 },
+      { id: '14', name: 'Rehab Lemonade Tea',      img: 'Rehab Lemonade Tea.png',      category: 'rehab', caffeinePer100ml: 25 },
+      { id: '15', name: 'Rehab Peach Tea',         img: 'Rehab Peach Tea.png',         category: 'rehab', caffeinePer100ml: 25 },
+      { id: '16', name: 'Rio Punch',               img: 'Rio Punch.png',               category: 'juiced', caffeinePer100ml: 32 },
+      { id: '17', name: 'Ultra Black',             img: 'Ultra Black.png',             category: 'ultra', caffeinePer100ml: 30 },
+      { id: '18', name: 'Ultra Fantasy Ruby Red',  img: 'Ultra Fantasy Ruby Red.png',  category: 'ultra', caffeinePer100ml: 30 },
+      { id: '19', name: 'Ultra Fiesta Mango',      img: 'Ultra Fiesta Mango.png',      category: 'ultra', caffeinePer100ml: 30 },
+      { id: '20', name: 'Ultra Golden Pineapple',  img: 'Ultra Golden Pineapple.png',  category: 'ultra', caffeinePer100ml: 30 },
+      { id: '21', name: 'Ultra Paradise',          img: 'Ultra Paradise.png',          category: 'ultra', caffeinePer100ml: 30 },
+      { id: '22', name: 'Ultra Peachy Keen',       img: 'Ultra Peachy Keen.png',       category: 'ultra', caffeinePer100ml: 30 },
+      { id: '23', name: 'Ultra Rosa',              img: 'Ultra Rosa.png',              category: 'ultra', caffeinePer100ml: 30 },
+      { id: '24', name: 'Ultra Strawberry Dreams', img: 'Ultra Strawberry Dreams.png', category: 'ultra', caffeinePer100ml: 30 },
+      { id: '25', name: 'Ultra Vice Guava',        img: 'Ultra Vice Guava.png',        category: 'ultra', caffeinePer100ml: 30 },
+      { id: '26', name: 'Ultra Violet',            img: 'Ultra Violet.png',            category: 'ultra', caffeinePer100ml: 30 },
+      { id: '27', name: 'Ultra Watermelon',        img: 'Ultra Watermelon.png',        category: 'ultra', caffeinePer100ml: 30 },
+      { id: '28', name: 'Ultra Zero',              img: 'Ultra Zero.png',              category: 'ultra', caffeinePer100ml: 30 },
+      { id: '29', name: 'Viking Berry',            img: 'Viking Berry.png',            category: 'juiced', caffeinePer100ml: 32 },
+      { id: '30', name: 'VR46 Doctor',             img: 'VR46 Doctor.png',             category: 'drivers', caffeinePer100ml: 32 },
+      { id: '31', name: 'VR46 Zero',               img: 'VR46 Zero.png',               category: 'drivers', caffeinePer100ml: 32 },
+      { id: '32', name: 'Ultra Red',               img: 'Ultra Red.png',               category: 'ultra', caffeinePer100ml: 30 }
     ];
 
     let currentMode = 5; 
@@ -800,7 +911,9 @@
     };
     let myCollected = {}; 
     let myPictures = []; 
+    let myCaffeineHistory = [];
     let selectedProductId = null; 
+    let caffeineSelectedDrink = null;
 
     const tierLevels5 = [
       { level: 5, label: '5★', class: 'badge-5-5' }, 
@@ -823,18 +936,11 @@
       { level: 1,  label: '1★',  class: 'badge-10-1' }
     ];
 
-    const tierLevels1 = [
-      { level: 1, label: '', class: '' }
-    ];
+    const tierLevels1 = [{ level: 1, label: '', class: '' }];
 
     const categoryNames = {
-      energy: 'Energy',
-      ultra: 'Ultra',
-      juiced: 'Juiced',
-      rehab: 'Rehab',
-      java: 'Java',
-      nitro: 'Nitro',
-      drivers: 'Drivers'
+      energy: 'Energy', ultra: 'Ultra', juiced: 'Juiced',
+      rehab: 'Rehab', java: 'Java', nitro: 'Nitro', drivers: 'Drivers'
     };
 
     function getCurrentTierLevels() {
@@ -860,7 +966,7 @@
       if (!event.target.matches('.dropdown-btn') && !event.target.closest('.dropdown-content') && !event.target.closest('.dropdown-btn *')) {
         const dropdowns = document.getElementsByClassName("dropdown-content");
         for (let i = 0; i < dropdowns.length; i++) {
-          const openDropdown = dropdowns[i];
+          let openDropdown = dropdowns[i];
           if (openDropdown.classList.contains('show')) {
             openDropdown.classList.remove('show');
             document.getElementById('dropdown-container').classList.remove('open');
@@ -877,23 +983,18 @@
       document.getElementById('mode-10-btn').classList.toggle('active', mode === 10);
       document.getElementById('mode-collected-btn').classList.toggle('active', mode === 'collected');
       document.getElementById('mode-pictures-btn').classList.toggle('active', mode === 'pictures');
+      document.getElementById('mode-caffeine-btn').classList.toggle('active', mode === 'caffeine');
       
       const dropdownBtn = document.getElementById('dropdown-main-btn');
       const isSub = typeof mode === 'string' && categoryNames[mode];
       dropdownBtn.classList.toggle('active', isSub);
       
       const arrowSvg = '<svg class="arrow" viewBox="0 0 24 24"><path d="M4 16L12 8L20 16" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
-      if (isSub) {
-        dropdownBtn.innerHTML = `${categoryNames[mode]} ${arrowSvg}`;
-      } else {
-        dropdownBtn.innerHTML = `Categories ${arrowSvg}`;
-      }
+      dropdownBtn.innerHTML = isSub ? `${categoryNames[mode]} ${arrowSvg}` : `Categories ${arrowSvg}`;
 
       document.querySelectorAll('.sub-mode-btn').forEach(btn => {
         btn.classList.remove('active');
-        if (btn.getAttribute('onclick').includes(mode)) {
-          btn.classList.add('active');
-        }
+        if (btn.getAttribute('onclick').includes(mode)) btn.classList.add('active');
       });
 
       document.getElementById('dropdown-content').classList.remove('show');
@@ -902,7 +1003,7 @@
       const tierTabsContainer = document.querySelector('.nav-tabs');
       const unassignedSection = document.querySelector('.unassigned-section');
 
-      if (mode === 'pictures' || mode === 'collected') {
+      if (['pictures', 'collected', 'caffeine'].includes(mode)) {
         tierTabsContainer.style.display = 'none';
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
         document.getElementById(`tab-${mode}`).classList.add('active');
@@ -910,6 +1011,7 @@
         
         if (mode === 'pictures') renderPicturesView();
         if (mode === 'collected') renderCollectedView();
+        if (mode === 'caffeine') renderCaffeineView();
       } else {
         tierTabsContainer.style.display = 'flex';
         const activeTierTabBtn = document.querySelector('.nav-tabs button.active');
@@ -924,12 +1026,10 @@
     }
 
     function renderActiveTab() {
-      if (currentMode === 'pictures') {
-        renderPicturesView();
-        return;
-      }
-      if (currentMode === 'collected') {
-        renderCollectedView();
+      if (['pictures', 'collected', 'caffeine'].includes(currentMode)) {
+        if (currentMode === 'pictures') renderPicturesView();
+        if (currentMode === 'collected') renderCollectedView();
+        if (currentMode === 'caffeine') renderCaffeineView();
         return;
       }
       const activeTab = document.querySelector('.tab-content.active').id;
@@ -941,17 +1041,11 @@
     function buildBoard(containerId, isInteractive = false) {
       const container = document.getElementById(containerId);
       container.innerHTML = '';
-      const levels = getCurrentTierLevels();
-      
-      levels.forEach(tl => {
+      getCurrentTierLevels().forEach(tl => {
         const row = document.createElement('div');
         row.className = 'tier-row';
-        
         let zoneAttrs = `class="tier-zone" data-tier="${tl.level}"`;
-        if (isInteractive) {
-          zoneAttrs += ` onclick="handleZoneClick(event, this)"`;
-        }
-
+        if (isInteractive) zoneAttrs += ` onclick="handleZoneClick(event, this)"`;
         const badgeHtml = tl.label ? `<div class="tier-badge ${tl.class}">${tl.label}</div>` : '';
         row.innerHTML = `${badgeHtml}<div ${zoneAttrs}></div>`;
         container.appendChild(row);
@@ -961,7 +1055,6 @@
     function handleImageClick(e, clickedId) {
       e.stopPropagation();
       const currentList = myData[currentMode];
-
       if (!selectedProductId) {
         selectedProductId = clickedId;
       } else if (selectedProductId === clickedId) {
@@ -969,17 +1062,11 @@
       } else {
         const sourceIndex = currentList.findIndex(i => i.id === selectedProductId);
         const targetIndex = currentList.findIndex(i => i.id === clickedId);
-        
         if (sourceIndex !== -1 && targetIndex !== -1) {
           const sourceItem = currentList[sourceIndex];
-          const targetItem = currentList[targetIndex];
-
-          sourceItem.t = targetItem.t;
+          sourceItem.t = currentList[targetIndex].t;
           currentList.splice(sourceIndex, 1);
-
-          const newTargetIndex = currentList.findIndex(i => i.id === clickedId);
-          currentList.splice(newTargetIndex, 0, sourceItem);
-
+          currentList.splice(currentList.findIndex(i => i.id === clickedId), 0, sourceItem);
           updatePositions(currentMode);
           saveToFirebase();
         }
@@ -990,7 +1077,6 @@
 
     function handleZoneClick(e, zone) {
       if (!selectedProductId) return;
-
       const targetTier = parseInt(zone.getAttribute('data-tier'), 10);
       const currentList = myData[currentMode];
       const sourceIndex = currentList.findIndex(i => i.id === selectedProductId);
@@ -998,7 +1084,6 @@
 
       const sourceItem = currentList[sourceIndex];
       sourceItem.t = targetTier;
-
       currentList.splice(sourceIndex, 1);
       
       if (targetTier === 0) {
@@ -1008,13 +1093,9 @@
         for (let i = 0; i < currentList.length; i++) {
           if (currentList[i].t === targetTier) lastIndex = i;
         }
-        if (lastIndex !== -1) {
-          currentList.splice(lastIndex + 1, 0, sourceItem);
-        } else {
-          currentList.push(sourceItem);
-        }
+        if (lastIndex !== -1) currentList.splice(lastIndex + 1, 0, sourceItem);
+        else currentList.push(sourceItem);
       }
-
       updatePositions(currentMode);
       selectedProductId = null;
       saveToFirebase();
@@ -1023,11 +1104,8 @@
 
     function updatePositions(mode) {
       const list = myData[mode];
-      const activeProds = (typeof mode === 'string' && categoryNames[mode]) 
-        ? products.filter(p => p.category === mode) 
-        : [];
+      const activeProds = (typeof mode === 'string' && categoryNames[mode]) ? products.filter(p => p.category === mode) : [];
       const activeIds = activeProds.map(p => p.id);
-
       const maxTier = mode === 5 ? 5 : (mode === 10 ? 10 : 1);
       for (let tier = 0; tier <= maxTier; tier++) {
         let pos = 1;
@@ -1043,14 +1121,9 @@
       const prod = products.find(p => p.id === productId);
       if (!prod) return null;
       const img = document.createElement('img');
-      img.src = prod.img; 
-      img.className = customClass; 
-      img.setAttribute('data-id', productId);
-
+      img.src = prod.img; img.className = customClass; img.setAttribute('data-id', productId);
       if (isInteractive) {
-        if (productId === selectedProductId) {
-          img.classList.add('selected');
-        }
+        if (productId === selectedProductId) img.classList.add('selected');
         img.onclick = (e) => handleImageClick(e, productId);
       }
       return img;
@@ -1058,10 +1131,7 @@
 
     function ensureAllProductsExist(list) {
       products.forEach(prod => {
-        const exists = list.some(item => item.id === prod.id);
-        if (!exists) {
-          list.push({ id: prod.id, t: 0, p: 0 });
-        }
+        if (!list.some(item => item.id === prod.id)) list.push({ id: prod.id, t: 0, p: 0 });
       });
     }
 
@@ -1073,114 +1143,57 @@
       localStorage.setItem('monster_room', room);
       if (userName) localStorage.setItem('monster_name', userName);
 
-      if (currentConnectionRef) {
-        currentConnectionRef.off();
-      }
+      if (currentConnectionRef) currentConnectionRef.off();
 
       currentConnectionRef = db.ref('rooms/' + room);
       currentConnectionRef.on('value', (snapshot) => {
         roomData = snapshot.val() || {};
-        
         const catKeys = Object.keys(categoryNames);
         let needsSave = false;
 
         if (userName && roomData[userName]) {
           const remoteData = roomData[userName];
-          if (remoteData) {
-            if (remoteData.tierLists) {
-              const tl = remoteData.tierLists;
-              if (Array.isArray(tl)) {
-                myData[5] = tl;
-                ensureAllProductsExist(myData[5]);
-              } else {
-                ['5', '10', ...catKeys].forEach(m => {
-                  if (tl[m]) {
-                    myData[m] = tl[m];
-                    ensureAllProductsExist(myData[m]);
-                  }
-                });
-              }
-            } else if (Array.isArray(remoteData)) {
-              myData[5] = remoteData;
-              ensureAllProductsExist(myData[5]);
+          if (remoteData.tierLists) {
+            const tl = remoteData.tierLists;
+            if (Array.isArray(tl)) {
+              myData[5] = tl; ensureAllProductsExist(myData[5]);
             } else {
               ['5', '10', ...catKeys].forEach(m => {
-                if (remoteData[m]) {
-                  myData[m] = remoteData[m];
-                  ensureAllProductsExist(myData[m]);
-                }
+                if (tl[m]) { myData[m] = tl[m]; ensureAllProductsExist(myData[m]); }
               });
             }
-
-            if (remoteData.pictures) {
-              if (Array.isArray(remoteData.pictures)) {
-                myPictures = remoteData.pictures;
-              } else {
-                myPictures = [];
-                Object.values(remoteData.pictures).forEach(arr => {
-                  if (Array.isArray(arr)) myPictures.push(...arr);
-                });
-              }
-            }
-
-            if (remoteData.collected) {
-              if (typeof remoteData.collected === 'object') {
-                myCollected = remoteData.collected;
-              }
-            }
           }
+          if (remoteData.pictures) myPictures = Array.isArray(remoteData.pictures) ? remoteData.pictures : [];
+          if (remoteData.collected) myCollected = remoteData.collected;
+          if (remoteData.caffeineHistory) myCaffeineHistory = Array.isArray(remoteData.caffeineHistory) ? remoteData.caffeineHistory : [];
         }
 
         ['5', '10', ...catKeys].forEach(m => {
           const beforeLen = myData[m].length;
           ensureAllProductsExist(myData[m]);
-          if (myData[m].length !== beforeLen) {
-            needsSave = true;
-          }
+          if (myData[m].length !== beforeLen) needsSave = true;
           updatePositions(m);
         });
 
         updateFriendDropdown();
         updateFriendPicturesDropdown();
         updateFriendCollectedDropdown();
+        updateFriendCaffeineDropdown();
         renderActiveTab();
 
-        if (needsSave && userName) {
-          saveToFirebase();
-        }
+        if (needsSave && userName) saveToFirebase();
       });
     }
 
     function leaveRoom() {
-      if (currentConnectionRef) {
-        currentConnectionRef.off();
-        currentConnectionRef = null;
-      }
-      
-      localStorage.removeItem('monster_room');
-      localStorage.removeItem('monster_name');
-      
-      document.getElementById('room-input').value = '';
-      document.getElementById('name-input').value = '';
-      
-      roomData = {};
-      selectedProductId = null;
-      myPictures = [];
-      myCollected = {};
-      const catKeys = Object.keys(categoryNames);
-      myData = {
-        5: products.map(p => ({ id: p.id, t: 0, p: 0 })),
-        10: products.map(p => ({ id: p.id, t: 0, p: 0 }))
-      };
-      catKeys.forEach(k => {
-        myData[k] = products.map(p => ({ id: p.id, t: 0, p: 0 }));
-      });
-      
+      if (currentConnectionRef) { currentConnectionRef.off(); currentConnectionRef = null; }
+      localStorage.removeItem('monster_room'); localStorage.removeItem('monster_name');
+      document.getElementById('room-input').value = ''; document.getElementById('name-input').value = '';
+      roomData = {}; selectedProductId = null; myPictures = []; myCollected = {}; myCaffeineHistory = [];
+      myData = { 5: products.map(p => ({ id: p.id, t: 0, p: 0 })), 10: products.map(p => ({ id: p.id, t: 0, p: 0 })) };
+      Object.keys(categoryNames).forEach(k => { myData[k] = products.map(p => ({ id: p.id, t: 0, p: 0 })); });
       renderActiveTab();
-      updateFriendDropdown();
-      updateFriendPicturesDropdown();
-      updateFriendCollectedDropdown();
-      
+      updateFriendDropdown(); updateFriendPicturesDropdown(); updateFriendCollectedDropdown(); updateFriendCaffeineDropdown();
       switchMode(5);
     }
 
@@ -1189,18 +1202,14 @@
       const userName = document.getElementById('name-input').value.trim();
       if (!room || !userName) return;
 
-      const tierListsSave = {
-        '5': myData[5],
-        '10': myData[10]
-      };
-      Object.keys(categoryNames).forEach(k => {
-        tierListsSave[k] = myData[k];
-      });
+      const tierListsSave = { '5': myData[5], '10': myData[10] };
+      Object.keys(categoryNames).forEach(k => { tierListsSave[k] = myData[k]; });
 
       db.ref(`rooms/${room}/${userName}`).set({
         tierLists: tierListsSave,
         pictures: myPictures,
-        collected: myCollected
+        collected: myCollected,
+        caffeineHistory: myCaffeineHistory
       });
     }
 
@@ -1211,47 +1220,36 @@
         if (Array.isArray(tl)) return mode === 5 ? tl : null;
         return tl[mode] || null;
       }
-      if (Array.isArray(userObj)) return mode === 5 ? userObj : null;
       return userObj[mode] || null;
     }
 
     function getUserPictures(userObj) {
-      if (!userObj) return [];
-      if (userObj.pictures) {
-        if (Array.isArray(userObj.pictures)) return userObj.pictures;
-        const allPics = [];
-        Object.values(userObj.pictures).forEach(arr => {
-          if (Array.isArray(arr)) allPics.push(...arr);
-        });
-        return allPics;
-      }
-      return [];
+      if (!userObj || !userObj.pictures) return [];
+      return Array.isArray(userObj.pictures) ? userObj.pictures : [];
     }
 
     function getUserCollected(userObj) {
-      if (!userObj || !userObj.collected) return {};
-      return userObj.collected;
+      return (userObj && userObj.collected) ? userObj.collected : {};
+    }
+
+    function getUserCaffeine(userObj) {
+      if (!userObj || !userObj.caffeineHistory) return [];
+      return Array.isArray(userObj.caffeineHistory) ? userObj.caffeineHistory : [];
     }
 
     function updateFriendDropdown() {
       const select = document.getElementById('friend-select');
       const friendContainer = document.getElementById('friend-container');
       const noFriendsMsg = document.getElementById('no-friends-msg');
-      
-      const myName = document.getElementById('name-input').value.trim();
-      const friendNames = Object.keys(roomData).filter(name => name !== myName);
+      const friendNames = Object.keys(roomData).filter(name => name !== document.getElementById('name-input').value.trim());
 
       select.innerHTML = '';
       if (friendNames.length === 0) {
-        friendContainer.style.display = 'none';
-        noFriendsMsg.style.display = 'block';
+        friendContainer.style.display = 'none'; noFriendsMsg.style.display = 'block';
       } else {
-        friendContainer.style.display = 'block';
-        noFriendsMsg.style.display = 'none';
+        friendContainer.style.display = 'block'; noFriendsMsg.style.display = 'none';
         friendNames.forEach(name => {
-          const opt = document.createElement('option');
-          opt.value = name; opt.innerText = name;
-          select.appendChild(opt);
+          const opt = document.createElement('option'); opt.value = name; opt.innerText = name; select.appendChild(opt);
         });
         renderFriendView();
       }
@@ -1260,19 +1258,14 @@
     function updateFriendPicturesDropdown() {
       const select = document.getElementById('friend-pictures-select');
       const noFriendPicsMsg = document.getElementById('no-friend-pics-msg');
-      
-      const myName = document.getElementById('name-input').value.trim();
-      const friendNames = Object.keys(roomData).filter(name => name !== myName);
-
+      const friendNames = Object.keys(roomData).filter(name => name !== document.getElementById('name-input').value.trim());
       select.innerHTML = '';
       if (friendNames.length === 0) {
         noFriendPicsMsg.style.display = 'block';
       } else {
         noFriendPicsMsg.style.display = 'none';
         friendNames.forEach(name => {
-          const opt = document.createElement('option');
-          opt.value = name; opt.innerText = name;
-          select.appendChild(opt);
+          const opt = document.createElement('option'); opt.value = name; opt.innerText = name; select.appendChild(opt);
         });
         renderFriendPicturesView();
       }
@@ -1281,26 +1274,252 @@
     function updateFriendCollectedDropdown() {
       const select = document.getElementById('friend-collected-select');
       const noFriendCollectedMsg = document.getElementById('no-friend-collected-msg');
-      
-      const myName = document.getElementById('name-input').value.trim();
-      const friendNames = Object.keys(roomData).filter(name => name !== myName);
-
+      const friendNames = Object.keys(roomData).filter(name => name !== document.getElementById('name-input').value.trim());
       select.innerHTML = '';
       if (friendNames.length === 0) {
         noFriendCollectedMsg.style.display = 'block';
       } else {
         noFriendCollectedMsg.style.display = 'none';
         friendNames.forEach(name => {
-          const opt = document.createElement('option');
-          opt.value = name; opt.innerText = name;
-          select.appendChild(opt);
+          const opt = document.createElement('option'); opt.value = name; opt.innerText = name; select.appendChild(opt);
         });
         renderFriendCollectedView();
       }
     }
 
+    function updateFriendCaffeineDropdown() {
+      const select = document.getElementById('friend-caffeine-select');
+      const noFriendCaffeineMsg = document.getElementById('no-friend-caffeine-msg');
+      const friendNames = Object.keys(roomData).filter(name => name !== document.getElementById('name-input').value.trim());
+      select.innerHTML = '';
+      if (friendNames.length === 0) {
+        noFriendCaffeineMsg.style.display = 'block';
+      } else {
+        noFriendCaffeineMsg.style.display = 'none';
+        friendNames.forEach(name => {
+          const opt = document.createElement('option'); opt.value = name; opt.innerText = name; select.appendChild(opt);
+        });
+        renderFriendCaffeineView();
+      }
+    }
+
+    function switchCaffeineSubTab(subTabId, btn) {
+      document.querySelectorAll('#tab-caffeine .sub-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#tab-caffeine .sub-tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(`sub-tab-${subTabId}-caffeine`).classList.add('active');
+      if (subTabId === 'friends') renderFriendCaffeineView();
+    }
+
+    function filterDrinkMenu() {
+      const query = document.getElementById('drink-search-input').value.toLowerCase();
+      const drinkMenu = document.getElementById('caffeine-drink-menu');
+      drinkMenu.innerHTML = '';
+      
+      const filtered = products.filter(p => p.name.toLowerCase().includes(query));
+      filtered.forEach(prod => {
+        const card = document.createElement('div');
+        card.className = 'drink-menu-card';
+        card.onclick = () => openCaffeineModal(prod);
+        card.innerHTML = `<img src="${prod.img}" alt="${prod.name}"><span class="drink-title">${prod.name}</span><span class="drink-mg">${prod.caffeinePer100ml}mg/100ml</span>`;
+        drinkMenu.appendChild(card);
+      });
+    }
+
+    function updateCounterTheme(displayMg, ringProgress, totalValEl, lightningSvg, statusText) {
+      const maxLimit = 400;
+      const circumference = 418.4;
+      let offset = circumference - (Math.min(displayMg, maxLimit) / maxLimit) * circumference;
+      ringProgress.style.strokeDashoffset = offset;
+
+      let colorHex = '#30d158'; // green
+      let glowRgba = 'rgba(48, 209, 88, 0.6)';
+
+      if (displayMg > 400) {
+        colorHex = 'var(--danger)';
+        glowRgba = 'rgba(255, 69, 58, 0.6)';
+        ringProgress.style.stroke = 'var(--danger)';
+        statusText.style.color = 'var(--danger)';
+        statusText.innerText = 'High Limit Exceeded!';
+      } else if (displayMg > 200) {
+        colorHex = '#ffcc00';
+        glowRgba = 'rgba(255, 204, 0, 0.6)';
+        ringProgress.style.stroke = '#ffcc00';
+        statusText.style.color = '#ffcc00';
+        statusText.innerText = 'Moderate Level';
+      } else {
+        colorHex = '#30d158';
+        glowRgba = 'rgba(48, 209, 88, 0.6)';
+        ringProgress.style.stroke = '#30d158';
+        statusText.style.color = '#30d158';
+        statusText.innerText = 'Safe Level';
+      }
+
+      ringProgress.style.stroke = colorHex;
+      totalValEl.style.color = colorHex;
+      totalValEl.style.textShadow = `0 0 10px ${glowRgba}`;
+      lightningSvg.style.fill = colorHex;
+      lightningSvg.style.filter = `drop-shadow(0 0 6px ${glowRgba})`;
+    }
+
+    function renderCaffeineView() {
+      const totalValEl = document.getElementById('caffeine-total-val');
+      const allTimeValEl = document.getElementById('caffeine-alltime-val');
+      const ringProgress = document.getElementById('caffeine-ring-progress');
+      const lightningSvg = document.getElementById('caffeine-lightning-svg');
+      const statusText = document.getElementById('caffeine-status-text');
+      const historyList = document.getElementById('caffeine-history-list');
+
+      let allTimeTotalMg = 0;
+      myCaffeineHistory.forEach(item => {
+        allTimeTotalMg += item.mg;
+      });
+      allTimeValEl.innerText = `${allTimeTotalMg} mg`;
+
+      const now = Date.now();
+      const halfLifeMs = 5 * 60 * 60 * 1000;
+      let currentActiveMg = 0;
+
+      myCaffeineHistory.forEach(item => {
+        const elapsed = now - item.timestamp;
+        if (elapsed >= 0) {
+          const remaining = item.mg * Math.pow(0.5, elapsed / halfLifeMs);
+          if (remaining > 0) currentActiveMg += remaining;
+        }
+      });
+
+      const displayMg = Math.round(currentActiveMg);
+      totalValEl.innerText = displayMg;
+
+      updateCounterTheme(displayMg, ringProgress, totalValEl, lightningSvg, statusText);
+
+      filterDrinkMenu();
+
+      historyList.innerHTML = '';
+      if (myCaffeineHistory.length === 0) {
+        historyList.innerHTML = '<div class="empty-msg">No caffeine logged today.</div>';
+        return;
+      }
+
+      myCaffeineHistory.forEach((item, index) => {
+        const dateObj = new Date(item.timestamp);
+        const timeStr = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        const row = document.createElement('div');
+        row.className = 'history-item';
+        row.innerHTML = `<span><strong>${item.name}</strong> (${item.ml} ml, <strong>${item.mg} mg</strong>) at ${timeStr}</span><button class="delete-history-btn" onclick="removeCaffeineLog(${index})">✕</button>`;
+        historyList.appendChild(row);
+      });
+    }
+
+    function renderFriendCaffeineView() {
+      const friendName = document.getElementById('friend-caffeine-select').value;
+      const totalValEl = document.getElementById('friend-caffeine-total-val');
+      const allTimeValEl = document.getElementById('friend-caffeine-alltime-val');
+      const ringProgress = document.getElementById('friend-caffeine-ring-progress');
+      const lightningSvg = document.getElementById('friend-caffeine-lightning-svg');
+      const statusText = document.getElementById('friend-caffeine-status-text');
+      const historyList = document.getElementById('friend-caffeine-history-list');
+
+      if (!friendName || !roomData[friendName]) {
+        totalValEl.innerText = '0';
+        allTimeValEl.innerText = '0 mg';
+        ringProgress.style.strokeDashoffset = '418.4';
+        updateCounterTheme(0, ringProgress, totalValEl, lightningSvg, statusText);
+        historyList.innerHTML = '<div class="empty-msg">No caffeine logged today.</div>';
+        return;
+      }
+
+      const friendHistory = getUserCaffeine(roomData[friendName]);
+      
+      let allTimeTotalMg = 0;
+      friendHistory.forEach(item => {
+        allTimeTotalMg += item.mg;
+      });
+      allTimeValEl.innerText = `${allTimeTotalMg} mg`;
+
+      const now = Date.now();
+      const halfLifeMs = 5 * 60 * 60 * 1000;
+      let currentActiveMg = 0;
+
+      friendHistory.forEach(item => {
+        const elapsed = now - item.timestamp;
+        if (elapsed >= 0) {
+          const remaining = item.mg * Math.pow(0.5, elapsed / halfLifeMs);
+          if (remaining > 0) currentActiveMg += remaining;
+        }
+      });
+
+      const displayMg = Math.round(currentActiveMg);
+      totalValEl.innerText = displayMg;
+
+      updateCounterTheme(displayMg, ringProgress, totalValEl, lightningSvg, statusText);
+
+      historyList.innerHTML = '';
+      if (friendHistory.length === 0) {
+        historyList.innerHTML = '<div class="empty-msg">No caffeine logged today.</div>';
+        return;
+      }
+
+      friendHistory.forEach(item => {
+        const dateObj = new Date(item.timestamp);
+        const timeStr = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        const row = document.createElement('div');
+        row.className = 'history-item';
+        row.innerHTML = `<span><strong>${item.name}</strong> (${item.ml} ml, <strong>${item.mg} mg</strong>) at ${timeStr}</span>`;
+        historyList.appendChild(row);
+      });
+    }
+
+    function openCaffeineModal(prod) {
+      caffeineSelectedDrink = prod;
+      document.getElementById('caffeineModalImg').src = prod.img;
+      document.getElementById('caffeineModalName').innerText = prod.name;
+      
+      const now = new Date();
+      const timeString = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+      document.getElementById('caffeineInputTime').value = timeString;
+      document.getElementById('caffeineInputMl').value = 500;
+
+      document.getElementById('caffeineModal').classList.add('show');
+    }
+
+    function closeCaffeineModal() {
+      document.getElementById('caffeineModal').classList.remove('show');
+      caffeineSelectedDrink = null;
+    }
+
+    function confirmAddCaffeine() {
+      if (!caffeineSelectedDrink) return;
+      const timeStr = document.getElementById('caffeineInputTime').value;
+      const mlVal = parseInt(document.getElementById('caffeineInputMl').value, 10);
+      if (!timeStr || isNaN(mlVal) || mlVal <= 0) return;
+
+      const [hours, minutes] = timeStr.split(':').map(Number);
+      const now = new Date();
+      const drinkDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+      
+      const mgVal = Math.round((mlVal / 100) * caffeineSelectedDrink.caffeinePer100ml);
+
+      myCaffeineHistory.unshift({
+        name: caffeineSelectedDrink.name,
+        ml: mlVal,
+        mg: mgVal,
+        timestamp: drinkDate.getTime()
+      });
+
+      saveToFirebase();
+      closeCaffeineModal();
+      renderCaffeineView();
+    }
+
+    function removeCaffeineLog(index) {
+      myCaffeineHistory.splice(index, 1);
+      saveToFirebase();
+      renderCaffeineView();
+    }
+
     function renderMyView() {
-      if (currentMode === 'pictures' || currentMode === 'collected') return;
+      if (['pictures', 'collected', 'caffeine'].includes(currentMode)) return;
       buildBoard('my-board', true);
       const unassignedZone = document.querySelector('.unassigned-zone');
       unassignedZone.innerHTML = '';
@@ -1308,14 +1527,7 @@
       const isCategory = (typeof currentMode === 'string' && categoryNames[currentMode]);
       const activeProds = getActiveProducts();
       const activeIds = activeProds.map(p => p.id);
-      const currentList = myData[currentMode];
-      
-      const sortedData = [...currentList]
-        .filter(item => !isCategory || activeIds.includes(item.id))
-        .sort((a, b) => {
-          if (a.t !== b.t) return a.t - b.t;
-          return a.p - b.p;
-        });
+      const sortedData = [...myData[currentMode]].filter(item => !isCategory || activeIds.includes(item.id)).sort((a, b) => a.t !== b.t ? a.t - b.t : a.p - b.p);
 
       sortedData.filter(item => item.t === 0).forEach(item => {
         const img = createImgElement(item.id, true);
@@ -1327,47 +1539,31 @@
         if (zone) {
           if (isCategory) {
             activeIds.forEach((id, index) => {
-              const wrapper = document.createElement('div');
-              wrapper.className = 'slot-wrapper';
-
-              const slot = document.createElement('div');
-              slot.className = 'slot-cell';
-              
-              const numBox = document.createElement('div');
-              numBox.className = 'slot-number-box';
-              numBox.innerText = index + 1;
-
-              wrapper.appendChild(slot);
-              wrapper.appendChild(numBox);
-              zone.appendChild(wrapper);
+              const wrapper = document.createElement('div'); wrapper.className = 'slot-wrapper';
+              const slot = document.createElement('div'); slot.className = 'slot-cell';
+              const numBox = document.createElement('div'); numBox.className = 'slot-number-box'; numBox.innerText = index + 1;
+              wrapper.appendChild(slot); wrapper.appendChild(numBox); zone.appendChild(wrapper);
             });
           }
-
           sortedData.filter(item => item.t === tl.level).forEach(item => {
             const wrappers = zone.querySelectorAll('.slot-wrapper');
             const emptyWrapper = Array.from(wrappers).find(w => !w.querySelector('.tier-img'));
             const img = createImgElement(item.id, true);
             if (emptyWrapper && img) {
-              const slot = emptyWrapper.querySelector('.slot-cell');
-              slot.classList.add('has-item');
-              slot.appendChild(img);
-            } else if (img) {
-              zone.appendChild(img);
-            }
+              emptyWrapper.querySelector('.slot-cell').classList.add('has-item');
+              emptyWrapper.querySelector('.slot-cell').appendChild(img);
+            } else if (img) zone.appendChild(img);
           });
         }
       });
     }
 
     function renderFriendView() {
-      if (currentMode === 'pictures' || currentMode === 'collected') return;
-      
+      if (['pictures', 'collected', 'caffeine'].includes(currentMode)) return;
       const name = document.getElementById('friend-select').value;
       if (!name || !roomData[name]) return;
 
-      const combinedTitle = document.getElementById('combined-title');
-      combinedTitle.innerText = `comparison with ${name}`;
-
+      document.getElementById('combined-title').innerText = `Comparison with ${name}`;
       buildBoard('friend-board', false);
       
       const userSubmissions = getSubmissionsForMode(roomData[name], currentMode);
@@ -1383,39 +1579,19 @@
           const zone = document.querySelector(`#friend-board .tier-zone[data-tier="${tl.level}"]`);
           if (zone) {
             activeIds.forEach((id, index) => {
-              const wrapper = document.createElement('div');
-              wrapper.className = 'slot-wrapper';
-
-              const slot = document.createElement('div');
-              slot.className = 'slot-cell';
-
-              const numBox = document.createElement('div');
-              numBox.className = 'slot-number-box';
-              numBox.innerText = index + 1;
-
-              wrapper.appendChild(slot);
-              wrapper.appendChild(numBox);
-              zone.appendChild(wrapper);
+              const wrapper = document.createElement('div'); wrapper.className = 'slot-wrapper';
+              const slot = document.createElement('div'); slot.className = 'slot-cell';
+              const numBox = document.createElement('div'); numBox.className = 'slot-number-box'; numBox.innerText = index + 1;
+              wrapper.appendChild(slot); wrapper.appendChild(numBox); zone.appendChild(wrapper);
             });
           }
         });
       }
 
-      const friendItems = [...userSubmissions]
-        .filter(item => !isCategory || activeIds.includes(item.id))
-        .sort((a, b) => {
-          if (a.t !== b.t) return a.t - b.t;
-          return a.p - b.p;
-        });
-
+      const friendItems = [...userSubmissions].filter(item => !isCategory || activeIds.includes(item.id)).sort((a, b) => a.t !== b.t ? a.t - b.t : a.p - b.p);
       const groupTiers = {};
       levels.forEach(tl => groupTiers[tl.level] = []);
-
-      friendItems.forEach(item => {
-        if (item.t > 0 && groupTiers[item.t]) {
-          groupTiers[item.t].push(item);
-        }
-      });
+      friendItems.forEach(item => { if (item.t > 0 && groupTiers[item.t]) groupTiers[item.t].push(item); });
 
       Object.keys(groupTiers).forEach(tLevel => {
         groupTiers[tLevel].sort((a, b) => a.p - b.p);
@@ -1426,173 +1602,18 @@
             const emptyWrapper = Array.from(wrappers).find(w => !w.querySelector('.tier-img'));
             const img = createImgElement(item.id, false);
             if (emptyWrapper && img) {
-              const slot = emptyWrapper.querySelector('.slot-cell');
-              slot.classList.add('has-item');
-              slot.appendChild(img);
-            } else if (img) {
-              zone.appendChild(img);
-            }
+              emptyWrapper.querySelector('.slot-cell').classList.add('has-item');
+              emptyWrapper.querySelector('.slot-cell').appendChild(img);
+            } else if (img) zone.appendChild(img);
           });
         }
       });
-
       buildBoard('combined-board', false);
-      const combinedPodium = document.getElementById('combined-podium');
-      combinedPodium.innerHTML = '';
-
-      const mySubmissions = myData[currentMode];
-      const friendSubmissions = userSubmissions;
-
-      const combinedStats = {};
-      const targetProds = isCategory ? activeProds : products;
-      targetProds.forEach(p => combinedStats[p.id] = { id: p.id, starSum: 0, posSum: 0, count: 0 });
-
-      [mySubmissions, friendSubmissions].forEach(sub => {
-        if (sub) {
-          sub.forEach(item => {
-            if (combinedStats[item.id] && item.t > 0) {
-              combinedStats[item.id].starSum += item.t;
-              combinedStats[item.id].posSum += item.p;
-              combinedStats[item.id].count += 1;
-            }
-          });
-        }
-      });
-
-      const combinedProcessed = Object.values(combinedStats).filter(s => s.count > 0).map(s => ({
-        id: s.id, 
-        avgStars: s.starSum / s.count, 
-        avgPos: s.posSum / s.count,
-        posPoints: s.posSum,
-        count: s.count
-      }));
-
-      const combinedTiers = {};
-      levels.forEach(tl => combinedTiers[tl.level] = []);
-
-      combinedProcessed.forEach(i => {
-        if (currentMode === 5) {
-          if (i.avgStars >= 4.5) combinedTiers[5].push(i);
-          else if (i.avgStars >= 3.5) combinedTiers[4].push(i);
-          else if (i.avgStars >= 2.5) combinedTiers[3].push(i);
-          else if (i.avgStars >= 1.5) combinedTiers[2].push(i);
-          else combinedTiers[1].push(i);
-        } else if (currentMode === 10) {
-          let rounded = Math.round(i.avgStars);
-          if (rounded < 1) rounded = 1;
-          if (rounded > 10) rounded = 10;
-          if (combinedTiers[rounded]) {
-            combinedTiers[rounded].push(i);
-          } else {
-            combinedTiers[1].push(i);
-          }
-        } else {
-          combinedTiers[1].push(i);
-        }
-      });
-
-      if (isCategory) {
-        levels.forEach(tl => {
-          const zone = document.querySelector(`#combined-board .tier-zone[data-tier="${tl.level}"]`);
-          if (zone) {
-            activeIds.forEach((id, index) => {
-              const wrapper = document.createElement('div');
-              wrapper.className = 'slot-wrapper';
-
-              const slot = document.createElement('div');
-              slot.className = 'slot-cell';
-
-              const numBox = document.createElement('div');
-              numBox.className = 'slot-number-box';
-              numBox.innerText = index + 1;
-
-              wrapper.appendChild(slot);
-              wrapper.appendChild(numBox);
-              zone.appendChild(wrapper);
-            });
-          }
-        });
-      }
-
-      Object.keys(combinedTiers).forEach(tLevel => {
-        if (isCategory) {
-          combinedTiers[tLevel].sort((a, b) => {
-            if (a.avgPos !== b.avgPos) return a.avgPos - b.avgPos;
-            if (b.count !== a.count) return b.count - a.count;
-            const prodA = products.find(p => p.id === a.id).name;
-            const prodB = products.find(p => p.id === b.id).name;
-            return prodA.localeCompare(prodB);
-          });
-        } else {
-          combinedTiers[tLevel].sort((a, b) => {
-            if (a.posPoints !== b.posPoints) return a.posPoints - b.posPoints;
-            if (b.avgStars !== a.avgStars) return b.avgStars - a.avgStars;
-            if (b.count !== a.count) return b.count - a.count;
-            const prodA = products.find(p => p.id === a.id).name;
-            const prodB = products.find(p => p.id === b.id).name;
-            return prodA.localeCompare(prodB);
-          });
-        }
-
-        const zone = document.querySelector(`#combined-board .tier-zone[data-tier="${tLevel}"]`);
-        if (zone) {
-          combinedTiers[tLevel].forEach(item => {
-            const wrappers = zone.querySelectorAll('.slot-wrapper');
-            const emptyWrapper = Array.from(wrappers).find(w => !w.querySelector('.tier-img'));
-            const img = createImgElement(item.id, false);
-            if (emptyWrapper && img) {
-              const slot = emptyWrapper.querySelector('.slot-cell');
-              slot.classList.add('has-item');
-              slot.appendChild(img);
-            } else if (img) {
-              zone.appendChild(img);
-            }
-          });
-        }
-      });
-
-      const sortedCombinedItems = [];
-      const levelNums = levels.map(l => l.level).sort((a,b) => b - a);
-      levelNums.forEach(tLevel => {
-        if (combinedTiers[tLevel]) {
-          combinedTiers[tLevel].forEach(item => sortedCombinedItems.push(item));
-        }
-      });
-
-      const combinedTop5 = sortedCombinedItems.slice(0, 5);
-      if (combinedTop5.length > 0) {
-        const podiumOrderIndices = [];
-        if (combinedTop5.length >= 1) podiumOrderIndices.push(0);
-        if (combinedTop5.length >= 2) podiumOrderIndices.push(1);
-        if (combinedTop5.length >= 3) podiumOrderIndices.push(2);
-        if (combinedTop5.length >= 4) podiumOrderIndices.push(3);
-        if (combinedTop5.length >= 5) podiumOrderIndices.push(4);
-
-        podiumOrderIndices.forEach(originalIndex => {
-          const item = combinedTop5[originalIndex];
-          const rank = originalIndex + 1;
-
-          const col = document.createElement('div');
-          col.className = 'podium-column';
-
-          const img = createImgElement(item.id, false);
-          if (img) {
-            img.className = 'tier-img podium-img';
-            col.appendChild(img);
-          }
-
-          const step = document.createElement('div');
-          step.className = `podium-step step-${rank}`;
-          step.innerText = `#${rank}`;
-          col.appendChild(step);
-
-          combinedPodium.appendChild(col);
-        });
-      }
+      document.getElementById('combined-podium').innerHTML = '';
     }
 
     function renderGroupView() {
-      if (currentMode === 'pictures' || currentMode === 'collected') return;
+      if (['pictures', 'collected', 'caffeine'].includes(currentMode)) return;
       buildBoard('group-board', false);
       const podium = document.getElementById('podium');
       podium.innerHTML = '';
@@ -1602,7 +1623,6 @@
         const sub = getSubmissionsForMode(userObj, currentMode);
         if (sub) allSubmissions.push(sub);
       });
-
       if (allSubmissions.length === 0) return;
 
       const isCategory = (typeof currentMode === 'string' && categoryNames[currentMode]);
@@ -1610,8 +1630,7 @@
       const activeIds = activeProds.map(p => p.id);
       const stats = {};
       
-      const targetProds = isCategory ? activeProds : products;
-      targetProds.forEach(p => stats[p.id] = { id: p.id, starSum: 0, posSum: 0, count: 0 });
+      (isCategory ? activeProds : products).forEach(p => stats[p.id] = { id: p.id, starSum: 0, posSum: 0, count: 0 });
 
       allSubmissions.forEach(sub => {
         sub.forEach(item => {
@@ -1624,11 +1643,7 @@
       });
 
       const processed = Object.values(stats).filter(s => s.count > 0).map(s => ({
-        id: s.id, 
-        avgStars: s.starSum / s.count, 
-        avgPos: s.posSum / s.count,
-        posPoints: s.posSum,
-        count: s.count
+        id: s.id, avgStars: s.starSum / s.count, avgPos: s.posSum / s.count, posPoints: s.posSum, count: s.count
       }));
 
       const groupTiers = {};
@@ -1644,112 +1659,49 @@
           else groupTiers[1].push(i);
         } else if (currentMode === 10) {
           let rounded = Math.round(i.avgStars);
-          if (rounded < 1) rounded = 1;
-          if (rounded > 10) rounded = 10;
-          if (groupTiers[rounded]) {
-            groupTiers[rounded].push(i);
-          } else {
-            groupTiers[1].push(i);
-          }
+          if (rounded < 1) rounded = 1; if (rounded > 10) rounded = 10;
+          if (groupTiers[rounded]) groupTiers[rounded].push(i); else groupTiers[1].push(i);
         } else {
           groupTiers[1].push(i);
         }
       });
 
       Object.keys(groupTiers).forEach(tLevel => {
-        if (isCategory) {
-          groupTiers[tLevel].sort((a, b) => {
-            if (a.avgPos !== b.avgPos) return a.avgPos - b.avgPos;
-            if (b.count !== a.count) return b.count - a.count;
-            const prodA = products.find(p => p.id === a.id).name;
-            const prodB = products.find(p => p.id === b.id).name;
-            return prodA.localeCompare(prodB);
-          });
-        } else {
-          groupTiers[tLevel].sort((a, b) => {
-            if (a.posPoints !== b.posPoints) return a.posPoints - b.posPoints;
-            if (b.avgStars !== a.avgStars) return b.avgStars - a.avgStars;
-            if (b.count !== a.count) return b.count - a.count;
-            const prodA = products.find(p => p.id === a.id).name;
-            const prodB = products.find(p => p.id === b.id).name;
-            return prodA.localeCompare(prodB);
-          });
-        }
-
+        groupTiers[tLevel].sort((a, b) => isCategory ? (a.avgPos - b.avgPos) : (a.posPoints - b.posPoints));
         const zone = document.querySelector(`#group-board .tier-zone[data-tier="${tLevel}"]`);
         if (zone) {
           if (isCategory) {
             activeIds.forEach((id, index) => {
-              const wrapper = document.createElement('div');
-              wrapper.className = 'slot-wrapper';
-
-              const slot = document.createElement('div');
-              slot.className = 'slot-cell';
-
-              const numBox = document.createElement('div');
-              numBox.className = 'slot-number-box';
-              numBox.innerText = index + 1;
-
-              wrapper.appendChild(slot);
-              wrapper.appendChild(numBox);
-              zone.appendChild(wrapper);
+              const wrapper = document.createElement('div'); wrapper.className = 'slot-wrapper';
+              const slot = document.createElement('div'); slot.className = 'slot-cell';
+              const numBox = document.createElement('div'); numBox.className = 'slot-number-box'; numBox.innerText = index + 1;
+              wrapper.appendChild(slot); wrapper.appendChild(numBox); zone.appendChild(wrapper);
             });
           }
-
           groupTiers[tLevel].forEach(item => {
             const wrappers = zone.querySelectorAll('.slot-wrapper');
             const emptyWrapper = Array.from(wrappers).find(w => !w.querySelector('.tier-img'));
             const img = createImgElement(item.id, false);
             if (emptyWrapper && img) {
-              const slot = emptyWrapper.querySelector('.slot-cell');
-              slot.classList.add('has-item');
-              slot.appendChild(img);
-            } else if (img) {
-              zone.appendChild(img);
-            }
+              emptyWrapper.querySelector('.slot-cell').classList.add('has-item');
+              emptyWrapper.querySelector('.slot-cell').appendChild(img);
+            } else if (img) zone.appendChild(img);
           });
         }
       });
 
       const sortedGroupItems = [];
-      const levelNums = levels.map(l => l.level).sort((a,b) => b - a);
-      levelNums.forEach(tLevel => {
-        if (groupTiers[tLevel]) {
-          groupTiers[tLevel].forEach(item => sortedGroupItems.push(item));
-        }
+      levels.map(l => l.level).sort((a,b) => b - a).forEach(tLevel => {
+        if (groupTiers[tLevel]) groupTiers[tLevel].forEach(item => sortedGroupItems.push(item));
       });
 
-      const top5 = sortedGroupItems.slice(0, 5);
-
-      if (top5.length > 0) {
-        const podiumOrderIndices = [];
-        if (top5.length >= 1) podiumOrderIndices.push(0);
-        if (top5.length >= 2) podiumOrderIndices.push(1);
-        if (top5.length >= 3) podiumOrderIndices.push(2);
-        if (top5.length >= 4) podiumOrderIndices.push(3);
-        if (top5.length >= 5) podiumOrderIndices.push(4);
-
-        podiumOrderIndices.forEach(originalIndex => {
-          const item = top5[originalIndex];
-          const rank = originalIndex + 1;
-
-          const col = document.createElement('div');
-          col.className = 'podium-column';
-
-          const img = createImgElement(item.id, false);
-          if (img) {
-            img.className = 'tier-img podium-img';
-            col.appendChild(img);
-          }
-
-          const step = document.createElement('div');
-          step.className = `podium-step step-${rank}`;
-          step.innerText = `#${rank}`;
-          col.appendChild(step);
-
-          podium.appendChild(col);
-        });
-      }
+      sortedGroupItems.slice(0, 5).forEach((item, originalIndex) => {
+        const col = document.createElement('div'); col.className = 'podium-column';
+        const img = createImgElement(item.id, false);
+        if (img) { img.className = 'tier-img podium-img'; col.appendChild(img); }
+        const step = document.createElement('div'); step.className = `podium-step step-${originalIndex + 1}`; step.innerText = `#${originalIndex + 1}`;
+        col.appendChild(step); podium.appendChild(col);
+      });
     }
 
     function switchTab(tabId, btn) {
@@ -1757,14 +1709,7 @@
       document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
       btn.classList.add('active');
       document.getElementById(`tab-${tabId}`).classList.add('active');
-
-      const unassignedSection = document.querySelector('.unassigned-section');
-      if (tabId === 'my' && currentMode !== 'pictures' && currentMode !== 'collected') {
-        unassignedSection.style.display = 'block';
-      } else {
-        unassignedSection.style.display = 'none';
-      }
-
+      document.querySelector('.unassigned-section').style.display = (tabId === 'my' && !['pictures', 'collected', 'caffeine'].includes(currentMode)) ? 'block' : 'none';
       renderActiveTab();
     }
 
@@ -1775,53 +1720,20 @@
       document.getElementById(`sub-tab-friends-collected`).style.display = (subTabId === 'friends') ? 'block' : 'none';
       document.getElementById(`sub-tab-my-collected`).style.display = (subTabId === 'my') ? 'block' : 'none';
       document.getElementById(`sub-tab-${subTabId}-collected`).classList.add('active');
-      if (subTabId === 'friends') {
-        renderFriendCollectedView();
-      }
+      if (subTabId === 'friends') renderFriendCollectedView();
     }
 
     function renderCollectedView() {
       const grid = document.getElementById('my-collected-grid');
       grid.innerHTML = '';
+      document.getElementById('my-collection-count').innerText = `${Object.values(myCollected).filter(val => val === true).length} / ${products.length}`;
 
-      const totalCount = products.length;
-      const collectedCount = Object.values(myCollected).filter(val => val === true).length;
-      document.getElementById('my-collection-count').innerText = `${collectedCount} / ${totalCount}`;
-
-      const sortedProducts = [...products].sort((a, b) => {
-        const aVal = myCollected[a.id] ? 1 : 0;
-        const bVal = myCollected[b.id] ? 1 : 0;
-        return bVal - aVal;
-      });
-
-      sortedProducts.forEach(prod => {
-        const row = document.createElement('div');
-        row.className = 'collected-item-row';
-
-        const info = document.createElement('div');
-        info.className = 'collected-item-info';
-        info.onclick = () => openActionModal(prod);
-
-        const img = document.createElement('img');
-        img.src = prod.img;
-        img.className = 'collected-item-img';
-
-        const name = document.createElement('div');
-        name.className = 'collected-item-name';
-        name.innerText = prod.name;
-
-        info.appendChild(img);
-        info.appendChild(name);
-
-        const dot = document.createElement('div');
-        dot.className = 'status-dot';
-        if (myCollected[prod.id]) {
-          dot.classList.add('active');
-        }
-
-        row.appendChild(info);
-        row.appendChild(dot);
-        grid.appendChild(row);
+      [...products].sort((a, b) => (myCollected[b.id] ? 1 : 0) - (myCollected[a.id] ? 1 : 0)).forEach(prod => {
+        const row = document.createElement('div'); row.className = 'collected-item-row';
+        const info = document.createElement('div'); info.className = 'collected-item-info'; info.onclick = () => openActionModal(prod);
+        info.innerHTML = `<img src="${prod.img}" class="collected-item-img"><div class="collected-item-name">${prod.name}</div>`;
+        const dot = document.createElement('div'); dot.className = 'status-dot' + (myCollected[prod.id] ? ' active' : '');
+        row.appendChild(info); row.appendChild(dot); grid.appendChild(row);
       });
     }
 
@@ -1829,134 +1741,53 @@
       const friendName = document.getElementById('friend-collected-select').value;
       const grid = document.getElementById('friend-collected-grid');
       grid.innerHTML = '';
-
-      const totalCount = products.length;
       const countEl = document.getElementById('friend-collection-count');
 
-      if (!friendName || !roomData[friendName]) {
-        countEl.innerText = `0 / ${totalCount}`;
-        return;
-      }
-
+      if (!friendName || !roomData[friendName]) { countEl.innerText = `0 / ${products.length}`; return; }
       const friendCollected = getUserCollected(roomData[friendName]);
-      const friendCollectedCount = Object.values(friendCollected).filter(val => val === true).length;
-      countEl.innerText = `${friendCollectedCount} / ${totalCount}`;
+      countEl.innerText = `${Object.values(friendCollected).filter(val => val === true).length} / ${products.length}`;
 
-      const sortedProducts = [...products].sort((a, b) => {
-        const aVal = friendCollected[a.id] ? 1 : 0;
-        const bVal = friendCollected[b.id] ? 1 : 0;
-        return bVal - aVal;
-      });
-
-      sortedProducts.forEach(prod => {
-        const row = document.createElement('div');
-        row.className = 'collected-item-row';
-
-        const info = document.createElement('div');
-        info.className = 'collected-item-info';
-
-        const img = document.createElement('img');
-        img.src = prod.img;
-        img.className = 'collected-item-img';
-
-        const name = document.createElement('div');
-        name.className = 'collected-item-name';
-        name.innerText = prod.name;
-
-        info.appendChild(img);
-        info.appendChild(name);
-
-        const dot = document.createElement('div');
-        dot.className = 'status-dot';
-        if (friendCollected[prod.id]) {
-          dot.classList.add('active');
-        }
-
-        row.appendChild(info);
-        row.appendChild(dot);
+      [...products].sort((a, b) => (friendCollected[b.id] ? 1 : 0) - (friendCollected[a.id] ? 1 : 0)).forEach(prod => {
+        const row = document.createElement('div'); row.className = 'collected-item-row';
+        row.innerHTML = `<div class="collected-item-info"><img src="${prod.img}" class="collected-item-img"><div class="collected-item-name">${prod.name}</div></div><div class="status-dot${friendCollected[prod.id] ? ' active' : ''}"></div>`;
         grid.appendChild(row);
       });
     }
 
     function openActionModal(prod) {
-      const modal = document.getElementById('actionModal');
-      const modalImg = document.getElementById('modalProductImg');
-      const modalName = document.getElementById('modalProductName');
-      const modalStatus = document.getElementById('modalProductStatus');
-      const modalBtns = document.getElementById('modalActionButtons');
-
-      modalImg.src = prod.img;
-      modalName.innerText = prod.name;
-
+      document.getElementById('modalProductImg').src = prod.img;
+      document.getElementById('modalProductName').innerText = prod.name;
       const isCollected = !!myCollected[prod.id];
-      modalStatus.innerText = isCollected ? 'Status: Tasted' : 'Status: Not tasted';
-
-      modalBtns.innerHTML = '';
-      if (isCollected) {
-        const removeBtn = document.createElement('button');
-        removeBtn.className = 'action-modal-btn btn-remove';
-        removeBtn.innerText = 'Remove';
-        removeBtn.onclick = () => {
-          myCollected[prod.id] = false;
-          saveToFirebase();
-          closeActionModal();
-          renderCollectedView();
-        };
-        modalBtns.appendChild(removeBtn);
-      } else {
-        const addBtn = document.createElement('button');
-        addBtn.className = 'action-modal-btn btn-add';
-        addBtn.innerText = 'Add';
-        addBtn.onclick = () => {
-          myCollected[prod.id] = true;
-          saveToFirebase();
-          closeActionModal();
-          renderCollectedView();
-        };
-        modalBtns.appendChild(addBtn);
-      }
-
-      modal.classList.add('show');
+      document.getElementById('modalProductStatus').innerText = isCollected ? 'Status: Tasted' : 'Status: Not tasted';
+      
+      const modalBtns = document.getElementById('modalActionButtons');
+      modalBtns.innerHTML = `<button class="action-modal-btn ${isCollected ? 'btn-remove' : 'btn-add'}" onclick="toggleCollectStatus('${prod.id}', ${!isCollected})">${isCollected ? 'Remove' : 'Add'}</button>`;
+      document.getElementById('actionModal').classList.add('show');
     }
 
-    function closeActionModal() {
-      const modal = document.getElementById('actionModal');
-      modal.classList.remove('show');
+    function toggleCollectStatus(productId, status) {
+      myCollected[productId] = status;
+      saveToFirebase();
+      closeActionModal();
+      renderCollectedView();
     }
+
+    function closeActionModal() { document.getElementById('actionModal').classList.remove('show'); }
 
     function switchPictureSubTab(subTabId, btn) {
       document.querySelectorAll('#tab-pictures .sub-tab-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('#tab-pictures .sub-tab-content').forEach(c => c.classList.remove('active'));
       btn.classList.add('active');
       document.getElementById(`sub-tab-${subTabId}-pictures`).classList.add('active');
-      if (subTabId === 'friends') {
-        renderFriendPicturesView();
-      }
+      if (subTabId === 'friends') renderFriendPicturesView();
     }
 
     function renderPicturesView() {
       const grid = document.getElementById('my-uploaded-pictures-grid');
       grid.innerHTML = '';
-
       myPictures.forEach((base64, index) => {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'uploaded-picture-wrapper';
-
-        const picImg = document.createElement('img');
-        picImg.src = base64;
-        picImg.className = 'uploaded-picture-card';
-        picImg.onclick = () => openModal(base64);
-
-        const deleteBtn = document.createElement('button');
-        deleteBtn.className = 'delete-pic-btn';
-        deleteBtn.innerText = '✕';
-        deleteBtn.onclick = (e) => {
-          e.stopPropagation();
-          removePicture(index);
-        };
-
-        wrapper.appendChild(picImg);
-        wrapper.appendChild(deleteBtn);
+        const wrapper = document.createElement('div'); wrapper.className = 'uploaded-picture-wrapper';
+        wrapper.innerHTML = `<img src="${base64}" class="uploaded-picture-card" onclick="openModal('${base64}')"><button class="delete-pic-btn" onclick="removePicture(${index})">✕</button>`;
         grid.appendChild(wrapper);
       });
     }
@@ -1964,11 +1795,9 @@
     function handleImageUpload(e) {
       const file = e.target.files[0];
       if (!file) return;
-
       const reader = new FileReader();
       reader.onload = function(event) {
-        const base64 = event.target.result;
-        myPictures.push(base64);
+        myPictures.push(event.target.result);
         saveToFirebase();
         renderPicturesView();
         document.getElementById('picture-file-input').value = '';
@@ -1986,49 +1815,29 @@
       const friendName = document.getElementById('friend-pictures-select').value;
       const grid = document.getElementById('friend-uploaded-pictures-grid');
       grid.innerHTML = '';
+      if (!friendName || !roomData[friendName]) return;
 
-      if (!friendName || !roomData[friendName]) {
-        return;
-      }
-
-      const friendPics = getUserPictures(roomData[friendName]);
-
-      friendPics.forEach(base64 => {
-        const picImg = document.createElement('img');
-        picImg.src = base64;
-        picImg.className = 'uploaded-picture-card';
-        picImg.onclick = () => openModal(base64);
-
-        const wrapper = document.createElement('div');
-        wrapper.className = 'uploaded-picture-wrapper';
-        wrapper.appendChild(picImg);
+      getUserPictures(roomData[friendName]).forEach(base64 => {
+        const wrapper = document.createElement('div'); wrapper.className = 'uploaded-picture-wrapper';
+        wrapper.innerHTML = `<img src="${base64}" class="uploaded-picture-card" onclick="openModal('${base64}')">`;
         grid.appendChild(wrapper);
       });
     }
 
     function openModal(src) {
-      const modal = document.getElementById('imageModal');
-      const modalImg = document.getElementById('modalImg');
-      modalImg.src = src;
-      modal.classList.add('show');
+      document.getElementById('modalImg').src = src;
+      document.getElementById('imageModal').classList.add('show');
     }
 
-    function closeModal() {
-      const modal = document.getElementById('imageModal');
-      modal.classList.remove('show');
-    }
+    function closeModal() { document.getElementById('imageModal').classList.remove('show'); }
 
     window.addEventListener('DOMContentLoaded', () => {
       const savedRoom = localStorage.getItem('monster_room');
       const savedName = localStorage.getItem('monster_name');
       if (savedRoom) document.getElementById('room-input').value = savedRoom;
       if (savedName) document.getElementById('name-input').value = savedName;
-      
       renderActiveTab();
-
-      if (savedRoom) {
-        connectToRoom();
-      }
+      if (savedRoom) connectToRoom();
     });
   </script>
 </body>
