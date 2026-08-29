@@ -1091,6 +1091,7 @@
 
     function updatePositions(mode) {
       const list = myData[mode];
+      if (!list) return;
       const activeProds = (typeof mode === 'string' && categoryNames[mode]) ? products.filter(p => p.category === mode) : [];
       const activeIds = activeProds.map(p => p.id);
       const maxTier = mode === 5 ? 5 : (mode === 10 ? 10 : 1);
@@ -1117,6 +1118,7 @@
     }
 
     function ensureAllProductsExist(list) {
+      if (!Array.isArray(list)) return;
       products.forEach(prod => {
         if (!list.some(item => item.id === prod.id)) list.push({ id: prod.id, t: 0, p: 0 });
       });
@@ -1156,6 +1158,7 @@
         }
 
         ['5', '10', ...catKeys].forEach(m => {
+          if (!myData[m]) myData[m] = products.map(p => ({ id: p.id, t: 0, p: 0 }));
           const beforeLen = myData[m].length;
           ensureAllProductsExist(myData[m]);
           if (myData[m].length !== beforeLen) needsSave = true;
@@ -1511,6 +1514,8 @@
       const isCategory = (typeof currentMode === 'string' && categoryNames[currentMode]);
       const activeProds = getActiveProducts();
       const activeIds = activeProds.map(p => p.id);
+      
+      if (!myData[currentMode]) myData[currentMode] = products.map(p => ({ id: p.id, t: 0, p: 0 }));
       const sortedData = [...myData[currentMode]].filter(item => !isCategory || activeIds.includes(item.id)).sort((a, b) => a.t !== b.t ? a.t - b.t : a.p - b.p);
 
       sortedData.filter(item => item.t === 0).forEach(item => {
@@ -1617,6 +1622,7 @@
       (isCategory ? activeProds : products).forEach(p => stats[p.id] = { id: p.id, starSum: 0, posSum: 0, count: 0 });
 
       allSubmissions.forEach(sub => {
+        if (!Array.isArray(sub)) return;
         sub.forEach(item => {
           if (stats[item.id] && item.t > 0) {
             stats[item.id].starSum += item.t;
@@ -1815,7 +1821,6 @@
 
     function closeModal() { document.getElementById('imageModal').classList.remove('show'); }
 
-    // Expose scope methods globally
     window.connectToRoom = connectToRoom;
     window.leaveRoom = leaveRoom;
     window.switchMode = switchMode;
@@ -1846,7 +1851,7 @@
       if (savedRoom) document.getElementById('room-input').value = savedRoom;
       if (savedName) document.getElementById('name-input').value = savedName;
       renderActiveTab();
-      if (savedRoom) connectToRoom();
+      if (savedRoom && savedName) connectToRoom();
     });
   </script>
 </body>
