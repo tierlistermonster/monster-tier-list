@@ -888,7 +888,6 @@
     
     const categoryKeys = ['energy', 'ultra', 'juiced', 'rehab', 'java', 'nitro', 'drivers'];
     
-    // Helyi mentések betöltése localStorage-ból, hogy ne vesszenek el adatok offline vagy hiba esetén sem
     function loadLocalCache() {
       try {
         const cachedMyData = localStorage.getItem('monster_my_data');
@@ -1212,7 +1211,6 @@
       const room = document.getElementById('room-input').value.trim();
       const userName = document.getElementById('name-input').value.trim();
       
-      // Helyi mentés frissítése azonnal, így semmi sem vész el
       try {
         localStorage.setItem('monster_my_data', JSON.stringify(myData));
         localStorage.setItem('monster_collected', JSON.stringify(myCollected));
@@ -1588,8 +1586,9 @@
 
       const combinedTitle = document.getElementById('combined-title');
       if(combinedTitle) combinedTitle.innerText = `Comparison with ${name}`;
-      buildBoard('friend-board', false);
       
+      // 1. Barát listájának kirajzolása
+      buildBoard('friend-board', false);
       const userSubmissions = getSubmissionsForMode(roomData[name], currentMode);
       if (!userSubmissions) return;
 
@@ -1632,9 +1631,95 @@
           });
         }
       });
+
+      // 2. Összehasonlító (Comparison) tábla kirajzolása (Én + Barát átlaga / kombinációja)
       buildBoard('combined-board', false);
+      const mySubmissions = getSubmissionsForMode({ tierLists: { '5': myData[5], '10': myData[10], ...Object.fromEntries(categoryKeys.map(k => [k, myData[k]])) } }, currentMode) || myData[currentMode];
+
+      if (isCategory) {
+        levels.forEach(tl => {
+          const zone = document.querySelector(`#combined-board .tier-zone[data-tier="${tl.level}"]`);
+          if (zone) {
+            activeIds.forEach((id, index) => {
+              const wrapper = document.createElement('div'); wrapper.className = 'slot-wrapper';
+              const slot = document.createElement('div'); slot.className = 'slot-cell';
+              const numBox = document.createElement('div'); numBox.className = 'slot-number-box'; numBox.innerText = index + 1;
+              wrapper.appendChild(slot); wrapper.appendChild(numBox); zone.appendChild(wrapper);
+            });
+          }
+        });
+      }
+
+      const combinedStats = {};
+      (isCategory ? activeProds : products).forEach(p => combinedStats[p.id] = { id: p.id, starSum: 0, posSum: 0, count: 0 });
+
+      [mySubmissions, userSubmissions].forEach(sub => {
+        if (Array.isArray(sub)) {
+          sub.forEach(item => {
+            if (combinedStats[item.id] && item.t > 0) {
+              combinedStats[item.id].starSum += item.t;
+              combinedStats[item.id].posSum += item.p;
+              combinedStats[item.id].count += 1;
+            }
+          });
+        }
+      });
+
+      const processedCombined = Object.values(combinedStats).filter(s => s.count > 0).map(s => ({
+        id: s.id, avgStars: s.starSum / s.count, avgPos: s.posSum / s.count, posPoints: s.posSum, count: s.count
+      }));
+
+      const combinedTiers = {};
+      levels.forEach(tl => combinedTiers[tl.level] = []);
+
+      processedCombined.forEach(i => {
+        if (currentMode === 5) {
+          if (i.avgStars >= 4.5) combinedTiers[5].push(i);
+          else if (i.avgStars >= 3.5) combinedTiers[4].push(i);
+          else if (i.avgStars >= 2.5) combinedTiers[3].push(i);
+          else if (i.avgStars >= 1.5) combinedTiers[2].push(i);
+          else combinedTiers[1].push(i);
+        } else if (currentMode === 10) {
+          let rounded = Math.round(i.avgStars);
+          if (rounded < 1) rounded = 1; if (rounded > 10) rounded = 10;
+          if (combinedTiers[rounded]) combinedTiers[rounded].push(i); else combinedTiers[1].push(i);
+        } else {
+          combinedTiers[1].push(i);
+        }
+      });
+
+      Object.keys(combinedTiers).forEach(tLevel => {
+        combinedTiers[tLevel].sort((a, b) => isCategory ? (a.avgPos - b.avgPos) : (a.posPoints - b.posPoints));
+        const zone = document.querySelector(`#combined-board .tier-zone[data-tier="${tLevel}"]`);
+        if (zone) {
+          combinedTiers[tLevel].forEach(item => {
+            const wrappers = zone.querySelectorAll('.slot-wrapper');
+            const emptyWrapper = Array.from(wrappers).find(w => !w.querySelector('.tier-img'));
+            const img = createImgElement(item.id, false);
+            if (emptyWrapper && img) {
+              emptyWrapper.querySelector('.slot-cell').classList.add('has-item');
+              emptyWrapper.querySelector('.slot-cell').appendChild(img);
+            } else if (img) zone.appendChild(img);
+          });
+        }
+      });
+
       const combinedPodium = document.getElementById('combined-podium');
-      if(combinedPodium) combinedPodium.innerHTML = '';
+      if(combinedPodium) {
+        combinedPodium.innerHTML = '';
+        const sortedCombinedItems = [];
+        levels.map(l => l.level).sort((a,b) => b - a).forEach(tLevel => {
+          if (combinedTiers[tLevel]) combinedTiers[tLevel].forEach(item => sortedCombinedItems.push(item));
+        });
+
+        sortedCombinedItems.slice(0, 5).forEach((item, originalIndex) => {
+          const col = document.createElement('div'); col.className = 'podium-column';
+          const img = createImgElement(item.id, false);
+          if (img) { img.className = 'tier-img podium-img'; col.appendChild(img); }
+          const step = document.createElement('div'); step.className = `podium-step step-${originalIndex + 1}`; step.innerText = `#${originalIndex + 1}`;
+          col.appendChild(step); combinedPodium.appendChild(col);
+        });
+      }
     }
 
     function renderGroupView() {
