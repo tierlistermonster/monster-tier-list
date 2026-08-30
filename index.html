@@ -1587,7 +1587,6 @@
       const combinedTitle = document.getElementById('combined-title');
       if(combinedTitle) combinedTitle.innerText = `Comparison with ${name}`;
       
-      // 1. Barát listájának kirajzolása
       buildBoard('friend-board', false);
       const userSubmissions = getSubmissionsForMode(roomData[name], currentMode);
       if (!userSubmissions) return;
@@ -1632,7 +1631,6 @@
         }
       });
 
-      // 2. Összehasonlító (Comparison) tábla kirajzolása (Én + Barát átlaga / kombinációja)
       buildBoard('combined-board', false);
       const mySubmissions = getSubmissionsForMode({ tierLists: { '5': myData[5], '10': myData[10], ...Object.fromEntries(categoryKeys.map(k => [k, myData[k]])) } }, currentMode) || myData[currentMode];
 
