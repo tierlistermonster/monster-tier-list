@@ -891,19 +891,6 @@
     let currentConnectionRef = null; 
     
     const categoryKeys = ['energy', 'ultra', 'juiced', 'rehab', 'java', 'nitro', 'drivers', 'sugary', 'zero'];
-    
-    function loadLocalCache() {
-      try {
-        const cachedMyData = localStorage.getItem('monster_my_data');
-        if (cachedMyData) myData = JSON.parse(cachedMyData);
-        const cachedCollected = localStorage.getItem('monster_collected');
-        if (cachedCollected) myCollected = JSON.parse(cachedCollected);
-        const cachedPictures = localStorage.getItem('monster_pictures');
-        if (cachedPictures) myPictures = JSON.parse(cachedPictures);
-        const cachedCaffeine = localStorage.getItem('monster_caffeine');
-        if (cachedCaffeine) myCaffeineHistory = JSON.parse(cachedCaffeine);
-      } catch(e) { console.error('Cache load error', e); }
-    }
 
     let myData = {
       5: products.map(p => ({ id: p.id, t: 0, p: 0 })),
@@ -916,7 +903,6 @@
     let myCollected = {}; 
     let myPictures = []; 
     let myCaffeineHistory = [];
-    loadLocalCache();
 
     let selectedProductId = null; 
     let caffeineSelectedDrink = null;
@@ -1152,9 +1138,6 @@
       const userName = document.getElementById('name-input').value.trim();
       if (!room) return;
 
-      localStorage.setItem('monster_room', room);
-      if (userName) localStorage.setItem('monster_name', userName);
-
       if (currentConnectionRef) currentConnectionRef.off();
 
       currentConnectionRef = db.ref('rooms/' + room);
@@ -1201,7 +1184,6 @@
 
     function leaveRoom() {
       if (currentConnectionRef) { currentConnectionRef.off(); currentConnectionRef = null; }
-      localStorage.removeItem('monster_room'); localStorage.removeItem('monster_name');
       document.getElementById('room-input').value = ''; document.getElementById('name-input').value = '';
       roomData = {}; selectedProductId = null; myPictures = []; myCollected = {}; myCaffeineHistory = [];
       myData = { 5: products.map(p => ({ id: p.id, t: 0, p: 0 })), 10: products.map(p => ({ id: p.id, t: 0, p: 0 })) };
@@ -1214,14 +1196,6 @@
     function saveToFirebase() {
       const room = document.getElementById('room-input').value.trim();
       const userName = document.getElementById('name-input').value.trim();
-      
-      try {
-        localStorage.setItem('monster_my_data', JSON.stringify(myData));
-        localStorage.setItem('monster_collected', JSON.stringify(myCollected));
-        localStorage.setItem('monster_pictures', JSON.stringify(myPictures));
-        localStorage.setItem('monster_caffeine', JSON.stringify(myCaffeineHistory));
-      } catch(e) {}
-
       if (!room || !userName) return;
 
       const tierListsSave = { '5': myData[5], '10': myData[10] };
@@ -1984,17 +1958,8 @@
     window.closeModal = closeModal;
 
     window.addEventListener('DOMContentLoaded', () => {
-      const savedRoom = localStorage.getItem('monster_room');
-      const savedName = localStorage.getItem('monster_name');
-      if (savedRoom) document.getElementById('room-input').value = savedRoom;
-      if (savedName) document.getElementById('name-input').value = savedName;
-      
       switchTab('group', document.querySelector('.nav-tabs button.tab-btn'));
       renderActiveTab();
-      
-      if (savedRoom && savedName) {
-        connectToRoom();
-      }
     });
   </script>
 </body>
