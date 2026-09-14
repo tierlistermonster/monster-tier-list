@@ -1136,7 +1136,10 @@
     function connectToRoom() {
       const room = document.getElementById('room-input').value.trim();
       const userName = document.getElementById('name-input').value.trim();
-      if (!room) return;
+      if (!room || !userName) return;
+
+      localStorage.setItem('monster_room', room);
+      localStorage.setItem('monster_name', userName);
 
       if (currentConnectionRef) currentConnectionRef.off();
 
@@ -1184,6 +1187,8 @@
 
     function leaveRoom() {
       if (currentConnectionRef) { currentConnectionRef.off(); currentConnectionRef = null; }
+      localStorage.removeItem('monster_room');
+      localStorage.removeItem('monster_name');
       document.getElementById('room-input').value = ''; document.getElementById('name-input').value = '';
       roomData = {}; selectedProductId = null; myPictures = []; myCollected = {}; myCaffeineHistory = [];
       myData = { 5: products.map(p => ({ id: p.id, t: 0, p: 0 })), 10: products.map(p => ({ id: p.id, t: 0, p: 0 })) };
@@ -1958,6 +1963,15 @@
     window.closeModal = closeModal;
 
     window.addEventListener('DOMContentLoaded', () => {
+      const savedRoom = localStorage.getItem('monster_room');
+      const savedName = localStorage.getItem('monster_name');
+      
+      if (savedRoom && savedName) {
+        document.getElementById('room-input').value = savedRoom;
+        document.getElementById('name-input').value = savedName;
+        connectToRoom();
+      }
+
       switchTab('group', document.querySelector('.nav-tabs button.tab-btn'));
       renderActiveTab();
     });
