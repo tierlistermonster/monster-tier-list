@@ -624,6 +624,7 @@
         <button class="sub-mode-btn" onclick="switchMode('java')">Java</button>
         <button class="sub-mode-btn" onclick="switchMode('nitro')">Nitro</button>
         <button class="sub-mode-btn" onclick="switchMode('drivers')">Drivers</button>
+        <button class="sub-mode-btn" onclick="switchMode('reserve')">Reserve</button>
         <button class="sub-mode-btn" onclick="switchMode('sugary')">Sugary</button>
         <button class="sub-mode-btn" onclick="switchMode('zero')">Zero</button>
       </div>
@@ -850,73 +851,73 @@
     const db = firebase.database();
 
     const products = [
-      { id: '1',  name: 'Aussie Lemonade',         img: 'Aussie Lemonade.png',         category: 'juiced', sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
-      { id: '2',  name: 'Bad Apple',               img: 'Bad Apple.png',               category: 'juiced', sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
-      { id: '3',  name: 'Energy Zero Sugar',       img: 'Energy Zero Sugar.png',       category: 'energy', sugaryOrZero: 'zero', caffeinePer100ml: 32 },
-      { id: '4',  name: 'Energy',                  img: 'Energy.png',                  category: 'energy', sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
-      { id: '5',  name: 'Full Throttle',           img: 'Full Throttle.png',           category: 'drivers', sugaryOrZero: 'zero', caffeinePer100ml: 30 },
-      { id: '6',  name: 'Khaotic',                 img: 'Khaotic.png',                 category: 'juiced', sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
-      { id: '7',  name: 'Lando Norris',            img: 'Lando Norris.png',            category: 'drivers', sugaryOrZero: 'zero', caffeinePer100ml: 32 },
-      { id: '8',  name: 'Mango Loco',              img: 'Mango Loco.png',              category: 'juiced', sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
-      { id: '9',  name: 'Monarch',                 img: 'Monarch.png',                 category: 'juiced', sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
-      { id: '10', name: 'Nitro Cosmic Peach',      img: 'Nitro Cosmic Peach.png',      category: 'nitro', sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
-      { id: '11', name: 'Nitro Super Dry',         img: 'Nitro Super Dry.png',         category: 'nitro', sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
-      { id: '12', name: 'Pacific Punch',           img: 'Pacific Punch.png',           category: 'juiced', sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
-      { id: '13', name: 'Pipeline Punch',          img: 'Pipeline Punch.png',          category: 'juiced', sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
-      { id: '14', name: 'Rehab Lemonade Tea',      img: 'Rehab Lemonade Tea.png',      category: 'rehab', sugaryOrZero: 'sugary', caffeinePer100ml: 25 },
-      { id: '15', name: 'Rehab Peach Tea',         img: 'Rehab Peach Tea.png',         category: 'rehab', sugaryOrZero: 'sugary', caffeinePer100ml: 25 },
-      { id: '16', name: 'Rio Punch',               img: 'Rio Punch.png',               category: 'juiced', sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
-      { id: '17', name: 'Ultra Black',             img: 'Ultra Black.png',             category: 'ultra', sugaryOrZero: 'zero', caffeinePer100ml: 30 },
-      { id: '18', name: 'Ultra Fantasy Ruby Red',  img: 'Ultra Fantasy Ruby Red.png',  category: 'ultra', sugaryOrZero: 'zero', caffeinePer100ml: 30 },
-      { id: '19', name: 'Ultra Fiesta Mango',      img: 'Ultra Fiesta Mango.png',      category: 'ultra', sugaryOrZero: 'zero', caffeinePer100ml: 30 },
-      { id: '20', name: 'Ultra Golden Pineapple',  img: 'Ultra Golden Pineapple.png',  category: 'ultra', sugaryOrZero: 'zero', caffeinePer100ml: 30 },
-      { id: '21', name: 'Ultra Paradise',          img: 'Ultra Paradise.png',          category: 'ultra', sugaryOrZero: 'zero', caffeinePer100ml: 30 },
-      { id: '22', name: 'Ultra Peachy Keen',       img: 'Ultra Peachy Keen.png',       category: 'ultra', sugaryOrZero: 'zero', caffeinePer100ml: 30 },
-      { id: '23', name: 'Ultra Rosa',              img: 'Ultra Rosa.png',              category: 'ultra', sugaryOrZero: 'zero', caffeinePer100ml: 30 },
-      { id: '24', name: 'Ultra Strawberry Dreams', img: 'Ultra Strawberry Dreams.png', category: 'ultra', sugaryOrZero: 'zero', caffeinePer100ml: 30 },
-      { id: '25', name: 'Ultra Vice Guava',        img: 'Ultra Vice Guava.png',        category: 'ultra', sugaryOrZero: 'zero', caffeinePer100ml: 30 },
-      { id: '26', name: 'Ultra Violet',            img: 'Ultra Violet.png',            category: 'ultra', sugaryOrZero: 'zero', caffeinePer100ml: 30 },
-      { id: '27', name: 'Ultra Watermelon',        img: 'Ultra Watermelon.png',        category: 'ultra', sugaryOrZero: 'zero', caffeinePer100ml: 30 },
-      { id: '28', name: 'Ultra Zero',              img: 'Ultra Zero.png',              category: 'ultra', sugaryOrZero: 'zero', caffeinePer100ml: 30 },
-      { id: '29', name: 'Viking Berry',            img: 'Viking Berry.png',            category: 'juiced', sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
-      { id: '30', name: 'VR46 Doctor',             img: 'VR46 Doctor.png',             category: 'drivers', sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
-      { id: '31', name: 'VR46 Zero',               img: 'VR46 Zero.png',               category: 'drivers', sugaryOrZero: 'zero', caffeinePer100ml: 32 },
-      { id: '32', name: 'Ultra Red',               img: 'Ultra Red.png',               category: 'ultra', sugaryOrZero: 'zero', caffeinePer100ml: 30 },
-      { id: '33', name: 'Ultra Red White & Blue Razz',               img: 'Ultra Red White & Blue Razz.png',               category: 'ultra', sugaryOrZero: 'zero', caffeinePer100ml: 30 },
-      { id: '34', name: 'Strawberry Lemonade',               img: 'Strawberry Lemonade.png',               category: 'juiced', sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
-      { id: '35', name: 'Assault',               img: 'Assault.png',               category: 'energy', sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
-      { id: '36', name: 'Dragon Ice Tea Lemon',               img: 'Dragon Ice Tea Lemon.png',               category: 'rehab', sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
-      { id: '37', name: 'Dragon Ice Tea Peach',               img: 'Dragon Ice Tea Peach.png',               category: 'rehab', sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
-      { id: '38', name: 'Java Cafe Latte',               img: 'Java Cafe Latte.png',               category: 'java', sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
-      { id: '39', name: 'Java Irish Creme',               img: 'Java Irish Creme.png',               category: 'java', sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
-      { id: '40', name: 'Java Loca Moca',               img: 'Java Loca Moca.png',               category: 'java', sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
-      { id: '41', name: 'Java Mean Bean',               img: 'Java Mean Bean.png',               category: 'java', sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
-      { id: '42', name: 'Java Salted Caramel',               img: 'Java Salted Caramel.png',               category: 'java', sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
-      { id: '43', name: 'Killer Brew Loca Moca',               img: 'Killer Brew Loca Moca.png',               category: 'java', sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
-      { id: '44', name: 'Killer Brew Mean Bean',               img: 'Killer Brew Mean Bean.png',               category: 'java', sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
-      { id: '45', name: 'Mixxd',               img: 'Mixxd.png',               category: 'juiced', sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
-      { id: '46', name: 'Rehab Green Tea',               img: 'Rehab Green Tea.png',               category: 'rehab', sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
-      { id: '47', name: 'Rehab Strawberry Lemonade Tea',               img: 'Rehab Strawberry Lemonade Tea.png',               category: 'rehab', sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
-      { id: '48', name: 'Rehab Wild Berry Tea',               img: 'Rehab Wild Berry Tea.png',               category: 'rehab', sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
-      { id: '49', name: 'Reserve Orange Dreamsicle',               img: 'Reserve Orange Dreamsicle.png',               category: 'energy', sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
-      { id: '50', name: 'Reserve Watermelon',               img: 'Reserve Watermelon.png',               category: 'energy', sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
-      { id: '51', name: 'Reserve White Pineapple',               img: 'Reserve White Pineapple.png',               category: 'energy', sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
-      { id: '52', name: 'Ripper',               img: 'Ripper.png',               category: 'juiced', sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
-      { id: '53', name: 'Strawberry Shot Zero Sugar',               img: 'Strawberry Shot Zero Sugar.png',               category: 'energy', sugaryOrZero: 'zero', caffeinePer100ml: 30 },
-      { id: '54', name: 'Strawberry Shot',               img: 'Strawberry Shot.png',               category: 'energy', sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
-      { id: '55', name: 'Ultra Blue Hawaiian',               img: 'Ultra Blue Hawaiian.png',               category: 'ultra', sugaryOrZero: 'zero', caffeinePer100ml: 30 },
-      { id: '56', name: 'Ultra Blue',               img: 'Ultra Blue.png',               category: 'ultra', sugaryOrZero: 'zero', caffeinePer100ml: 30 },
-      { id: '57', name: 'Ultra Punk Punch',               img: 'Ultra Punk Punch.png',               category: 'ultra', sugaryOrZero: 'zero', caffeinePer100ml: 30 },
-      { id: '58', name: 'Ultra Sunrise',               img: 'Ultra Sunrise.png',               category: 'ultra', sugaryOrZero: 'zero', caffeinePer100ml: 30 },
-      { id: '59', name: 'Ultra Wild Passion',               img: 'Ultra Wild Passion.png',               category: 'ultra', sugaryOrZero: 'zero', caffeinePer100ml: 30 },
-      { id: '60', name: 'Voodoo Grape',               img: 'Voodoo Grape.png',               category: 'juiced', sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
+      { id: '1',  name: 'Assault',                         img: 'Assault.png',                         category: 'energy',  sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
+      { id: '2',  name: 'Aussie Lemonade',                 img: 'Aussie Lemonade.png',                 category: 'juiced',  sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
+      { id: '3',  name: 'Bad Apple',                       img: 'Bad Apple.png',                       category: 'juiced',  sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
+      { id: '4',  name: 'Dragon Ice Tea Lemon',            img: 'Dragon Ice Tea Lemon.png',            category: 'rehab',   sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
+      { id: '5',  name: 'Dragon Ice Tea Peach',            img: 'Dragon Ice Tea Peach.png',            category: 'rehab',   sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
+      { id: '6',  name: 'Energy',                          img: 'Energy.png',                          category: 'energy',  sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
+      { id: '7',  name: 'Energy Zero Sugar',               img: 'Energy Zero Sugar.png',               category: 'energy',  sugaryOrZero: 'zero',   caffeinePer100ml: 32 },
+      { id: '8',  name: 'Full Throttle',                   img: 'Full Throttle.png',                   category: 'drivers', sugaryOrZero: 'zero',   caffeinePer100ml: 30 },
+      { id: '9',  name: 'Java Cafe Latte',                 img: 'Java Cafe Latte.png',                 category: 'java',    sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
+      { id: '10', name: 'Java Irish Creme',                img: 'Java Irish Creme.png',                category: 'java',    sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
+      { id: '11', name: 'Java Loca Moca',                img: 'Java Loca Moca.png',                category: 'java',    sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
+      { id: '12', name: 'Java Mean Bean',                img: 'Java Mean Bean.png',                category: 'java',    sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
+      { id: '13', name: 'Java Salted Caramel',             img: 'Java Salted Caramel.png',             category: 'java',    sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
+      { id: '14', name: 'Khaotic',                         img: 'Khaotic.png',                         category: 'juiced',  sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
+      { id: '15', name: 'Killer Brew Loca Moca',         img: 'Killer Brew Loca Moca.png',         category: 'java',    sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
+      { id: '16', name: 'Killer Brew Mean Bean',         img: 'Killer Brew Mean Bean.png',         category: 'java',    sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
+      { id: '17', name: 'Lando Norris',                    img: 'Lando Norris.png',                    category: 'drivers', sugaryOrZero: 'zero',   caffeinePer100ml: 32 },
+      { id: '18', name: 'Mango Loco',                      img: 'Mango Loco.png',                      category: 'juiced',  sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
+      { id: '19', name: 'Mixxd',                           img: 'Mixxd.png',                           category: 'juiced',  sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
+      { id: '20', name: 'Monarch',                         img: 'Monarch.png',                         category: 'juiced',  sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
+      { id: '21', name: 'Nitro Cosmic Peach',              img: 'Nitro Cosmic Peach.png',              category: 'nitro',   sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
+      { id: '22', name: 'Nitro Super Dry',                 img: 'Nitro Super Dry.png',                 category: 'nitro',   sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
+      { id: '23', name: 'Pacific Punch',                   img: 'Pacific Punch.png',                   category: 'juiced',  sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
+      { id: '24', name: 'Pipeline Punch',                  img: 'Pipeline Punch.png',                  category: 'juiced',  sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
+      { id: '25', name: 'Rehab Green Tea',                 img: 'Rehab Green Tea.png',                 category: 'rehab',   sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
+      { id: '26', name: 'Rehab Lemonade Tea',              img: 'Rehab Lemonade Tea.png',              category: 'rehab',   sugaryOrZero: 'sugary', caffeinePer100ml: 25 },
+      { id: '27', name: 'Rehab Peach Tea',                 img: 'Rehab Peach Tea.png',                 category: 'rehab',   sugaryOrZero: 'sugary', caffeinePer100ml: 25 },
+      { id: '28', name: 'Rehab Strawberry Lemonade Tea',   img: 'Rehab Strawberry Lemonade Tea.png',   category: 'rehab',   sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
+      { id: '29', name: 'Rehab Wild Berry Tea',            img: 'Rehab Wild Berry Tea.png',            category: 'rehab',   sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
+      { id: '30', name: 'Reserve Orange Dreamsicle',       img: 'Reserve Orange Dreamsicle.png',       category: 'reserve', sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
+      { id: '31', name: 'Reserve Watermelon',              img: 'Reserve Watermelon.png',              category: 'reserve', sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
+      { id: '32', name: 'Reserve White Pineapple',         img: 'Reserve White Pineapple.png',         category: 'reserve', sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
+      { id: '33', name: 'Ripper',                          img: 'Ripper.png',                          category: 'juiced',  sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
+      { id: '34', name: 'Rio Punch',                       img: 'Rio Punch.png',                       category: 'juiced',  sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
+      { id: '35', name: 'Strawberry Lemonade',             img: 'Strawberry Lemonade.png',             category: 'juiced',  sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
+      { id: '36', name: 'Strawberry Shot',                 img: 'Strawberry Shot.png',                 category: 'energy',  sugaryOrZero: 'sugary', caffeinePer100ml: 30 },
+      { id: '37', name: 'Strawberry Shot Zero Sugar',      img: 'Strawberry Shot Zero Sugar.png',      category: 'energy',  sugaryOrZero: 'zero',   caffeinePer100ml: 30 },
+      { id: '38', name: 'Ultra Black',                     img: 'Ultra Black.png',                     category: 'ultra',   sugaryOrZero: 'zero',   caffeinePer100ml: 30 },
+      { id: '39', name: 'Ultra Blue',                      img: 'Ultra Blue.png',                      category: 'ultra',   sugaryOrZero: 'zero',   caffeinePer100ml: 30 },
+      { id: '40', name: 'Ultra Blue Hawaiian',             img: 'Ultra Blue Hawaiian.png',             category: 'ultra',   sugaryOrZero: 'zero',   caffeinePer100ml: 30 },
+      { id: '41', name: 'Ultra Fantasy Ruby Red',          img: 'Ultra Fantasy Ruby Red.png',          category: 'ultra',   sugaryOrZero: 'zero',   caffeinePer100ml: 30 },
+      { id: '42', name: 'Ultra Fiesta Mango',              img: 'Ultra Fiesta Mango.png',              category: 'ultra',   sugaryOrZero: 'zero',   caffeinePer100ml: 30 },
+      { id: '43', name: 'Ultra Golden Pineapple',          img: 'Ultra Golden Pineapple.png',          category: 'ultra',   sugaryOrZero: 'zero',   caffeinePer100ml: 30 },
+      { id: '44', name: 'Ultra Paradise',                  img: 'Ultra Paradise.png',                  category: 'ultra',   sugaryOrZero: 'zero',   caffeinePer100ml: 30 },
+      { id: '45', name: 'Ultra Peachy Keen',               img: 'Ultra Peachy Keen.png',               category: 'ultra',   sugaryOrZero: 'zero',   caffeinePer100ml: 30 },
+      { id: '46', name: 'Ultra Punk Punch',                img: 'Ultra Punk Punch.png',                category: 'ultra',   sugaryOrZero: 'zero',   caffeinePer100ml: 30 },
+      { id: '47', name: 'Ultra Red',                       img: 'Ultra Red.png',                       category: 'ultra',   sugaryOrZero: 'zero',   caffeinePer100ml: 30 },
+      { id: '48', name: 'Ultra Red White & Blue Razz',     img: 'Ultra Red White & Blue Razz.png',     category: 'ultra',   sugaryOrZero: 'zero',   caffeinePer100ml: 30 },
+      { id: '49', name: 'Ultra Rosa',                      img: 'Ultra Rosa.png',                      category: 'ultra',   sugaryOrZero: 'zero',   caffeinePer100ml: 30 },
+      { id: '50', name: 'Ultra Strawberry Dreams',         img: 'Ultra Strawberry Dreams.png',         category: 'ultra',   sugaryOrZero: 'zero',   caffeinePer100ml: 30 },
+      { id: '51', name: 'Ultra Sunrise',                   img: 'Ultra Sunrise.png',                   category: 'ultra',   sugaryOrZero: 'zero',   caffeinePer100ml: 30 },
+      { id: '52', name: 'Ultra Vice Guava',                img: 'Ultra Vice Guava.png',                category: 'ultra',   sugaryOrZero: 'zero',   caffeinePer100ml: 30 },
+      { id: '53', name: 'Ultra Violet',                    img: 'Ultra Violet.png',                    category: 'ultra',   sugaryOrZero: 'zero',   caffeinePer100ml: 30 },
+      { id: '54', name: 'Ultra Watermelon',                img: 'Ultra Watermelon.png',                category: 'ultra',   sugaryOrZero: 'zero',   caffeinePer100ml: 30 },
+      { id: '55', name: 'Ultra Wild Passion',              img: 'Ultra Wild Passion.png',              category: 'ultra',   sugaryOrZero: 'zero',   caffeinePer100ml: 30 },
+      { id: '56', name: 'Ultra Zero',                      img: 'Ultra Zero.png',                      category: 'ultra',   sugaryOrZero: 'zero',   caffeinePer100ml: 30 },
+      { id: '57', name: 'Viking Berry',                    img: 'Viking Berry.png',                    category: 'juiced',  sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
+      { id: '58', name: 'Voodoo Grape',                    img: 'Voodoo Grape.png',                    category: 'juiced',  sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
+      { id: '59', name: 'VR46 Doctor',                     img: 'VR46 Doctor.png',                     category: 'drivers', sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
+      { id: '60', name: 'VR46 Zero',                       img: 'VR46 Zero.png',                       category: 'drivers', sugaryOrZero: 'zero',   caffeinePer100ml: 32 }
     ];
 
     let currentMode = 5; 
     let roomData = {};
     let currentConnectionRef = null; 
     
-    const categoryKeys = ['energy', 'ultra', 'juiced', 'rehab', 'java', 'nitro', 'drivers', 'sugary', 'zero'];
+    const categoryKeys = ['energy', 'ultra', 'juiced', 'rehab', 'java', 'nitro', 'drivers', 'reserve', 'sugary', 'zero'];
 
     let myData = {
       5: products.map(p => ({ id: p.id, t: 0, p: 0 })),
@@ -958,7 +959,7 @@
 
     const categoryNames = {
       energy: 'Energy', ultra: 'Ultra', juiced: 'Juiced',
-      rehab: 'Rehab', java: 'Java', nitro: 'Nitro', drivers: 'Drivers', sugary: 'Sugary', zero: 'Zero'
+      rehab: 'Rehab', java: 'Java', nitro: 'Nitro', drivers: 'Drivers', reserve: 'Reserve', sugary: 'Sugary', zero: 'Zero'
     };
 
     function getCurrentTierLevels() {
