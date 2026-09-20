@@ -1880,10 +1880,11 @@
 
       const achievements = [];
       
-      // Tasted achievements
+      // Tasted achievements (Type: 1)
       for (let i = 1; i <= 10; i++) {
         const target = i * 10;
         achievements.push({
+          type: 1,
           title: `Taste ${target} Monsters`,
           desc: `Taste a total of ${target} different Monster Energy drinks.`,
           unlocked: tastedCount >= target,
@@ -1891,16 +1892,23 @@
         });
       }
 
-      // Caffeine achievements (1000mg steps up to 10000mg)
+      // Caffeine achievements (Type: 2)
       for (let i = 1; i <= 10; i++) {
         const targetMg = i * 1000;
         achievements.push({
+          type: 2,
           title: `${targetMg} mg Caffeine`,
           desc: `Consume a cumulative total of ${targetMg} mg of caffeine across all logs.`,
           unlocked: allTimeCaffeine >= targetMg,
           progress: `${Math.min(allTimeCaffeine, targetMg)} / ${targetMg} mg`
         });
       }
+
+      // Rendezés: Teljesítettek felülre (unlocked elöl), de megőrzik az eredeti típus (íz = 1, koffein = 2) szerinti sorrendet
+      achievements.sort((a, b) => {
+        if (a.unlocked === b.unlocked) return 0;
+        return a.unlocked ? -1 : 1;
+      });
 
       return achievements;
     }
