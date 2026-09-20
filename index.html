@@ -1922,6 +1922,7 @@
 
       const achievements = [];
       
+      // 1. Darabszám alapú achievements
       for (let i = 1; i <= 10; i++) {
         const target = i * 10;
         achievements.push({
@@ -1933,6 +1934,22 @@
         });
       }
 
+      // 2. Kategória alapú achievements (minden egyes kategóriából 1 kóstolva)
+      categoryKeys.forEach(catKey => {
+        const catProds = products.filter(p => catKey === 'sugary' || catKey === 'zero' ? p.sugaryOrZero === catKey : p.category === catKey);
+        const hasTastedCat = catProds.some(p => collectedObj && collectedObj[p.id] === true);
+        const catDisplayName = categoryNames[catKey] || catKey;
+
+        achievements.push({
+          id: `category_${catKey}`,
+          title: `Taste a ${catDisplayName}`,
+          desc: `Taste at least one drink from the ${catDisplayName} category.`,
+          unlocked: hasTastedCat,
+          progress: hasTastedCat ? '1 / 1' : '0 / 1'
+        });
+      });
+
+      // 3. Koffein alapú achievements
       for (let i = 1; i <= 10; i++) {
         const targetMg = i * 1000;
         achievements.push({
