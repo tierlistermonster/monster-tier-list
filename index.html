@@ -111,9 +111,11 @@
       margin-top: 4px;
       z-index: 100;
       flex-direction: column;
-      gap: 2px;
-      padding: 4px;
+      gap: 4px;
+      padding: 6px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      max-height: 250px;
+      overflow-y: auto;
     }
     .dropdown-content.show { display: flex; }
     .sub-mode-btn {
@@ -152,8 +154,8 @@
       width: 100%;
     }
 
-    .tier-board { display: flex; flex-direction: column; gap: 4px; background: #000; padding: 4px; border-radius: 8px; width: 100%; box-sizing: border-box; }
-    .tier-row { display: flex; background: #161618; min-height: 58px; border-radius: 6px; overflow: hidden; align-items: stretch; }
+    .tier-board { display: flex; flex-direction: column; gap: 6px; background: #000; padding: 6px; border-radius: 8px; width: 100%; box-sizing: border-box; }
+    .tier-row { display: flex; background: #161618; min-height: 62px; border-radius: 6px; overflow: hidden; align-items: stretch; gap: 4px; }
     .tier-badge {
       width: 42px; display: flex; align-items: center; justify-content: center;
       font-weight: 800; font-size: 13px; color: #000; flex-shrink: 0;
@@ -178,7 +180,7 @@
 
     .tier-zone { 
       flex: 1; display: flex; flex-direction: row; 
-      align-items: center; gap: 4px; padding: 4px; min-height: 50px; 
+      align-items: center; gap: 8px; padding: 6px; min-height: 50px; 
       overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch;
       cursor: pointer;
     }
@@ -190,13 +192,13 @@
       flex-direction: column;
       align-items: center;
       flex-shrink: 0;
-      gap: 2px;
+      gap: 4px;
     }
 
     .slot-cell {
       position: relative;
-      width: 46px;
-      height: 46px;
+      width: 48px;
+      height: 48px;
       background: #2c2c2e;
       border: 2px dashed #444;
       border-radius: 6px;
@@ -227,8 +229,8 @@
       display: flex;
       justify-content: center;
       align-items: flex-end;
-      gap: 4px;
-      margin-top: 4px;
+      gap: 8px;
+      margin-top: 6px;
       padding: 10px 6px 6px 6px;
       background: #161618;
       border-radius: 8px;
@@ -243,12 +245,13 @@
       align-items: center;
       flex: 1;
       min-width: 50px;
+      gap: 4px;
     }
     .podium-img {
       height: 45px;
       width: 45px;
       object-fit: contain;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
       filter: drop-shadow(0 3px 4px rgba(0,0,0,0.5));
     }
     .podium-step {
@@ -290,7 +293,7 @@
       overflow-x: auto !important;
       overflow-y: hidden !important;
       -webkit-overflow-scrolling: touch;
-      gap: 6px;
+      gap: 8px;
       padding-bottom: 4px;
       width: 100%;
       min-height: 56px;
@@ -401,8 +404,8 @@
       overflow-x: auto;
       overflow-y: hidden;
       -webkit-overflow-scrolling: touch;
-      gap: 8px;
-      padding: 4px 2px;
+      gap: 10px;
+      padding: 6px 2px;
       width: 100%;
       box-sizing: border-box;
     }
@@ -450,7 +453,7 @@
       color: #8e8e93;
     }
 
-    .history-list { display: flex; flex-direction: column; gap: 6px; width: 100%; max-height: 140px; overflow-y: auto; }
+    .history-list { display: flex; flex-direction: column; gap: 8px; width: 100%; max-height: 140px; overflow-y: auto; }
     .history-item {
       background: #242426; border: 1px solid #3a3a3c; padding: 6px 10px; border-radius: 6px; display: flex;
       justify-content: space-between; align-items: center; font-size: 11px;
@@ -468,14 +471,14 @@
       border: 1px solid #3a3a3c;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 8px;
       box-sizing: border-box;
       width: 100%;
     }
     .picture-grid {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 10px;
       margin-top: 4px;
     }
     .uploaded-picture-wrapper {
@@ -627,6 +630,8 @@
         <button class="sub-mode-btn" onclick="switchMode('drivers')">Drivers</button>
         <button class="sub-mode-btn" onclick="switchMode('sugary')">Sugary</button>
         <button class="sub-mode-btn" onclick="switchMode('zero')">Zero</button>
+        <button class="sub-mode-btn" onclick="switchMode('super_fuel')">Super Fuel</button>
+        <button class="sub-mode-btn" onclick="switchMode('beast')">Beast</button>
       </div>
     </div>
     <button id="mode-collected-btn" class="mode-btn collected-tab-btn" onclick="switchMode('collected')">🎯 Tasted</button>
@@ -911,13 +916,15 @@
       { id: '60', name: 'Voodoo Grape',               img: 'Voodoo Grape.png',               category: 'juiced', sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
       { id: '30', name: 'VR46 Doctor',             img: 'VR46 Doctor.png',             category: 'drivers', sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
       { id: '31', name: 'VR46 Zero',               img: 'VR46 Zero.png',               category: 'drivers', sugaryOrZero: 'zero', caffeinePer100ml: 32 },
+      { id: '61', name: 'Super Fuel',              img: 'Super Fuel.png',              category: 'super_fuel', sugaryOrZero: 'zero', caffeinePer100ml: 30 },
+      { id: '62', name: 'Beast',                    img: 'Beast.png',                   category: 'beast', sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
     ];
 
     let currentMode = 5; 
     let roomData = {};
     let currentConnectionRef = null; 
     
-    const categoryKeys = ['energy', 'ultra', 'juiced', 'rehab', 'java', 'nitro', 'reserve', 'drivers', 'sugary', 'zero'];
+    const categoryKeys = ['energy', 'ultra', 'juiced', 'rehab', 'java', 'nitro', 'reserve', 'drivers', 'sugary', 'zero', 'super_fuel', 'beast'];
 
     let myData = {
       5: products.map(p => ({ id: p.id, t: 0, p: 0 })),
@@ -955,17 +962,16 @@
       { level: 1,  label: '1★',  class: 'badge-10-1' }
     ];
 
-    const tierLevels1 = [{ level: 1, label: '', class: '' }];
-
     const categoryNames = {
       energy: 'Energy', ultra: 'Ultra', juiced: 'Juiced',
-      rehab: 'Rehab', java: 'Java', nitro: 'Nitro', reserve: 'Reserve', drivers: 'Drivers', sugary: 'Sugary', zero: 'Zero'
+      rehab: 'Rehab', java: 'Java', nitro: 'Nitro', reserve: 'Reserve', drivers: 'Drivers', sugary: 'Sugary', zero: 'Zero',
+      super_fuel: 'Super Fuel', beast: 'Beast'
     };
 
     function getCurrentTierLevels() {
       if (currentMode === 5) return tierLevels5;
       if (currentMode === 10) return tierLevels10;
-      return tierLevels1;
+      return tierLevels5;
     }
 
     function getActiveProducts() {
@@ -1982,6 +1988,7 @@
     window.closeCaffeineModal = closeCaffeineModal;
     window.confirmAddCaffeine = confirmAddCaffeine;
     window.removeCaffeineLog = removeCaffeineLog;
+    window.handleZoneItemClick = handleImageClick;
     window.handleZoneClick = handleZoneClick;
     window.closeActionModal = closeActionModal;
     window.toggleCollectStatus = toggleCollectStatus;
