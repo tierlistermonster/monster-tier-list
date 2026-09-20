@@ -65,7 +65,7 @@
     .mode-btn {
       background: #222224; color: #8e8e93; border: 1px solid #3a3a3c; padding: 8px;
       border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 12px; flex: 1; text-align: center;
-      min-width: 90px;
+      min-width: 90px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .mode-btn.active { background: #007aff; color: #fff; border-color: #007aff; }
     .mode-btn.pictures-tab-btn.active { background: #30d158; color: #000; border-color: #30d158; }
@@ -327,8 +327,9 @@
 
     .sub-nav-tabs { display: flex; gap: 6px; margin-bottom: 10px; width: 100%; }
     .sub-tab-btn {
-      background: #2c2c2e; color: #8e8e93; border: none; padding: 6px;
+      background: #2c2c2e; color: #8e8e93; border: none; padding: 6px 4px;
       border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 11px; flex: 1; text-align: center;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .sub-tab-btn.active { background: #007aff; color: #fff; }
     .sub-tab-content { display: none; width: 100%; }
@@ -1872,9 +1873,14 @@
       if (subTabId === 'friends') renderFriendPicturesView();
     }
 
-    function getAchievementsList(collectedObj) {
+    function getAchievementsList(collectedObj, caffeineHistoryArr) {
       const tastedCount = Object.values(collectedObj || {}).filter(val => val === true).length;
+      let allTimeCaffeine = 0;
+      (caffeineHistoryArr || []).forEach(item => { allTimeCaffeine += item.mg; });
+
       const achievements = [];
+      
+      // Tasted achievements
       for (let i = 1; i <= 10; i++) {
         const target = i * 10;
         achievements.push({
@@ -1884,6 +1890,18 @@
           progress: `${Math.min(tastedCount, target)} / ${target}`
         });
       }
+
+      // Caffeine achievements (1000mg steps up to 10000mg)
+      for (let i = 1; i <= 10; i++) {
+        const targetMg = i * 1000;
+        achievements.push({
+          title: `${targetMg} mg Caffeine`,
+          desc: `Consume a cumulative total of ${targetMg} mg of caffeine across all logs.`,
+          unlocked: allTimeCaffeine >= targetMg,
+          progress: `${Math.min(allTimeCaffeine, targetMg)} / ${targetMg} mg`
+        });
+      }
+
       return achievements;
     }
 
@@ -1892,7 +1910,7 @@
       if(!listContainer) return;
       listContainer.innerHTML = '';
       
-      const achievements = getAchievementsList(myCollected);
+      const achievements = getAchievementsList(myCollected, myCaffeineHistory);
       achievements.forEach(ach => {
         const card = document.createElement('div');
         card.className = `achievement-card${ach.unlocked ? ' unlocked' : ''}`;
@@ -1916,7 +1934,8 @@
       if (!friendName || !roomData[friendName]) return;
 
       const friendCollected = getUserCollected(roomData[friendName]);
-      const achievements = getAchievementsList(friendCollected);
+      const friendCaffeine = getUserCaffeine(roomData[friendName]);
+      const achievements = getAchievementsList(friendCollected, friendCaffeine);
       achievements.forEach(ach => {
         const card = document.createElement('div');
         card.className = `achievement-card${ach.unlocked ? ' unlocked' : ''}`;
