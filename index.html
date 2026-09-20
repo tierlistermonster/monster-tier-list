@@ -514,12 +514,12 @@
       color: #000;
     }
 
-    /* Értesítés stílus */
+    /* Értesítés stílus (Fentről beúszó) */
     #achievement-toast {
       position: fixed;
-      bottom: 20px;
+      top: 20px;
       left: 50%;
-      transform: translateX(-50%) translateY(150px);
+      transform: translateX(-50%) translateY(-150px);
       background: #1c1c1e;
       border: 2px solid var(--accent);
       color: #fff;
@@ -939,7 +939,6 @@
     let selectedProductId = null; 
     let caffeineSelectedDrink = null;
 
-    // Előző állapot tárolása az értesítésekhez
     let previousUnlockedAchievements = {};
 
     const tierLevels5 = [
@@ -1945,7 +1944,6 @@
         });
       }
 
-      // Fordított sorrend: A még nem teljesítettek felülre, a már teljesítettek ("unlocked": true) legalulra kerülnek
       achievements.sort((a, b) => {
         if (a.unlocked === b.unlocked) return 0;
         return a.unlocked ? 1 : -1;
@@ -1954,7 +1952,6 @@
       return achievements;
     }
 
-    // Értesítés megjelenítése
     function showAchievementToast(title) {
       const toast = document.getElementById('achievement-toast');
       document.getElementById('toast-title-text').innerText = title;
@@ -1964,7 +1961,6 @@
       }, 4000);
     }
 
-    // Ellenőrzi, hogy történt-e új achievement feloldás
     function checkAchievementsUpdate() {
       const currentList = getAchievementsList(myCollected, myCaffeineHistory);
       currentList.forEach(ach => {
@@ -1972,7 +1968,6 @@
           showAchievementToast(ach.title);
         }
       });
-      // Elmentjük az aktuális állapotot
       previousUnlockedAchievements = {};
       currentList.forEach(ach => {
         if (ach.unlocked) previousUnlockedAchievements[ach.id] = true;
@@ -1986,7 +1981,6 @@
       
       const achievements = getAchievementsList(myCollected, myCaffeineHistory);
       
-      // Kezdeti feltöltéskor is frissítjük a state-et, hogy ne dobjon üdvözlő toastot oldalbetöltéskor
       previousUnlockedAchievements = {};
       achievements.forEach(ach => {
         if (ach.unlocked) previousUnlockedAchievements[ach.id] = true;
