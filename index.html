@@ -111,11 +111,9 @@
       margin-top: 4px;
       z-index: 100;
       flex-direction: column;
-      gap: 4px;
-      padding: 6px;
+      gap: 2px;
+      padding: 4px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-      max-height: 250px;
-      overflow-y: auto;
     }
     .dropdown-content.show { display: flex; }
     .sub-mode-btn {
@@ -154,8 +152,8 @@
       width: 100%;
     }
 
-    .tier-board { display: flex; flex-direction: column; gap: 6px; background: #000; padding: 6px; border-radius: 8px; width: 100%; box-sizing: border-box; }
-    .tier-row { display: flex; background: #161618; min-height: 62px; border-radius: 6px; overflow: hidden; align-items: stretch; gap: 4px; }
+    .tier-board { display: flex; flex-direction: column; gap: 4px; background: #000; padding: 4px; border-radius: 8px; width: 100%; box-sizing: border-box; }
+    .tier-row { display: flex; background: #161618; min-height: 58px; border-radius: 6px; overflow: hidden; align-items: stretch; }
     .tier-badge {
       width: 42px; display: flex; align-items: center; justify-content: center;
       font-weight: 800; font-size: 13px; color: #000; flex-shrink: 0;
@@ -180,7 +178,7 @@
 
     .tier-zone { 
       flex: 1; display: flex; flex-direction: row; 
-      align-items: center; gap: 8px; padding: 6px; min-height: 50px; 
+      align-items: center; gap: 4px; padding: 4px; min-height: 50px; 
       overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch;
       cursor: pointer;
     }
@@ -192,13 +190,13 @@
       flex-direction: column;
       align-items: center;
       flex-shrink: 0;
-      gap: 4px;
+      gap: 2px;
     }
 
     .slot-cell {
       position: relative;
-      width: 48px;
-      height: 48px;
+      width: 46px;
+      height: 46px;
       background: #2c2c2e;
       border: 2px dashed #444;
       border-radius: 6px;
@@ -229,8 +227,8 @@
       display: flex;
       justify-content: center;
       align-items: flex-end;
-      gap: 8px;
-      margin-top: 6px;
+      gap: 4px;
+      margin-top: 4px;
       padding: 10px 6px 6px 6px;
       background: #161618;
       border-radius: 8px;
@@ -245,13 +243,12 @@
       align-items: center;
       flex: 1;
       min-width: 50px;
-      gap: 4px;
     }
     .podium-img {
       height: 45px;
       width: 45px;
       object-fit: contain;
-      margin-bottom: 2px;
+      margin-bottom: 4px;
       filter: drop-shadow(0 3px 4px rgba(0,0,0,0.5));
     }
     .podium-step {
@@ -293,7 +290,7 @@
       overflow-x: auto !important;
       overflow-y: hidden !important;
       -webkit-overflow-scrolling: touch;
-      gap: 8px;
+      gap: 6px;
       padding-bottom: 4px;
       width: 100%;
       min-height: 56px;
@@ -404,8 +401,8 @@
       overflow-x: auto;
       overflow-y: hidden;
       -webkit-overflow-scrolling: touch;
-      gap: 10px;
-      padding: 6px 2px;
+      gap: 8px;
+      padding: 4px 2px;
       width: 100%;
       box-sizing: border-box;
     }
@@ -453,7 +450,7 @@
       color: #8e8e93;
     }
 
-    .history-list { display: flex; flex-direction: column; gap: 8px; width: 100%; max-height: 140px; overflow-y: auto; }
+    .history-list { display: flex; flex-direction: column; gap: 6px; width: 100%; max-height: 140px; overflow-y: auto; }
     .history-item {
       background: #242426; border: 1px solid #3a3a3c; padding: 6px 10px; border-radius: 6px; display: flex;
       justify-content: space-between; align-items: center; font-size: 11px;
@@ -463,78 +460,49 @@
       font-size: 13px; font-weight: bold; padding: 0 4px;
     }
 
-    .picture-upload-box {
-      margin-top: 6px;
-      background: var(--surface);
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid #3a3a3c;
+    /* Achievement Styles */
+    .achievements-grid {
       display: flex;
       flex-direction: column;
       gap: 8px;
-      box-sizing: border-box;
       width: 100%;
     }
-    .picture-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 4px;
-    }
-    .uploaded-picture-wrapper {
-      position: relative;
-      width: 90px;
-      height: 90px;
-    }
-    .uploaded-picture-card {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 6px;
-      border: 1px solid #444;
-      background: #2c2c2e;
-      cursor: pointer;
-    }
-    .delete-pic-btn {
-      position: absolute;
-      top: -5px;
-      right: -5px;
-      background: var(--danger);
-      color: #fff;
-      border: none;
-      border-radius: 50%;
-      width: 20px;
-      height: 20px;
-      font-size: 10px;
-      font-weight: bold;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.5);
-      z-index: 5;
-    }
-    .custom-upload-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #007aff;
-      color: #fff;
+    .achievement-card {
+      background: var(--surface);
+      border: 1px solid #3a3a3c;
+      border-radius: 8px;
       padding: 10px 14px;
-      border-radius: 6px;
-      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      opacity: 0.5;
+      transition: opacity 0.2s, border-color 0.2s;
+    }
+    .achievement-card.unlocked {
+      opacity: 1;
+      border-color: var(--accent);
+      background: linear-gradient(135deg, var(--surface) 0%, rgba(48, 209, 88, 0.1) 100%);
+    }
+    .achievement-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1;
+    }
+    .achievement-title {
       font-size: 13px;
-      cursor: pointer;
-      border: none;
-      width: 100%;
-      box-sizing: border-box;
-      gap: 8px;
+      font-weight: bold;
+      color: #fff;
     }
-    .custom-upload-btn svg {
-      width: 16px;
-      height: 16px;
-      fill: #ffffff;
+    .achievement-desc {
+      font-size: 11px;
+      color: #8e8e93;
     }
+    .achievement-badge {
+      font-size: 18px;
+    }
+
     .section-title {
       font-size: 13px;
       font-weight: bold;
@@ -583,12 +551,6 @@
       background: #2c2c2e; color: #fff; border: 1px solid #444; padding: 8px;
       border-radius: 6px; font-size: 14px; outline: none; width: 100%; box-sizing: border-box;
     }
-
-    .image-modal img { max-width: 100%; max-height: 85vh; object-fit: contain; border-radius: 8px; }
-    .image-modal-close {
-      position: absolute; top: 20px; right: 20px; background: var(--danger); color: #fff;
-      border: none; border-radius: 50%; width: 36px; height: 36px; font-size: 16px; font-weight: bold; cursor: pointer;
-    }
   </style>
 
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -630,12 +592,10 @@
         <button class="sub-mode-btn" onclick="switchMode('drivers')">Drivers</button>
         <button class="sub-mode-btn" onclick="switchMode('sugary')">Sugary</button>
         <button class="sub-mode-btn" onclick="switchMode('zero')">Zero</button>
-        <button class="sub-mode-btn" onclick="switchMode('super_fuel')">Super Fuel</button>
-        <button class="sub-mode-btn" onclick="switchMode('beast')">Beast</button>
       </div>
     </div>
     <button id="mode-collected-btn" class="mode-btn collected-tab-btn" onclick="switchMode('collected')">🎯 Tasted</button>
-    <button id="mode-pictures-btn" class="mode-btn pictures-tab-btn" onclick="switchMode('pictures')">🖼️ Pictures</button>
+    <button id="mode-achievements-btn" class="mode-btn pictures-tab-btn" onclick="switchMode('achievements')">🏆 Achievements</button>
     <button id="mode-caffeine-btn" class="mode-btn caffeine-tab-btn" onclick="switchMode('caffeine')">⚡ Caffeine</button>
   </div>
 
@@ -669,30 +629,25 @@
     </div>
   </div>
 
-  <div id="tab-pictures" class="tab-content">
+  <div id="tab-achievements" class="tab-content">
     <div class="sub-nav-tabs">
-      <button class="sub-tab-btn active" onclick="switchPictureSubTab('my', this)">✏️ My Pictures</button>
-      <button class="sub-tab-btn" onclick="switchPictureSubTab('friends', this)">👥 Friends Pictures</button>
+      <button class="sub-tab-btn active" onclick="switchAchievementSubTab('my', this)">✏️ My Achievements</button>
+      <button class="sub-tab-btn" onclick="switchAchievementSubTab('friends', this)">👥 Friends Achievements</button>
     </div>
-    <div id="sub-tab-my-pictures" class="sub-tab-content active">
-      <div class="picture-upload-box" style="display: flex;">
-        <label class="custom-upload-btn">
-          <svg viewBox="0 0 24 24"><path d="M20 10.5h-6.5V4h-3v6.5H4v3h6.5V20h3v-6.5H20v-3z"/></svg>
-          Upload Picture
-          <input type="file" id="picture-file-input" accept="image/*" onchange="handleImageUpload(event)" style="display: none;">
-        </label>
-        <div class="picture-grid" id="my-uploaded-pictures-grid"></div>
+    <div id="sub-tab-my-achievements" class="sub-tab-content active">
+      <div class="app-card">
+        <div id="my-achievements-grid" class="achievements-grid"></div>
       </div>
     </div>
-    <div id="sub-tab-friends-pictures" class="sub-tab-content">
+    <div id="sub-tab-friends-achievements" class="sub-tab-content">
       <div class="friend-picker" style="margin-bottom: 8px;">
         <label style="font-size: 11px; font-weight: bold; color: #8e8e93; text-transform: uppercase;">Select Friend:</label>
-        <select id="friend-pictures-select" class="friend-select-box" onchange="renderFriendPicturesView()"></select>
+        <select id="friend-achievements-select" class="friend-select-box" onchange="renderFriendAchievementsView()"></select>
       </div>
-      <div class="picture-upload-box" id="friend-pictures-box" style="display: flex;">
-        <div class="picture-grid" id="friend-uploaded-pictures-grid"></div>
+      <div class="app-card">
+        <div id="friend-achievements-grid" class="achievements-grid"></div>
       </div>
-      <div id="no-friend-pics-msg" class="no-friends-msg" style="display: none;">👥 No friends added yet in this room.</div>
+      <div id="no-friend-achievements-msg" class="no-friends-msg" style="display: none;">👥 No friends added yet in this room.</div>
     </div>
   </div>
 
@@ -835,11 +790,6 @@
     </div>
   </div>
 
-  <div id="imageModal" class="image-modal" onclick="closeModal()">
-    <button class="image-modal-close" onclick="closeModal()">✕</button>
-    <img id="modalImg" src="" alt="Full size preview">
-  </div>
-
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyBm-OZUTOdc20Jx637WFLXCrQs_QnHViYA",
@@ -916,15 +866,13 @@
       { id: '60', name: 'Voodoo Grape',               img: 'Voodoo Grape.png',               category: 'juiced', sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
       { id: '30', name: 'VR46 Doctor',             img: 'VR46 Doctor.png',             category: 'drivers', sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
       { id: '31', name: 'VR46 Zero',               img: 'VR46 Zero.png',               category: 'drivers', sugaryOrZero: 'zero', caffeinePer100ml: 32 },
-      { id: '61', name: 'Super Fuel',              img: 'Super Fuel.png',              category: 'super_fuel', sugaryOrZero: 'zero', caffeinePer100ml: 30 },
-      { id: '62', name: 'Beast',                    img: 'Beast.png',                   category: 'beast', sugaryOrZero: 'sugary', caffeinePer100ml: 32 },
     ];
 
     let currentMode = 5; 
     let roomData = {};
     let currentConnectionRef = null; 
     
-    const categoryKeys = ['energy', 'ultra', 'juiced', 'rehab', 'java', 'nitro', 'reserve', 'drivers', 'sugary', 'zero', 'super_fuel', 'beast'];
+    const categoryKeys = ['energy', 'ultra', 'juiced', 'rehab', 'java', 'nitro', 'reserve', 'drivers', 'sugary', 'zero'];
 
     let myData = {
       5: products.map(p => ({ id: p.id, t: 0, p: 0 })),
@@ -935,7 +883,6 @@
     });
 
     let myCollected = {}; 
-    let myPictures = []; 
     let myCaffeineHistory = [];
 
     let selectedProductId = null; 
@@ -962,16 +909,17 @@
       { level: 1,  label: '1★',  class: 'badge-10-1' }
     ];
 
+    const tierLevels1 = [{ level: 1, label: '', class: '' }];
+
     const categoryNames = {
       energy: 'Energy', ultra: 'Ultra', juiced: 'Juiced',
-      rehab: 'Rehab', java: 'Java', nitro: 'Nitro', reserve: 'Reserve', drivers: 'Drivers', sugary: 'Sugary', zero: 'Zero',
-      super_fuel: 'Super Fuel', beast: 'Beast'
+      rehab: 'Rehab', java: 'Java', nitro: 'Nitro', reserve: 'Reserve', drivers: 'Drivers', sugary: 'Sugary', zero: 'Zero'
     };
 
     function getCurrentTierLevels() {
       if (currentMode === 5) return tierLevels5;
       if (currentMode === 10) return tierLevels10;
-      return tierLevels5;
+      return tierLevels1;
     }
 
     function getActiveProducts() {
@@ -1007,7 +955,7 @@
       document.getElementById('mode-5-btn').classList.toggle('active', mode === 5);
       document.getElementById('mode-10-btn').classList.toggle('active', mode === 10);
       document.getElementById('mode-collected-btn').classList.toggle('active', mode === 'collected');
-      document.getElementById('mode-pictures-btn').classList.toggle('active', mode === 'pictures');
+      document.getElementById('mode-achievements-btn').classList.toggle('active', mode === 'achievements');
       document.getElementById('mode-caffeine-btn').classList.toggle('active', mode === 'caffeine');
       
       const dropdownBtn = document.getElementById('dropdown-main-btn');
@@ -1028,13 +976,13 @@
       const tierTabsContainer = document.querySelector('.nav-tabs');
       const unassignedSection = document.querySelector('.unassigned-section');
 
-      if (['pictures', 'collected', 'caffeine'].includes(mode)) {
+      if (['achievements', 'collected', 'caffeine'].includes(mode)) {
         tierTabsContainer.style.display = 'none';
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
         document.getElementById(`tab-${mode}`).classList.add('active');
         unassignedSection.style.display = 'none';
         
-        if (mode === 'pictures') renderPicturesView();
+        if (mode === 'achievements') renderAchievementsView();
         if (mode === 'collected') renderCollectedView();
         if (mode === 'caffeine') renderCaffeineView();
       } else {
@@ -1051,8 +999,8 @@
     }
 
     function renderActiveTab() {
-      if (['pictures', 'collected', 'caffeine'].includes(currentMode)) {
-        if (currentMode === 'pictures') renderPicturesView();
+      if (['achievements', 'collected', 'caffeine'].includes(currentMode)) {
+        if (currentMode === 'achievements') renderAchievementsView();
         if (currentMode === 'collected') renderCollectedView();
         if (currentMode === 'caffeine') renderCaffeineView();
         return;
@@ -1193,7 +1141,6 @@
               });
             }
           }
-          if (remoteData.pictures) myPictures = Array.isArray(remoteData.pictures) ? remoteData.pictures : [];
           if (remoteData.collected) myCollected = remoteData.collected;
           if (remoteData.caffeineHistory) myCaffeineHistory = Array.isArray(remoteData.caffeineHistory) ? remoteData.caffeineHistory : [];
         }
@@ -1209,7 +1156,7 @@
         });
 
         updateFriendDropdown();
-        updateFriendPicturesDropdown();
+        updateFriendAchievementsDropdown();
         updateFriendCollectedDropdown();
         updateFriendCaffeineDropdown();
         renderActiveTab();
@@ -1223,11 +1170,11 @@
       localStorage.removeItem('monster_room');
       localStorage.removeItem('monster_name');
       document.getElementById('room-input').value = ''; document.getElementById('name-input').value = '';
-      roomData = {}; selectedProductId = null; myPictures = []; myCollected = {}; myCaffeineHistory = [];
+      roomData = {}; selectedProductId = null; myCollected = {}; myCaffeineHistory = [];
       myData = { 5: products.map(p => ({ id: p.id, t: 0, p: 0 })), 10: products.map(p => ({ id: p.id, t: 0, p: 0 })) };
       categoryKeys.forEach(k => { myData[k] = products.filter(p => k === 'sugary' || k === 'zero' ? p.sugaryOrZero === k : p.category === k).map(p => ({ id: p.id, t: 0, p: 0 })); });
       renderActiveTab();
-      updateFriendDropdown(); updateFriendPicturesDropdown(); updateFriendCollectedDropdown(); updateFriendCaffeineDropdown();
+      updateFriendDropdown(); updateFriendAchievementsDropdown(); updateFriendCollectedDropdown(); updateFriendCaffeineDropdown();
       switchMode(5);
     }
 
@@ -1241,7 +1188,6 @@
 
       db.ref(`rooms/${room}/${userName}`).set({
         tierLists: tierListsSave,
-        pictures: myPictures,
         collected: myCollected,
         caffeineHistory: myCaffeineHistory
       });
@@ -1255,11 +1201,6 @@
         return tl[mode] || null;
       }
       return userObj[mode] || null;
-    }
-
-    function getUserPictures(userObj) {
-      if (!userObj || !userObj.pictures) return [];
-      return Array.isArray(userObj.pictures) ? userObj.pictures : [];
     }
 
     function getUserCollected(userObj) {
@@ -1291,19 +1232,19 @@
       }
     }
 
-    function updateFriendPicturesDropdown() {
-      const select = document.getElementById('friend-pictures-select');
-      const noFriendPicsMsg = document.getElementById('no-friend-pics-msg');
-      const friendNames = Object.keys(roomData).filter(name => name !== document.getElementById('name-input').value.trim());
+    function updateFriendAchievementsDropdown() {
+      const select = document.getElementById('friend-achievements-select');
+      const noFriendAchievementsMsg = document.getElementById('no-friend-achievements-msg');
+      const friendNames = Object.keys(roomData).filter(name => name !== document.getElementById('name-input'].value?.trim() || name !== document.getElementById('name-input').value.trim());
       select.innerHTML = '';
       if (friendNames.length === 0) {
-        if(noFriendPicsMsg) noFriendPicsMsg.style.display = 'block';
+        if(noFriendAchievementsMsg) noFriendAchievementsMsg.style.display = 'block';
       } else {
-        if(noFriendPicsMsg) noFriendPicsMsg.style.display = 'none';
+        if(noFriendAchievementsMsg) noFriendAchievementsMsg.style.display = 'none';
         friendNames.forEach(name => {
           const opt = document.createElement('option'); opt.value = name; opt.innerText = name; select.appendChild(opt);
         });
-        renderFriendPicturesView();
+        renderFriendAchievementsView();
       }
     }
 
@@ -1337,6 +1278,52 @@
         });
         renderFriendCaffeineView();
       }
+    }
+
+    function switchAchievementSubTab(subTabId, btn) {
+      document.querySelectorAll('#tab-achievements .sub-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#tab-achievements .sub-tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(`sub-tab-${subTabId}-achievements`).classList.add('active');
+      if (subTabId === 'friends') renderFriendAchievementsView();
+    }
+
+    function renderAchievementsList(collectedObj, containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = '';
+
+      const tastedCount = Object.values(collectedObj || {}).filter(val => val === true).length;
+
+      for (let i = 1; i <= 10; i++) {
+        const threshold = i * 10;
+        const isUnlocked = tastedCount >= threshold;
+
+        const card = document.createElement('div');
+        card.className = 'achievement-card' + (isUnlocked ? ' unlocked' : '');
+        card.innerHTML = `
+          <div class="achievement-info">
+            <div class="achievement-title">Tase ${threshold} Monsters</div>
+            <div class="achievement-desc">Have you tasted at least ${threshold} different Monster flavors?</div>
+          </div>
+          <div class="achievement-badge">${isUnlocked ? '🏆' : '🔒'}</div>
+        `;
+        container.appendChild(card);
+      }
+    }
+
+    function renderAchievementsView() {
+      renderAchievementsList(myCollected, 'my-achievements-grid');
+    }
+
+    function renderFriendAchievementsView() {
+      const friendSelect = document.getElementById('friend-achievements-select');
+      const friendName = friendSelect ? friendSelect.value : '';
+      if (!friendName || !roomData[friendName]) {
+        renderAchievementsList({}, 'friend-achievements-grid');
+        return;
+      }
+      renderAchievementsList(getUserCollected(roomData[friendName]), 'friend-achievements-grid');
     }
 
     function switchCaffeineSubTab(subTabId, btn) {
@@ -1550,7 +1537,7 @@
     }
 
     function renderMyView() {
-      if (['pictures', 'collected', 'caffeine'].includes(currentMode)) return;
+      if (['achievements', 'collected', 'caffeine'].includes(currentMode)) return;
       buildBoard('my-board', true);
       const unassignedZone = document.querySelector('.unassigned-zone');
       if(!unassignedZone) return;
@@ -1595,7 +1582,7 @@
     }
 
     function renderFriendView() {
-      if (['pictures', 'collected', 'caffeine'].includes(currentMode)) return;
+      if (['achievements', 'collected', 'caffeine'].includes(currentMode)) return;
       const friendSelect = document.getElementById('friend-select');
       const name = friendSelect ? friendSelect.value : '';
       if (!name || !roomData[name]) return;
@@ -1737,7 +1724,7 @@
     }
 
     function renderGroupView() {
-      if (['pictures', 'collected', 'caffeine'].includes(currentMode)) return;
+      if (['achievements', 'collected', 'caffeine'].includes(currentMode)) return;
       buildBoard('group-board', false);
       const podium = document.getElementById('podium');
       if(!podium) return;
@@ -1837,7 +1824,7 @@
       const targetTab = document.getElementById(`tab-${tabId}`);
       if(targetTab) targetTab.classList.add('active');
       const unassignedSec = document.querySelector('.unassigned-section');
-      if(unassignedSec) unassignedSec.style.display = (tabId === 'my' && !['pictures', 'collected', 'caffeine'].includes(currentMode)) ? 'block' : 'none';
+      if(unassignedSec) unassignedSec.style.display = (tabId === 'my' && !['achievements', 'collected', 'caffeine'].includes(currentMode)) ? 'block' : 'none';
       renderActiveTab();
     }
 
@@ -1909,68 +1896,6 @@
 
     function closeActionModal() { document.getElementById('actionModal').classList.remove('show'); }
 
-    function switchPictureSubTab(subTabId, btn) {
-      document.querySelectorAll('#tab-pictures .sub-tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('#tab-pictures .sub-tab-content').forEach(c => c.classList.remove('active'));
-      if(btn) btn.classList.add('active');
-      const targetSub = document.getElementById(`sub-tab-${subTabId}-pictures`);
-      if(targetSub) targetSub.classList.add('active');
-      if (subTabId === 'friends') renderFriendPicturesView();
-    }
-
-    function renderPicturesView() {
-      const grid = document.getElementById('my-uploaded-pictures-grid');
-      if(!grid) return;
-      grid.innerHTML = '';
-      myPictures.forEach((base64, index) => {
-        const wrapper = document.createElement('div'); wrapper.className = 'uploaded-picture-wrapper';
-        wrapper.innerHTML = `<img src="${base64}" class="uploaded-picture-card" onclick="openModal('${base64}')"><button class="delete-pic-btn" onclick="removePicture(${index})">✕</button>`;
-        grid.appendChild(wrapper);
-      });
-    }
-
-    function handleImageUpload(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(event) {
-        myPictures.push(event.target.result);
-        saveToFirebase();
-        renderPicturesView();
-        const fileInput = document.getElementById('picture-file-input');
-        if(fileInput) fileInput.value = '';
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function removePicture(index) {
-      myPictures.splice(index, 1);
-      saveToFirebase();
-      renderPicturesView();
-    }
-
-    function renderFriendPicturesView() {
-      const friendSelect = document.getElementById('friend-pictures-select');
-      const friendName = friendSelect ? friendSelect.value : '';
-      const grid = document.getElementById('friend-uploaded-pictures-grid');
-      if(!grid) return;
-      grid.innerHTML = '';
-      if (!friendName || !roomData[friendName]) return;
-
-      getUserPictures(roomData[friendName]).forEach(base64 => {
-        const wrapper = document.createElement('div'); wrapper.className = 'uploaded-picture-wrapper';
-        wrapper.innerHTML = `<img src="${base64}" class="uploaded-picture-card" onclick="openModal('${base64}')">`;
-        grid.appendChild(wrapper);
-      });
-    }
-
-    function openModal(src) {
-      document.getElementById('modalImg').src = src;
-      document.getElementById('imageModal').classList.add('show');
-    }
-
-    function closeModal() { document.getElementById('imageModal').classList.remove('show'); }
-
     window.connectToRoom = connectToRoom;
     window.leaveRoom = leaveRoom;
     window.switchMode = switchMode;
@@ -1978,9 +1903,8 @@
     window.switchTab = switchTab;
     window.switchCollectedSubTab = switchCollectedSubTab;
     window.renderFriendCollectedView = renderFriendCollectedView;
-    window.switchPictureSubTab = switchPictureSubTab;
-    window.handleImageUpload = handleImageUpload;
-    window.renderFriendPicturesView = renderFriendPicturesView;
+    window.switchAchievementSubTab = switchAchievementSubTab;
+    window.renderFriendAchievementsView = renderFriendAchievementsView;
     window.switchCaffeineSubTab = switchCaffeineSubTab;
     window.filterDrinkMenu = filterDrinkMenu;
     window.renderFriendCaffeineView = renderFriendCaffeineView;
@@ -1988,13 +1912,9 @@
     window.closeCaffeineModal = closeCaffeineModal;
     window.confirmAddCaffeine = confirmAddCaffeine;
     window.removeCaffeineLog = removeCaffeineLog;
-    window.handleZoneItemClick = handleImageClick;
     window.handleZoneClick = handleZoneClick;
     window.closeActionModal = closeActionModal;
     window.toggleCollectStatus = toggleCollectStatus;
-    window.removePicture = removePicture;
-    window.openModal = openModal;
-    window.closeModal = closeModal;
 
     window.addEventListener('DOMContentLoaded', () => {
       const savedRoom = localStorage.getItem('monster_room');
