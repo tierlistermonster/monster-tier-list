@@ -460,12 +460,12 @@
       font-size: 13px; font-weight: bold; padding: 0 4px;
     }
 
-    /* Achievement Styles */
-    .achievements-grid {
+    .achievement-list {
       display: flex;
       flex-direction: column;
       gap: 8px;
       width: 100%;
+      margin-top: 6px;
     }
     .achievement-card {
       background: var(--surface);
@@ -475,6 +475,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      box-sizing: border-box;
       gap: 10px;
       opacity: 0.5;
       transition: opacity 0.2s, border-color 0.2s;
@@ -482,13 +483,12 @@
     .achievement-card.unlocked {
       opacity: 1;
       border-color: var(--accent);
-      background: linear-gradient(135deg, var(--surface) 0%, rgba(48, 209, 88, 0.1) 100%);
+      background: linear-gradient(135deg, rgba(48, 209, 88, 0.1) 0%, var(--surface) 100%);
     }
     .achievement-info {
       display: flex;
       flex-direction: column;
       gap: 2px;
-      flex: 1;
     }
     .achievement-title {
       font-size: 13px;
@@ -500,7 +500,17 @@
       color: #8e8e93;
     }
     .achievement-badge {
-      font-size: 18px;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: #2c2c2e;
+      color: #8e8e93;
+      flex-shrink: 0;
+    }
+    .achievement-card.unlocked .achievement-badge {
+      background: var(--accent);
+      color: #000;
     }
 
     .section-title {
@@ -551,6 +561,12 @@
       background: #2c2c2e; color: #fff; border: 1px solid #444; padding: 8px;
       border-radius: 6px; font-size: 14px; outline: none; width: 100%; box-sizing: border-box;
     }
+
+    .image-modal img { max-width: 100%; max-height: 85vh; object-fit: contain; border-radius: 8px; }
+    .image-modal-close {
+      position: absolute; top: 20px; right: 20px; background: var(--danger); color: #fff;
+      border: none; border-radius: 50%; width: 36px; height: 36px; font-size: 16px; font-weight: bold; cursor: pointer;
+    }
   </style>
 
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -595,7 +611,7 @@
       </div>
     </div>
     <button id="mode-collected-btn" class="mode-btn collected-tab-btn" onclick="switchMode('collected')">🎯 Tasted</button>
-    <button id="mode-achievements-btn" class="mode-btn pictures-tab-btn" onclick="switchMode('achievements')">🏆 Achievements</button>
+    <button id="mode-pictures-btn" class="mode-btn pictures-tab-btn" onclick="switchMode('pictures')">🏆 Achievements</button>
     <button id="mode-caffeine-btn" class="mode-btn caffeine-tab-btn" onclick="switchMode('caffeine')">⚡ Caffeine</button>
   </div>
 
@@ -629,25 +645,21 @@
     </div>
   </div>
 
-  <div id="tab-achievements" class="tab-content">
+  <div id="tab-pictures" class="tab-content">
     <div class="sub-nav-tabs">
-      <button class="sub-tab-btn active" onclick="switchAchievementSubTab('my', this)">✏️ My Achievements</button>
-      <button class="sub-tab-btn" onclick="switchAchievementSubTab('friends', this)">👥 Friends Achievements</button>
+      <button class="sub-tab-btn active" onclick="switchPictureSubTab('my', this)">✏️ My Achievements</button>
+      <button class="sub-tab-btn" onclick="switchPictureSubTab('friends', this)">👥 Friends Achievements</button>
     </div>
-    <div id="sub-tab-my-achievements" class="sub-tab-content active">
-      <div class="app-card">
-        <div id="my-achievements-grid" class="achievements-grid"></div>
-      </div>
+    <div id="sub-tab-my-pictures" class="sub-tab-content active">
+      <div class="achievement-list" id="my-achievement-list"></div>
     </div>
-    <div id="sub-tab-friends-achievements" class="sub-tab-content">
+    <div id="sub-tab-friends-pictures" class="sub-tab-content">
       <div class="friend-picker" style="margin-bottom: 8px;">
         <label style="font-size: 11px; font-weight: bold; color: #8e8e93; text-transform: uppercase;">Select Friend:</label>
-        <select id="friend-achievements-select" class="friend-select-box" onchange="renderFriendAchievementsView()"></select>
+        <select id="friend-pictures-select" class="friend-select-box" onchange="renderFriendPicturesView()"></select>
       </div>
-      <div class="app-card">
-        <div id="friend-achievements-grid" class="achievements-grid"></div>
-      </div>
-      <div id="no-friend-achievements-msg" class="no-friends-msg" style="display: none;">👥 No friends added yet in this room.</div>
+      <div class="achievement-list" id="friend-achievement-list"></div>
+      <div id="no-friend-pics-msg" class="no-friends-msg" style="display: none;">👥 No friends added yet in this room.</div>
     </div>
   </div>
 
@@ -883,6 +895,7 @@
     });
 
     let myCollected = {}; 
+    let myPictures = []; 
     let myCaffeineHistory = [];
 
     let selectedProductId = null; 
@@ -955,7 +968,7 @@
       document.getElementById('mode-5-btn').classList.toggle('active', mode === 5);
       document.getElementById('mode-10-btn').classList.toggle('active', mode === 10);
       document.getElementById('mode-collected-btn').classList.toggle('active', mode === 'collected');
-      document.getElementById('mode-achievements-btn').classList.toggle('active', mode === 'achievements');
+      document.getElementById('mode-pictures-btn').classList.toggle('active', mode === 'pictures');
       document.getElementById('mode-caffeine-btn').classList.toggle('active', mode === 'caffeine');
       
       const dropdownBtn = document.getElementById('dropdown-main-btn');
@@ -976,13 +989,13 @@
       const tierTabsContainer = document.querySelector('.nav-tabs');
       const unassignedSection = document.querySelector('.unassigned-section');
 
-      if (['achievements', 'collected', 'caffeine'].includes(mode)) {
+      if (['pictures', 'collected', 'caffeine'].includes(mode)) {
         tierTabsContainer.style.display = 'none';
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
         document.getElementById(`tab-${mode}`).classList.add('active');
         unassignedSection.style.display = 'none';
         
-        if (mode === 'achievements') renderAchievementsView();
+        if (mode === 'pictures') renderPicturesView();
         if (mode === 'collected') renderCollectedView();
         if (mode === 'caffeine') renderCaffeineView();
       } else {
@@ -999,8 +1012,8 @@
     }
 
     function renderActiveTab() {
-      if (['achievements', 'collected', 'caffeine'].includes(currentMode)) {
-        if (currentMode === 'achievements') renderAchievementsView();
+      if (['pictures', 'collected', 'caffeine'].includes(currentMode)) {
+        if (currentMode === 'pictures') renderPicturesView();
         if (currentMode === 'collected') renderCollectedView();
         if (currentMode === 'caffeine') renderCaffeineView();
         return;
@@ -1156,7 +1169,7 @@
         });
 
         updateFriendDropdown();
-        updateFriendAchievementsDropdown();
+        updateFriendPicturesDropdown();
         updateFriendCollectedDropdown();
         updateFriendCaffeineDropdown();
         renderActiveTab();
@@ -1174,7 +1187,7 @@
       myData = { 5: products.map(p => ({ id: p.id, t: 0, p: 0 })), 10: products.map(p => ({ id: p.id, t: 0, p: 0 })) };
       categoryKeys.forEach(k => { myData[k] = products.filter(p => k === 'sugary' || k === 'zero' ? p.sugaryOrZero === k : p.category === k).map(p => ({ id: p.id, t: 0, p: 0 })); });
       renderActiveTab();
-      updateFriendDropdown(); updateFriendAchievementsDropdown(); updateFriendCollectedDropdown(); updateFriendCaffeineDropdown();
+      updateFriendDropdown(); updateFriendPicturesDropdown(); updateFriendCollectedDropdown(); updateFriendCaffeineDropdown();
       switchMode(5);
     }
 
@@ -1232,19 +1245,19 @@
       }
     }
 
-    function updateFriendAchievementsDropdown() {
-      const select = document.getElementById('friend-achievements-select');
-      const noFriendAchievementsMsg = document.getElementById('no-friend-achievements-msg');
-      const friendNames = Object.keys(roomData).filter(name => name !== document.getElementById('name-input'].value?.trim() || name !== document.getElementById('name-input').value.trim());
+    function updateFriendPicturesDropdown() {
+      const select = document.getElementById('friend-pictures-select');
+      const noFriendPicsMsg = document.getElementById('no-friend-pics-msg');
+      const friendNames = Object.keys(roomData).filter(name => name !== document.getElementById('name-input').value.trim());
       select.innerHTML = '';
       if (friendNames.length === 0) {
-        if(noFriendAchievementsMsg) noFriendAchievementsMsg.style.display = 'block';
+        if(noFriendPicsMsg) noFriendPicsMsg.style.display = 'block';
       } else {
-        if(noFriendAchievementsMsg) noFriendAchievementsMsg.style.display = 'none';
+        if(noFriendPicsMsg) noFriendPicsMsg.style.display = 'none';
         friendNames.forEach(name => {
           const opt = document.createElement('option'); opt.value = name; opt.innerText = name; select.appendChild(opt);
         });
-        renderFriendAchievementsView();
+        renderFriendPicturesView();
       }
     }
 
@@ -1278,52 +1291,6 @@
         });
         renderFriendCaffeineView();
       }
-    }
-
-    function switchAchievementSubTab(subTabId, btn) {
-      document.querySelectorAll('#tab-achievements .sub-tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('#tab-achievements .sub-tab-content').forEach(c => c.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById(`sub-tab-${subTabId}-achievements`).classList.add('active');
-      if (subTabId === 'friends') renderFriendAchievementsView();
-    }
-
-    function renderAchievementsList(collectedObj, containerId) {
-      const container = document.getElementById(containerId);
-      if (!container) return;
-      container.innerHTML = '';
-
-      const tastedCount = Object.values(collectedObj || {}).filter(val => val === true).length;
-
-      for (let i = 1; i <= 10; i++) {
-        const threshold = i * 10;
-        const isUnlocked = tastedCount >= threshold;
-
-        const card = document.createElement('div');
-        card.className = 'achievement-card' + (isUnlocked ? ' unlocked' : '');
-        card.innerHTML = `
-          <div class="achievement-info">
-            <div class="achievement-title">Tase ${threshold} Monsters</div>
-            <div class="achievement-desc">Have you tasted at least ${threshold} different Monster flavors?</div>
-          </div>
-          <div class="achievement-badge">${isUnlocked ? '🏆' : '🔒'}</div>
-        `;
-        container.appendChild(card);
-      }
-    }
-
-    function renderAchievementsView() {
-      renderAchievementsList(myCollected, 'my-achievements-grid');
-    }
-
-    function renderFriendAchievementsView() {
-      const friendSelect = document.getElementById('friend-achievements-select');
-      const friendName = friendSelect ? friendSelect.value : '';
-      if (!friendName || !roomData[friendName]) {
-        renderAchievementsList({}, 'friend-achievements-grid');
-        return;
-      }
-      renderAchievementsList(getUserCollected(roomData[friendName]), 'friend-achievements-grid');
     }
 
     function switchCaffeineSubTab(subTabId, btn) {
@@ -1537,7 +1504,7 @@
     }
 
     function renderMyView() {
-      if (['achievements', 'collected', 'caffeine'].includes(currentMode)) return;
+      if (['pictures', 'collected', 'caffeine'].includes(currentMode)) return;
       buildBoard('my-board', true);
       const unassignedZone = document.querySelector('.unassigned-zone');
       if(!unassignedZone) return;
@@ -1582,7 +1549,7 @@
     }
 
     function renderFriendView() {
-      if (['achievements', 'collected', 'caffeine'].includes(currentMode)) return;
+      if (['pictures', 'collected', 'caffeine'].includes(currentMode)) return;
       const friendSelect = document.getElementById('friend-select');
       const name = friendSelect ? friendSelect.value : '';
       if (!name || !roomData[name]) return;
@@ -1724,7 +1691,7 @@
     }
 
     function renderGroupView() {
-      if (['achievements', 'collected', 'caffeine'].includes(currentMode)) return;
+      if (['pictures', 'collected', 'caffeine'].includes(currentMode)) return;
       buildBoard('group-board', false);
       const podium = document.getElementById('podium');
       if(!podium) return;
@@ -1824,7 +1791,7 @@
       const targetTab = document.getElementById(`tab-${tabId}`);
       if(targetTab) targetTab.classList.add('active');
       const unassignedSec = document.querySelector('.unassigned-section');
-      if(unassignedSec) unassignedSec.style.display = (tabId === 'my' && !['achievements', 'collected', 'caffeine'].includes(currentMode)) ? 'block' : 'none';
+      if(unassignedSec) unassignedSec.style.display = (tabId === 'my' && !['pictures', 'collected', 'caffeine'].includes(currentMode)) ? 'block' : 'none';
       renderActiveTab();
     }
 
@@ -1896,6 +1863,74 @@
 
     function closeActionModal() { document.getElementById('actionModal').classList.remove('show'); }
 
+    function switchPictureSubTab(subTabId, btn) {
+      document.querySelectorAll('#tab-pictures .sub-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#tab-pictures .sub-tab-content').forEach(c => c.classList.remove('active'));
+      if(btn) btn.classList.add('active');
+      const targetSub = document.getElementById(`sub-tab-${subTabId}-pictures`);
+      if(targetSub) targetSub.classList.add('active');
+      if (subTabId === 'friends') renderFriendPicturesView();
+    }
+
+    function getAchievementsList(collectedObj) {
+      const tastedCount = Object.values(collectedObj || {}).filter(val => val === true).length;
+      const achievements = [];
+      for (let i = 1; i <= 10; i++) {
+        const target = i * 10;
+        achievements.push({
+          title: `Taste ${target} Monsters`,
+          desc: `Taste a total of ${target} different Monster Energy drinks.`,
+          unlocked: tastedCount >= target,
+          progress: `${Math.min(tastedCount, target)} / ${target}`
+        });
+      }
+      return achievements;
+    }
+
+    function renderPicturesView() {
+      const listContainer = document.getElementById('my-achievement-list');
+      if(!listContainer) return;
+      listContainer.innerHTML = '';
+      
+      const achievements = getAchievementsList(myCollected);
+      achievements.forEach(ach => {
+        const card = document.createElement('div');
+        card.className = `achievement-card${ach.unlocked ? ' unlocked' : ''}`;
+        card.innerHTML = `
+          <div class="achievement-info">
+            <div class="achievement-title">${ach.title}</div>
+            <div class="achievement-desc">${ach.desc}</div>
+          </div>
+          <div class="achievement-badge">${ach.progress}</div>
+        `;
+        listContainer.appendChild(card);
+      });
+    }
+
+    function renderFriendPicturesView() {
+      const friendSelect = document.getElementById('friend-pictures-select');
+      const friendName = friendSelect ? friendSelect.value : '';
+      const listContainer = document.getElementById('friend-achievement-list');
+      if(!listContainer) return;
+      listContainer.innerHTML = '';
+      if (!friendName || !roomData[friendName]) return;
+
+      const friendCollected = getUserCollected(roomData[friendName]);
+      const achievements = getAchievementsList(friendCollected);
+      achievements.forEach(ach => {
+        const card = document.createElement('div');
+        card.className = `achievement-card${ach.unlocked ? ' unlocked' : ''}`;
+        card.innerHTML = `
+          <div class="achievement-info">
+            <div class="achievement-title">${ach.title}</div>
+            <div class="achievement-desc">${ach.desc}</div>
+          </div>
+          <div class="achievement-badge">${ach.progress}</div>
+        `;
+        listContainer.appendChild(card);
+      });
+    }
+
     window.connectToRoom = connectToRoom;
     window.leaveRoom = leaveRoom;
     window.switchMode = switchMode;
@@ -1903,8 +1938,8 @@
     window.switchTab = switchTab;
     window.switchCollectedSubTab = switchCollectedSubTab;
     window.renderFriendCollectedView = renderFriendCollectedView;
-    window.switchAchievementSubTab = switchAchievementSubTab;
-    window.renderFriendAchievementsView = renderFriendAchievementsView;
+    window.switchPictureSubTab = switchPictureSubTab;
+    window.renderFriendPicturesView = renderFriendPicturesView;
     window.switchCaffeineSubTab = switchCaffeineSubTab;
     window.filterDrinkMenu = filterDrinkMenu;
     window.renderFriendCaffeineView = renderFriendCaffeineView;
