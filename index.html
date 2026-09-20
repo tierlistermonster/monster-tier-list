@@ -514,6 +514,34 @@
       color: #000;
     }
 
+    /* Értesítés stílus */
+    #achievement-toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(150px);
+      background: #1c1c1e;
+      border: 2px solid var(--accent);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      max-width: 90%;
+      box-sizing: border-box;
+    }
+    #achievement-toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+    .toast-icon { font-size: 24px; }
+    .toast-texts { display: flex; flex-direction: column; gap: 2px; }
+    .toast-header { font-size: 10px; font-weight: bold; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; }
+    .toast-title { font-size: 13px; font-weight: bold; color: #fff; }
+
     .section-title {
       font-size: 13px;
       font-weight: bold;
@@ -803,6 +831,15 @@
     </div>
   </div>
 
+  <!-- Achievement Toast Értesítés -->
+  <div id="achievement-toast">
+    <div class="toast-icon">🏆</div>
+    <div class="toast-texts">
+      <div class="toast-header">Achievement Unlocked!</div>
+      <div id="toast-title-text" class="toast-title">Cím neve</div>
+    </div>
+  </div>
+
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyBm-OZUTOdc20Jx637WFLXCrQs_QnHViYA",
@@ -901,6 +938,9 @@
 
     let selectedProductId = null; 
     let caffeineSelectedDrink = null;
+
+    // Előző állapot tárolása az értesítésekhez
+    let previousUnlockedAchievements = {};
 
     const tierLevels5 = [
       { level: 5, label: '5★', class: 'badge-5-5' }, 
@@ -1496,12 +1536,14 @@
       saveToFirebase();
       closeCaffeineModal();
       renderCaffeineView();
+      checkAchievementsUpdate();
     }
 
     function removeCaffeineLog(index) {
       myCaffeineHistory.splice(index, 1);
       saveToFirebase();
       renderCaffeineView();
+      checkAchievementsUpdate();
     }
 
     function renderMyView() {
@@ -1860,6 +1902,7 @@
       saveToFirebase();
       closeActionModal();
       renderCollectedView();
+      checkAchievementsUpdate();
     }
 
     function closeActionModal() { document.getElementById('actionModal').classList.remove('show'); }
@@ -1880,11 +1923,10 @@
 
       const achievements = [];
       
-      // Tasted achievements (Type: 1)
       for (let i = 1; i <= 10; i++) {
         const target = i * 10;
         achievements.push({
-          type: 1,
+          id: `taste_${target}`,
           title: `Taste ${target} Monsters`,
           desc: `Taste a total of ${target} different Monster Energy drinks.`,
           unlocked: tastedCount >= target,
@@ -1892,11 +1934,10 @@
         });
       }
 
-      // Caffeine achievements (Type: 2)
       for (let i = 1; i <= 10; i++) {
         const targetMg = i * 1000;
         achievements.push({
-          type: 2,
+          id: `caffeine_${targetMg}`,
           title: `${targetMg} mg Caffeine`,
           desc: `Consume a cumulative total of ${targetMg} mg of caffeine across all logs.`,
           unlocked: allTimeCaffeine >= targetMg,
@@ -1904,13 +1945,38 @@
         });
       }
 
-      // Rendezés: Teljesítettek felülre (unlocked elöl), de megőrzik az eredeti típus (íz = 1, koffein = 2) szerinti sorrendet
+      // Fordított sorrend: A még nem teljesítettek felülre, a már teljesítettek ("unlocked": true) legalulra kerülnek
       achievements.sort((a, b) => {
         if (a.unlocked === b.unlocked) return 0;
-        return a.unlocked ? -1 : 1;
+        return a.unlocked ? 1 : -1;
       });
 
       return achievements;
+    }
+
+    // Értesítés megjelenítése
+    function showAchievementToast(title) {
+      const toast = document.getElementById('achievement-toast');
+      document.getElementById('toast-title-text').innerText = title;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 4000);
+    }
+
+    // Ellenőrzi, hogy történt-e új achievement feloldás
+    function checkAchievementsUpdate() {
+      const currentList = getAchievementsList(myCollected, myCaffeineHistory);
+      currentList.forEach(ach => {
+        if (ach.unlocked && !previousUnlockedAchievements[ach.id]) {
+          showAchievementToast(ach.title);
+        }
+      });
+      // Elmentjük az aktuális állapotot
+      previousUnlockedAchievements = {};
+      currentList.forEach(ach => {
+        if (ach.unlocked) previousUnlockedAchievements[ach.id] = true;
+      });
     }
 
     function renderPicturesView() {
@@ -1919,6 +1985,13 @@
       listContainer.innerHTML = '';
       
       const achievements = getAchievementsList(myCollected, myCaffeineHistory);
+      
+      // Kezdeti feltöltéskor is frissítjük a state-et, hogy ne dobjon üdvözlő toastot oldalbetöltéskor
+      previousUnlockedAchievements = {};
+      achievements.forEach(ach => {
+        if (ach.unlocked) previousUnlockedAchievements[ach.id] = true;
+      });
+
       achievements.forEach(ach => {
         const card = document.createElement('div');
         card.className = `achievement-card${ach.unlocked ? ' unlocked' : ''}`;
