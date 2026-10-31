@@ -39,6 +39,7 @@
 
     h1 { margin-bottom: 2px; font-size: 18px; text-transform: uppercase; text-align: center; color: #fff; }
     p.subtitle { color: #8e8e93; margin-top: 0; margin-bottom: 10px; font-size: 11px; text-align: center; }
+
     .room-bar {
       background: var(--surface); padding: 8px; border-radius: 8px; width: 100%;
       max-width: 800px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 6px;
@@ -59,3 +60,2638 @@
     .room-bar button.leave-btn {
       background: var(--danger); color: #fff; flex: 1;
     }
+
+    .mode-tabs { display: flex; gap: 6px; margin-bottom: 8px; width: 100%; max-width: 800px; flex-wrap: wrap; align-items: center; }
+    .mode-btn {
+      background: #222224; color: #8e8e93; border: 1px solid #3a3a3c; padding: 8px;
+      border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 12px; flex: 1; text-align: center;
+      min-width: 90px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .mode-btn.active { background: #007aff; color: #fff; border-color: #007aff; }
+    .mode-btn.pictures-tab-btn.active { background: #30d158; color: #000; border-color: #30d158; }
+    .mode-btn.collected-tab-btn.active { background: #af52de; color: #fff; border-color: #af52de; }
+    .mode-btn.caffeine-tab-btn.active { background: #ff9500; color: #000; border-color: #ff9500; }
+
+    .dropdown-container {
+      position: relative;
+      flex: 1;
+      min-width: 100px;
+    }
+    .dropdown-btn {
+      width: 100%;
+      background: #222224; color: #8e8e93; border: 1px solid #3a3a3c; padding: 8px;
+      border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 12px; text-align: center;
+      box-sizing: border-box;
+      position: relative;
+      padding-right: 28px;
+    }
+    .dropdown-btn.active { background: #007aff; color: #fff; border-color: #007aff; }
+    .dropdown-btn .arrow {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%) rotate(180deg);
+      transition: transform 0.2s;
+      width: 14px;
+      height: 14px;
+      display: inline-block;
+    }
+    .dropdown-container.open .dropdown-btn .arrow {
+      transform: translateY(-50%) rotate(0deg);
+    }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #1c1c1e;
+      border: 1px solid #3a3a3c;
+      border-radius: 8px;
+      margin-top: 4px;
+      z-index: 100;
+      flex-direction: column;
+      gap: 2px;
+      padding: 4px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+    .dropdown-content.show { display: flex; }
+    .sub-mode-btn {
+      background: #2c2c2e;
+      color: #8e8e93;
+      border: none;
+      padding: 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 12px;
+      text-align: center;
+    }
+    .sub-mode-btn.active { background: #007aff; color: #fff; }
+
+    .nav-tabs { display: flex; gap: 6px; margin-bottom: 10px; width: 100%; max-width: 800px; }
+    .tab-btn {
+      background: #2c2c2e; color: #8e8e93; border: none; padding: 8px 6px;
+      border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 11px; flex: 1; text-align: center;
+    }
+    .tab-btn.active { background: var(--accent); color: #000; }
+
+    .tab-content { display: none; width: 100%; max-width: 800px; }
+    .tab-content.active { display: block; }
+
+    .app-card {
+      background: var(--surface);
+      border: 1px solid #3a3a3c;
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-sizing: border-box;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+      width: 100%;
+    }
+
+    .tier-board { display: flex; flex-direction: column; gap: 4px; background: #000; padding: 4px; border-radius: 8px; width: 100%; box-sizing: border-box; }
+    .tier-row { display: flex; background: #161618; min-height: 58px; border-radius: 6px; overflow: hidden; align-items: stretch; }
+    .tier-badge {
+      width: 42px; display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 13px; color: #000; flex-shrink: 0;
+    }
+    
+    .badge-5-5 { background: var(--tier-5-5); }
+    .badge-5-4 { background: var(--tier-5-4); }
+    .badge-5-3 { background: var(--tier-5-3); }
+    .badge-5-2 { background: var(--tier-5-2); }
+    .badge-5-1 { background: var(--tier-5-1); }
+
+    .badge-10-10 { background: var(--tier-10-10); }
+    .badge-10-9  { background: var(--tier-10-9); }
+    .badge-10-8  { background: var(--tier-10-8); }
+    .badge-10-7  { background: var(--tier-10-7); }
+    .badge-10-6  { background: var(--tier-10-6); }
+    .badge-10-5  { background: #000080; color: #000; }
+    .badge-10-4  { background: var(--tier-10-4); color: #000; }
+    .badge-10-3  { background: var(--tier-10-3); color: #000; }
+    .badge-10-2  { background: var(--tier-10-2); color: #fff; }
+    .badge-10-1  { background: var(--tier-10-1); color: #000; }
+
+    .tier-zone { 
+      flex: 1; display: flex; flex-direction: row; 
+      align-items: center; gap: 4px; padding: 4px; min-height: 50px; 
+      overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch;
+      cursor: pointer;
+    }
+    .tier-zone::-webkit-scrollbar { height: 4px; }
+    .tier-zone::-webkit-scrollbar-thumb { background: #444; border-radius: 2px; }
+
+    .slot-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+      gap: 2px;
+    }
+
+    .slot-cell {
+      position: relative;
+      width: 46px;
+      height: 46px;
+      background: #2c2c2e;
+      border: 2px dashed #444;
+      border-radius: 6px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slot-cell.has-item {
+      background: transparent;
+      border: 2px solid transparent;
+    }
+
+    .slot-number-box {
+      background: #131314;
+      border: 1px solid #3a3a3c;
+      border-radius: 4px;
+      padding: 1px 4px;
+      font-size: 9px;
+      font-weight: bold;
+      color: #8e8e93;
+      text-align: center;
+      min-width: 40px;
+    }
+
+    .podium-container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 4px;
+      margin-top: 4px;
+      padding: 10px 6px 6px 6px;
+      background: #161618;
+      border-radius: 8px;
+      border: 1px solid #3a3a3c;
+      box-sizing: border-box;
+      width: 100%;
+      overflow-x: auto;
+    }
+    .podium-column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      min-width: 50px;
+    }
+    .podium-img {
+      height: 45px;
+      width: 45px;
+      object-fit: contain;
+      margin-bottom: 4px;
+      filter: drop-shadow(0 3px 4px rgba(0,0,0,0.5));
+    }
+    .podium-step {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 12px;
+      border-radius: 4px 4px 0 0;
+      box-shadow: inset 0 2px 3px rgba(255,255,255,0.3), inset 0 -3px 4px rgba(0,0,0,0.3);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    }
+    .step-1 { height: 70px; background: linear-gradient(135deg, #ffe135 0%, #d4af37 100%); color: #000; text-shadow: none; }
+    .step-2 { height: 55px; background: linear-gradient(135deg, #e0e0e0 0%, #9e9e9e 100%); color: #000; text-shadow: none; }
+    .step-3 { height: 42px; background: linear-gradient(135deg, #e69a53 0%, #a86422 100%); color: #fff; }
+    .step-4 { height: 32px; background: linear-gradient(135deg, #7c8894 0%, #434c56 100%); color: #fff; }
+    .step-5 { height: 24px; background: linear-gradient(135deg, #596169 0%, #2e343b 100%); color: #fff; }
+
+    .unassigned-section { 
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(28, 28, 30, 0.98); 
+      backdrop-filter: blur(10px);
+      padding: 8px 10px; 
+      border-top: 1px solid #3a3a3c; 
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.8);
+      box-sizing: border-box;
+      display: none; 
+    }
+
+    .unassigned-zone {
+      display: flex !important;
+      flex-direction: row !important;
+      flex-wrap: nowrap !important;
+      overflow-x: auto !important;
+      overflow-y: hidden !important;
+      -webkit-overflow-scrolling: touch;
+      gap: 6px;
+      padding-bottom: 4px;
+      width: 100%;
+      min-height: 56px;
+      align-items: center;
+      cursor: pointer;
+    }
+    .unassigned-zone::-webkit-scrollbar { height: 4px; }
+    .unassigned-zone::-webkit-scrollbar-thumb { background: #444; border-radius: 2px; }
+
+    .tier-img { 
+      height: 48px; width: 48px; object-fit: contain; cursor: pointer; border-radius: 6px; flex-shrink: 0;
+      transition: transform 0.15s, box-shadow 0.15s, border 0.15s;
+      border: 2px solid transparent;
+      z-index: 2;
+    }
+    .tier-img.selected {
+      border: 2px solid var(--accent);
+      transform: scale(1.08);
+      box-shadow: 0 0 10px rgba(48, 209, 88, 0.6);
+    }
+
+    .friend-picker { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+    .friend-select-box {
+      background: #2c2c2e; color: #ffffff; padding: 8px 10px; border-radius: 8px;
+      font-size: 14px; font-weight: bold; border: 1px solid #444; width: 100%;
+      box-sizing: border-box; cursor: pointer; outline: none;
+    }
+    .friend-select-box option { background-color: #2c2c2e; color: #ffffff; }
+    .no-friends-msg {
+      background: var(--surface); padding: 25px 15px; border-radius: 8px;
+      text-align: center; color: #8e8e93; font-size: 14px; font-weight: bold;
+      border: 1px dashed #3a3a3c;
+    }
+
+    .sub-nav-tabs { display: flex; gap: 6px; margin-bottom: 10px; width: 100%; }
+    .sub-tab-btn {
+      background: #2c2c2e; color: #8e8e93; border: none; padding: 6px 4px;
+      border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 11px; flex: 1; text-align: center;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .sub-tab-btn.active { background: #007aff; color: #fff; }
+    .sub-tab-content { display: none; width: 100%; }
+    .sub-tab-content.active { display: block; }
+
+    .caffeine-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+    }
+    .counter-display-wrapper {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 5px 0;
+    }
+    .counter-ring-svg {
+      position: absolute;
+      top: 0; left: 0;
+      width: 150px; height: 150px;
+      transform: rotate(-90deg);
+    }
+    .counter-ring-bg {
+      fill: none;
+      stroke: #2c2c2e;
+      stroke-width: 8;
+    }
+    .counter-ring-progress {
+      fill: none;
+      stroke: #30d158;
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-dasharray: 418.4;
+      stroke-dashoffset: 418.4;
+      transition: stroke-dashoffset 0.5s ease;
+    }
+    .counter-display {
+      width: 130px; height: 130px; border-radius: 50%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: #151517; box-shadow: inset 0 4px 10px rgba(0,0,0,0.7);
+      z-index: 2;
+    }
+    .counter-lightning-svg {
+      width: 22px; height: 22px; fill: #30d158; margin-bottom: -2px;
+      filter: drop-shadow(0 0 6px rgba(48, 209, 88, 0.6));
+      transition: fill 0.3s ease;
+    }
+    .counter-value { 
+      font-size: 34px; font-weight: 900; color: #30d158; line-height: 1; 
+      text-shadow: 0 0 10px rgba(48, 209, 88, 0.6);
+      transition: color 0.3s ease, text-shadow 0.3s ease;
+    }
+    .counter-label { font-size: 9px; color: #8e8e93; text-transform: uppercase; margin-top: 2px; font-weight: 700; }
+    
+    .drink-search-input {
+      background: #2c2c2e; color: #fff; border: 1px solid #444; padding: 8px 10px;
+      border-radius: 8px; font-size: 13px; width: 100%; box-sizing: border-box; outline: none;
+      margin-bottom: 4px;
+    }
+
+    .drink-menu-scroll {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      gap: 8px;
+      padding: 4px 2px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .drink-menu-scroll::-webkit-scrollbar { height: 4px; }
+    .drink-menu-scroll::-webkit-scrollbar-thumb { background: #444; border-radius: 2px; }
+
+    .drink-menu-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #242426;
+      border: 2px solid #3a3a3c;
+      border-radius: 8px;
+      padding: 6px;
+      cursor: pointer;
+      flex-shrink: 0;
+      width: 90px;
+      height: 85px;
+      justify-content: flex-start;
+      gap: 4px;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .drink-menu-card:hover { border-color: #ff9500; transform: scale(1.03); }
+    .drink-menu-card img { height: 42px; width: 42px; object-fit: contain; border-radius: 6px; }
+    .drink-menu-card .drink-title {
+      font-size: 10px; font-weight: bold; color: #fff; text-align: center;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;
+    }
+    .drink-menu-card .drink-mg {
+      font-size: 9px; color: #ff9500; font-weight: bold;
+    }
+
+    .caffeine-stats-bar {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      background: #242426;
+      border: 1px solid #3a3a3c;
+      padding: 8px 12px;
+      border-radius: 8px;
+      box-sizing: border-box;
+      align-items: center;
+      font-size: 11px;
+      font-weight: bold;
+      color: #8e8e93;
+    }
+
+    .history-list { display: flex; flex-direction: column; gap: 6px; width: 100%; max-height: 140px; overflow-y: auto; }
+    .history-item {
+      background: #242426; border: 1px solid #3a3a3c; padding: 6px 10px; border-radius: 6px; display: flex;
+      justify-content: space-between; align-items: center; font-size: 11px;
+    }
+    .delete-history-btn {
+      background: none; border: none; color: var(--danger); cursor: pointer;
+      font-size: 13px; font-weight: bold; padding: 0 4px;
+    }
+
+    .achievement-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+      margin-top: 6px;
+    }
+    .achievement-card {
+      background: var(--surface);
+      border: 1px solid #3a3a3c;
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-sizing: border-box;
+      gap: 10px;
+      opacity: 0.5;
+      transition: opacity 0.2s, border-color 0.2s;
+    }
+    .achievement-card.unlocked {
+      opacity: 1;
+      border-color: var(--accent);
+      background: linear-gradient(135deg, rgba(48, 209, 88, 0.1) 0%, var(--surface) 100%);
+    }
+    .achievement-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .achievement-title {
+      font-size: 13px;
+      font-weight: bold;
+      color: #fff;
+    }
+    .achievement-desc {
+      font-size: 11px;
+      color: #8e8e93;
+    }
+    .achievement-badge {
+      font-size: 11px;
+      font-weight: bold;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: #2c2c2e;
+      color: #8e8e93;
+      flex-shrink: 0;
+    }
+    .achievement-card.unlocked .achievement-badge {
+      background: var(--accent);
+      color: #000;
+    }
+
+    #achievement-toast {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-150px);
+      background: #1c1c1e;
+      border: 2px solid var(--accent);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      max-width: 90%;
+      box-sizing: border-box;
+    }
+    #achievement-toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+    .toast-icon { font-size: 24px; }
+    .toast-texts { display: flex; flex-direction: column; gap: 2px; }
+    .toast-header { font-size: 10px; font-weight: bold; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; }
+    .toast-title { font-size: 13px; font-weight: bold; color: #fff; }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: bold;
+      color: #8e8e93;
+      margin: 12px 0 6px 0;
+      text-transform: uppercase;
+    }
+
+    .collected-grid { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 800px; }
+    .collected-item-row {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--surface); padding: 8px 12px; border-radius: 8px; border: 1px solid #3a3a3c;
+    }
+    .collected-item-info { display: flex; align-items: center; gap: 12px; cursor: pointer; flex: 1; }
+    .collected-item-img { width: 40px; height: 40px; object-fit: contain; border-radius: 6px; }
+    .collected-item-name { font-size: 14px; font-weight: bold; color: #fff; }
+    .status-dot { width: 10px; height: 10px; border-radius: 50%; background-color: #555; flex-shrink: 0; }
+    .status-dot.active { background-color: var(--accent); box-shadow: 0 0 6px rgba(48, 209, 88, 0.8); }
+
+    .action-modal, .image-modal, .caffeine-modal {
+      display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.75); backdrop-filter: blur(5px);
+      align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;
+    }
+    .action-modal.show, .image-modal.show, .caffeine-modal.show { display: flex; }
+    .action-modal-box {
+      background: var(--surface); border: 1px solid #3a3a3c; border-radius: 12px; padding: 20px;
+      width: 100%; max-width: 320px; display: flex; flex-direction: column; align-items: center; text-align: center;
+    }
+    .action-modal-img { width: 70px; height: 70px; object-fit: contain; margin-bottom: 10px; border-radius: 8px; }
+    .action-modal-title { font-size: 16px; font-weight: bold; color: #fff; margin-bottom: 4px; }
+    .action-modal-status { font-size: 12px; color: #8e8e93; margin-bottom: 16px; }
+    .action-modal-btns { display: flex; gap: 8px; width: 100%; }
+    .action-modal-btn {
+      flex: 1; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; border: none;
+    }
+    .btn-add { background: var(--accent); color: #000; }
+    .btn-remove { background: var(--danger); color: #fff; }
+    .btn-close-modal { background: #2c2c2e; color: #8e8e93; border: 1px solid #444; width: 100%; margin-top: 8px; }
+    
+    .caffeine-input-group {
+      display: flex; flex-direction: column; gap: 6px; width: 100%; text-align: left; margin-bottom: 12px;
+    }
+    .caffeine-input-group label { font-size: 11px; font-weight: bold; color: #8e8e93; text-transform: uppercase; }
+    .caffeine-input-group input {
+      background: #2c2c2e; color: #fff; border: 1px solid #444; padding: 8px;
+      border-radius: 6px; font-size: 14px; outline: none; width: 100%; box-sizing: border-box;
+    }
+  </style>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+</head>
+<body>
+
+  <h1>Monster Group TierList</h1>
+  <p class="subtitle">Real-time Group Rating</p>
+
+  <div class="room-bar">
+    <div class="room-bar-row">
+      <label>Room:</label>
+      <input type="text" id="room-input" value="">
+    </div>
+    <div class="room-bar-row">
+      <label>Name:</label>
+      <input type="text" id="name-input" value="">
+    </div>
+    <div class="room-bar-row" style="gap: 6px;">
+      <button onclick="connectToRoom()">Join</button>
+      <button class="leave-btn" onclick="leaveRoom()">Leave</button>
+    </div>
+  </div>
+
+  <div class="mode-tabs">
+    <button id="mode-5-btn" class="mode-btn active" onclick="switchMode(5)">⭐ 5 Star</button>
+    <button id="mode-10-btn" class="mode-btn" onclick="switchMode(10)">🌟 10 Star</button>
+    <div id="dropdown-container" class="dropdown-container">
+      <button id="dropdown-main-btn" class="dropdown-btn" onclick="toggleDropdown(event)">Categories <svg class="arrow" viewBox="0 0 24 24"><path d="M4 16L12 8L20 16" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></button>
+      <div id="dropdown-content" class="dropdown-content">
+        <button class="sub-mode-btn" onclick="switchMode('energy')">Energy</button>
+        <button class="sub-mode-btn" onclick="switchMode('ultra')">Ultra</button>
+        <button class="sub-mode-btn" onclick="switchMode('juiced')">Juiced</button>
+        <button class="sub-mode-btn" onclick="switchMode('rehab')">Rehab</button>
+        <button class="sub-mode-btn" onclick="switchMode('java')">Java</button>
+        <button class="sub-mode-btn" onclick="switchMode('nitro')">Nitro</button>
+        <button class="sub-mode-btn" onclick="switchMode('reserve')">Reserve</button>
+        <button class="sub-mode-btn" onclick="switchMode('drivers')">Drivers</button>
+        <button class="sub-mode-btn" onclick="switchMode('beast')">Beast</button>
+        <button class="sub-mode-btn" onclick="switchMode('sugary')">Sugary</button>
+        <button class="sub-mode-btn" onclick="switchMode('zero')">Zero</button>
+      </div>
+    </div>
+    <button id="mode-collected-btn" class="mode-btn collected-tab-btn" onclick="switchMode('collected')">🎯 Tasted</button>
+    <button id="mode-pictures-btn" class="mode-btn pictures-tab-btn" onclick="switchMode('pictures')">🏆 Achievements</button>
+    <button id="mode-caffeine-btn" class="mode-btn caffeine-tab-btn" onclick="switchMode('caffeine')">⚡ Caffeine</button>
+  </div>
+
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('group', this)">📊 Group Tier</button>
+    <button class="tab-btn" onclick="switchTab('my', this)">✏️ My Tier</button>
+    <button class="tab-btn" onclick="switchTab('friends', this)">👥 Friends</button>
+  </div>
+
+  <div id="tab-collected" class="tab-content">
+    <div class="sub-nav-tabs">
+      <button class="sub-tab-btn active" onclick="switchCollectedSubTab('my', this)">✏️ My Tasted</button>
+      <button class="sub-tab-btn" onclick="switchCollectedSubTab('friends', this)">👥 Friend Tasted</button>
+    </div>
+    <div id="sub-tab-my-collected" class="sub-tab-content active">
+      <div class="collection-counter" style="background:var(--surface); border:1px solid #3a3a3c; border-radius:8px; padding:10px 14px; margin-bottom:10px; font-size:13px; font-weight:bold; display:flex; justify-content:space-between;">
+        <span>Tasted:</span> <span id="my-collection-count" style="color:var(--accent);">0 / 0</span>
+      </div>
+      <div id="my-collected-grid" class="collected-grid"></div>
+    </div>
+    <div id="sub-tab-friends-collected" class="sub-tab-content">
+      <div class="friend-picker" style="margin-bottom: 8px;">
+        <label style="font-size: 11px; font-weight: bold; color: #8e8e93; text-transform: uppercase;">Select Friend:</label>
+        <select id="friend-collected-select" class="friend-select-box" onchange="renderFriendCollectedView()"></select>
+      </div>
+      <div class="collection-counter" style="background:var(--surface); border:1px solid #3a3a3c; border-radius:8px; padding:10px 14px; margin-bottom:10px; font-size:13px; font-weight:bold; display:flex; justify-content:space-between;">
+        <span>Tasted:</span> <span id="friend-collection-count" style="color:var(--accent);">0 / 0</span>
+      </div>
+      <div id="friend-collected-grid" class="collected-grid"></div>
+      <div id="no-friend-collected-msg" class="no-friends-msg" style="display: none;">👥 No friends added yet in this room.</div>
+    </div>
+  </div>
+
+  <div id="tab-pictures" class="tab-content">
+    <div class="sub-nav-tabs">
+      <button class="sub-tab-btn active" onclick="switchPictureSubTab('my', this)">✏️ My Achievements</button>
+      <button class="sub-tab-btn" onclick="switchPictureSubTab('friends', this)">👥 Friends Achievements</button>
+    </div>
+    <div id="sub-tab-my-pictures" class="sub-tab-content active">
+      <div class="achievement-list" id="my-achievement-list"></div>
+    </div>
+    <div id="sub-tab-friends-pictures" class="sub-tab-content">
+      <div class="friend-picker" style="margin-bottom: 8px;">
+        <label style="font-size: 11px; font-weight: bold; color: #8e8e93; text-transform: uppercase;">Select Friend:</label>
+        <select id="friend-pictures-select" class="friend-select-box" onchange="renderFriendPicturesView()"></select>
+      </div>
+      <div class="achievement-list" id="friend-achievement-list"></div>
+      <div id="no-friend-pics-msg" class="no-friends-msg" style="display: none;">👥 No friends added yet in this room.</div>
+    </div>
+  </div>
+
+  <div id="tab-caffeine" class="tab-content">
+    <div class="sub-nav-tabs">
+      <button class="sub-tab-btn active" onclick="switchCaffeineSubTab('my', this)">✏️ My Caffeine</button>
+      <button class="sub-tab-btn" onclick="switchCaffeineSubTab('friends', this)">👥 Friends Caffeine</button>
+    </div>
+    
+    <div id="sub-tab-my-caffeine" class="sub-tab-content active">
+      <div class="app-card">
+        <div class="caffeine-wrapper">
+          <div class="caffeine-stats-bar">
+            <span>All-time Total:</span>
+            <strong id="caffeine-alltime-val" style="color:#ff9500;">0 mg</strong>
+          </div>
+
+          <div class="counter-display-wrapper">
+            <svg class="counter-ring-svg" viewBox="0 0 150 150">
+              <circle class="counter-ring-bg" cx="75" cy="75" r="66"></circle>
+              <circle id="caffeine-ring-progress" class="counter-ring-progress" cx="75" cy="75" r="66"></circle>
+            </svg>
+            <div class="counter-display">
+              <svg id="caffeine-lightning-svg" class="counter-lightning-svg" viewBox="0 0 24 24"><path d="M13 2L3 14h7v8l10-12h-7V2z"/></svg>
+              <div id="caffeine-total-val" class="counter-value">0</div>
+              <div class="counter-label">mg active</div>
+            </div>
+          </div>
+
+          <div class="caffeine-stats-bar">
+            <span>Daily Limit: <strong style="color:#fff;">400 mg</strong></span>
+            <span id="caffeine-status-text" style="color:var(--accent);">Safe level</span>
+          </div>
+
+          <div class="section-title" style="align-self: flex-start; margin: 4px 0;">Add Drink</div>
+          <input type="text" id="drink-search-input" class="drink-search-input" placeholder="Search drink..." oninput="filterDrinkMenu()">
+          <div id="caffeine-drink-menu" class="drink-menu-scroll"></div>
+
+          <div class="section-title" style="align-self: flex-start; margin: 4px 0;">Today's Log</div>
+          <div id="caffeine-history-list" class="history-list">
+            <div class="empty-msg">No caffeine logged today.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="sub-tab-friends-caffeine" class="sub-tab-content">
+      <div class="friend-picker" style="margin-bottom: 8px;">
+        <label style="font-size: 11px; font-weight: bold; color: #8e8e93; text-transform: uppercase;">Select Friend:</label>
+        <select id="friend-caffeine-select" class="friend-select-box" onchange="renderFriendCaffeineView()"></select>
+      </div>
+      <div class="app-card">
+        <div class="caffeine-wrapper">
+          <div class="caffeine-stats-bar">
+            <span>All-time Total:</span>
+            <strong id="friend-caffeine-alltime-val" style="color:#ff9500;">0 mg</strong>
+          </div>
+
+          <div class="counter-display-wrapper">
+            <svg class="counter-ring-svg" viewBox="0 0 150 150">
+              <circle class="counter-ring-bg" cx="75" cy="75" r="66"></circle>
+              <circle id="friend-caffeine-ring-progress" class="counter-ring-progress" cx="75" cy="75" r="66"></circle>
+            </svg>
+            <div class="counter-display">
+              <svg id="friend-caffeine-lightning-svg" class="counter-lightning-svg" viewBox="0 0 24 24"><path d="M13 2L3 14h7v8l10-12h-7V2z"/></svg>
+              <div id="friend-caffeine-total-val" class="counter-value">0</div>
+              <div class="counter-label">mg active</div>
+            </div>
+          </div>
+
+          <div class="caffeine-stats-bar">
+            <span>Daily Limit: <strong style="color:#fff;">400 mg</strong></span>
+            <span id="friend-caffeine-status-text" style="color:var(--accent);">Safe level</span>
+          </div>
+
+          <div class="section-title" style="align-self: flex-start; margin: 4px 0;">Friend's Log</div>
+          <div id="friend-caffeine-history-list" class="history-list">
+            <div class="empty-msg">No caffeine logged today.</div>
+          </div>
+        </div>
+      </div>
+      <div id="no-friend-caffeine-msg" class="no-friends-msg" style="display: none; margin-top: 10px;">👥 No friends added yet in this room.</div>
+    </div>
+  </div>
+
+  <div id="tab-group" class="tab-content">
+    <div id="group-board" class="tier-board"></div>
+    <div id="podium" class="podium-container"></div>
+  </div>
+
+  <div id="tab-my" class="tab-content">
+    <div id="my-board" class="tier-board"></div>
+  </div>
+
+  <div class="unassigned-section">
+    <div class="tier-zone unassigned-zone" data-tier="0" onclick="handleZoneClick(event, this)"></div>
+  </div>
+
+  <div id="tab-friends" class="tab-content">
+    <div id="friend-container">
+      <div class="friend-picker">
+        <label style="font-size: 11px; font-weight: bold; color: #8e8e93; text-transform: uppercase;">Select Friend:</label>
+        <select id="friend-select" class="friend-select-box" onchange="renderFriendView()"></select>
+      </div>
+      <div class="section-title">Friend's Tier List</div>
+      <div id="friend-board" class="tier-board"></div>
+      <div class="section-title" id="combined-title">Comparison with Friend</div>
+      <div id="combined-board" class="tier-board"></div>
+      <div id="combined-podium" class="podium-container"></div>
+    </div>
+    <div id="no-friends-msg" class="no-friends-msg" style="display: none;">👥 No friends added yet in this room.</div>
+  </div>
+
+  <div id="actionModal" class="action-modal">
+    <div class="action-modal-box">
+      <img id="modalProductImg" class="action-modal-img" src="" alt="Product">
+      <div id="modalProductName" class="action-modal-title">Product Name</div>
+      <div id="modalProductStatus" class="action-modal-status">Status: Not tasted</div>
+      <div id="modalActionButtons" class="action-modal-btns"></div>
+      <button class="action-modal-btn btn-close-modal" onclick="closeActionModal()">Cancel</button>
+    </div>
+  </div>
+
+  <div id="caffeineModal" class="caffeine-modal">
+    <div class="action-modal-box">
+      <img id="caffeineModalImg" class="action-modal-img" src="" alt="Drink">
+      <div id="caffeineModalName" class="action-modal-title">Drink Name</div>
+      <div class="caffeine-input-group" style="margin-top: 10px;">
+        <label>Time Consumed:</label>
+        <input type="time" id="caffeineInputTime">
+      </div>
+      <div class="caffeine-input-group">
+        <label>Amount (ml):</label>
+        <input type="number" id="caffeineInputMl" value="500" min="50" max="2000" step="50">
+      </div>
+      <div class="action-modal-btns">
+        <button class="action-modal-btn btn-add" onclick="confirmAddCaffeine()">Add</button>
+      </div>
+      <button class="action-modal-btn btn-close-modal" onclick="closeCaffeineModal()">Cancel</button>
+    </div>
+  </div>
+
+  <div id="achievement-toast">
+    <div class="toast-icon">🏆</div>
+    <div class="toast-texts">
+      <div class="toast-header">Achievement Unlocked!</div>
+      <div id="toast-title-text" class="toast-title">Cím neve</div>
+    </div>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBm-OZUTOdc20Jx637WFLXCrQs_QnHViYA",
+      authDomain: "monster-tier-list.firebaseapp.com",
+      projectId: "monster-tier-list",
+      storageBucket: "monster-tier-list.firebasestorage.app",
+      messagingSenderId: "155876294578",
+      appId: "1:155876294578:web:3641c1bc9513b4bf16eeab",
+      measurementId: "G-3R00X2SMSM",
+      databaseURL: "https://monster-tier-list-default-rtdb.firebaseio.com"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // Az összes termék, az első (Aussie Lemonade) az elején, a többi ABC sorrendben rendezve:
+    const products = [
+      { 
+        id: '1',
+        name: 'Aussie Lemonade',
+        img: 'Aussie Lemonade.png',
+        category: 'juiced',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 32
+      },
+      {
+        id: '35',
+        name: 'Assault',
+        img: 'Assault.png',
+        category: 'energy', 
+        sugaryOrZero: 'sugary', 
+        caffeinePer100ml: 32
+      },
+      { 
+        id: '2',
+        name: 'Bad Apple', 
+        img: 'Bad Apple.png',  
+        category: 'juiced',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 32 
+      },
+      { 
+        id: '66',
+        name: 'Beast Tea Lemonade',
+        img: 'Beast Tea Lemonade.png',
+        category: 'beast',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 0
+      },
+      { 
+        id: '67',
+        name: 'Beast Tea Original',
+        img: 'Beast Tea Original.png',
+        category: 'beast',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 0
+      },
+      { 
+        id: '68',
+        name: 'Blind Lemon Cherry',
+        img: 'Blind Lemon Cherry.png',
+        category: 'beast',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 0
+      },
+      { 
+        id: '69',
+        name: 'Blind Lemon Original',
+        img: 'Blind Lemon Original.png',
+        category: 'beast',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 0
+      },
+      { 
+        id: '70',
+        name: 'Blind Lemon Peach',
+        img: 'Blind Lemon Peach.png',
+        category: 'beast',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 0
+      },
+      { 
+        id: '71',
+        name: 'Blind Lemon Strawberry',
+        img: 'Blind Lemon Strawberry.png',
+        category: 'beast',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 0
+      },
+      {
+        id: '36',
+        name: 'Dragon Ice Tea Lemon', 
+        img: 'Dragon Ice Tea Lemon.png', 
+        category: 'rehab',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 29
+      },
+      { 
+        id: '56', 
+        name: 'Electric Blue',
+        img: 'Electric Blue.png',
+        category: 'energy',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 32
+      },
+      { 
+        id: '61',
+        name: 'Energy Absolutely Zero',
+        img: 'Energy Absolutely Zero.png',
+        category: 'energy',
+        sugaryOrZero: 'zero',
+        caffeinePer100ml: 32
+      },
+      { 
+        id: '62',
+        name: 'Energy Lo-Carb',
+        img: 'Energy Lo-Carb.png',
+        category: 'energy',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 32
+      },
+      { 
+        id: '4',
+        name: 'Energy',
+        img: 'Energy.png',
+        category: 'energy',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 32
+      },
+      {
+        id: '3',
+        name: 'Energy Zero Sugar',
+        img: 'Energy Zero Sugar.png',
+        category: 'energy',
+        sugaryOrZero: 'zero',
+        caffeinePer100ml: 32
+      },
+      { 
+        id: '5',
+        name: 'Full Throttle',
+        img: 'Full Throttle.png',
+        category: 'drivers',
+        sugaryOrZero: 'zero',
+        caffeinePer100ml: 32
+      },
+      { 
+        id: '63',
+        name: 'Import',
+        img: 'Import.png',
+        category: 'energy',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 33
+      },
+      { id: '38',
+       name: 'Java Cafe Latte',
+       img: 'Java Cafe Latte.png',
+       category: 'java',
+       sugaryOrZero: 'sugary',
+       caffeinePer100ml: 45
+      },
+      {
+        id: '39',
+        name: 'Java Irish Creme',
+        img: 'Java Irish Creme.png',
+        category: 'java',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 45
+      },
+      {
+        id: '40',
+        name: 'Java Loca Moca',
+        img: 'Java Loca Moca.png',
+        category: 'java',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 45
+      },
+      {
+        id: '41',
+        name: 'Java Mean Bean',
+        img: 'Java Mean Bean.png',
+        category: 'java',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 45
+      },
+      { 
+        id: '42',
+        name: 'Java Salted Caramel',
+        img: 'Java Salted Caramel.png',
+        category: 'java',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 45
+      },
+      {
+        id: '6',
+        name: 'Khaotic',  
+        img: 'Khaotic.png',   
+        category: 'juiced',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 32 
+      },
+      {
+        id: '43',
+        name: 'Killer Brew Loca Moca',  
+        img: 'Killer Brew Loca Moca.png',   
+        category: 'java', 
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 68 
+      },
+      {
+        id: '44',
+        name: 'Killer Brew Mean Bean',
+        img: 'Killer Brew Mean Bean.png', 
+        category: 'java',
+        sugaryOrZero: 'sugary', 
+        caffeinePer100ml: 68
+      },
+      {
+        id: '7',
+        name: 'Lando Norris',    
+        img: 'Lando Norris.png',   
+        category: 'drivers',
+        sugaryOrZero: 'zero', 
+        caffeinePer100ml: 32
+      },
+      { 
+        id: '64',
+        name: 'M3 Extra Strength',
+        img: 'M3 Extra Strength.png',
+        category: 'energy',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 100
+      },
+      {
+        id: '8',  
+        name: 'Mango Loco',   
+        img: 'Mango Loco.png',  
+        category: 'juiced',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 32
+      },
+      {
+        id: '45', 
+        name: 'Mixxd',    
+        img: 'Mixxd.png',   
+        category: 'juiced', 
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 32 
+      },
+      { 
+        id: '9',
+        name: 'Monarch',  
+        img: 'Monarch.png',      
+        category: 'juiced',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 32 
+      },
+      {
+        id: '47', 
+        name: 'Nitro Blue Flash',    
+        img: 'Nitro Blue Flash.png',     
+        category: 'nitro', 
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 32
+      },
+      { 
+        id: '10', 
+        name: 'Nitro Cosmic Peach',
+        img: 'Nitro Cosmic Peach.png',  
+        category: 'nitro',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 32 
+      },
+      {
+        id: '11',
+        name: 'Nitro Super Dry',  
+        img: 'Nitro Super Dry.png',      
+        category: 'nitro',
+        sugaryOrZero: 'sugary', 
+        caffeinePer100ml: 32
+      },
+      {
+        id: '58',
+        name: 'Orange Dreamsicle',   
+        img: 'Orange Dreamsicle.png',    
+        category: 'energy',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 32
+      },
+      {
+        id: '12',
+        name: 'Pacific Punch',    
+        img: 'Pacific Punch.png',  
+        category: 'juiced',
+        sugaryOrZero: 'sugary', 
+        caffeinePer100ml: 32 
+      },
+      {
+        id: '13',
+        name: 'Pipeline Punch',    
+        img: 'Pipeline Punch.png', 
+        category: 'juiced',
+        sugaryOrZero: 'sugary', 
+        caffeinePer100ml: 32 
+      },
+      {
+        id: '14', 
+        name: 'Rehab Lemonade Tea',
+        img: 'Rehab Lemonade Tea.png',     
+        category: 'rehab',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 32 
+      },
+      { 
+        id: '15',
+        name: 'Rehab Peach Tea',    
+        img: 'Rehab Peach Tea.png',     
+        category: 'rehab',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 32
+      },
+      {
+        id: '48', 
+        name: 'Rehab Wild Berry Tea',  
+        img: 'Rehab Wild Berry Tea.png',    
+        category: 'rehab', 
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 32
+      },
+      {
+        id: '49', 
+        name: 'Reserve Orange Dreamsicle',   
+        img: 'Reserve Orange Dreamsicle.png',   
+        category: 'reserve',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 32 
+      },
+      {
+        id: '50', 
+        name: "Reserve Peaches N' Creme",  
+        img: "Reserve Peaches N' Creme.png",    
+        category: 'reserve', 
+        sugaryOrZero: 'sugary', 
+        caffeinePer100ml: 32
+      },
+      {
+        id: '51',
+        name: 'Reserve White Pineapple',    
+        img: 'Reserve White Pineapple.png',    
+        category: 'reserve',
+        sugaryOrZero: 'sugary', 
+        caffeinePer100ml: 32 
+      },
+      {
+        id: '16', 
+        name: 'Rio Punch',  
+        img: 'Rio Punch.png',     
+        category: 'juiced',
+        sugaryOrZero: 'sugary', 
+        caffeinePer100ml: 32
+      },
+      {
+        id: '52', 
+        name: 'Ripper',    
+        img: 'Ripper.png',      
+        category: 'juiced',
+        sugaryOrZero: 'sugary', 
+        caffeinePer100ml: 32 
+      },
+      {
+        id: '34', 
+        name: 'Strawberry Lemonade',   
+        img: 'Strawberry Lemonade.png',  
+        category: 'juiced', 
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 32
+      },
+      {
+        id: '53', 
+        name: 'Strawberry Shot Zero Sugar',   
+        img: 'Strawberry Shot Zero Sugar.png',
+        category: 'energy',
+        sugaryOrZero: 'zero', 
+        caffeinePer100ml: 32 
+      },
+      {
+        id: '54',
+        name: 'Strawberry Shot',    
+        img: 'Strawberry Shot.png',
+        category: 'energy',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 32
+      },
+      { 
+        id: '72',
+        name: 'The Beast Gnarly Grape',
+        img: 'The Beast Gnarly Grape.png',
+        category: 'beast',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 0
+      },
+      { 
+        id: '73',
+        name: 'The Beast Killer Sunrise',
+        img: 'The Beast Killer Sunrise.png',
+        category: 'beast',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 0
+      },
+      { 
+        id: '74',
+        name: 'The Beast Mean Green',
+        img: 'The Beast Mean Green.png',
+        category: 'beast',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 0
+      },
+      { 
+        id: '75',
+        name: 'The Beast Peach Perfect',
+        img: 'The Beast Peach Perfect.png',
+        category: 'beast',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 0
+      },
+      { 
+        id: '76',
+        name: 'The Beast Perfect 10 Gnarly Grape',
+        img: 'The Beast Perfect 10 Gnarly Grape.png',
+        category: 'beast',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 0
+      },
+      { 
+        id: '77',
+        name: 'The Beast Perfect 10 Mean Green',
+        img: 'The Beast Perfect 10 Mean Green.png',
+        category: 'beast',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 0
+      },
+      { 
+        id: '78',
+        name: 'The Beast Perfect 10 Scary Berries',
+        img: 'The Beast Perfect 10 Scary Berries.png',
+        category: 'beast',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 0
+      },
+      { 
+        id: '79',
+        name: 'The Beast Perfect 10 Tiki Terror',
+        img: 'The Beast Perfect 10 Tiki Terror.png',
+        category: 'beast',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 0
+      },
+      { 
+        id: '80',
+        name: 'The Beast Pimk Poison',
+        img: 'The Beast Pimk Poison.png',
+        category: 'beast',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 0
+      },
+      { 
+        id: '81',
+        name: 'The Beast Scary Berries',
+        img: 'The Beast Scary Berries.png',
+        category: 'beast',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 0
+      },
+      { 
+        id: '82',
+        name: 'The Beast White Haze',
+        img: 'The Beast White Haze.png',
+        category: 'beast',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 0
+      },
+      { 
+        id: '55', 
+        name: 'Ultra Blue Hawaiian',  
+        img: 'Ultra Blue Hawaiian.png',     
+        category: 'ultra', 
+        sugaryOrZero: 'zero', 
+        caffeinePer100ml: 30
+      },
+      { 
+        id: '37', 
+        name: 'Ultra Blue',
+        img: 'Ultra Blue.png', 
+        category: 'ultra',
+        sugaryOrZero: 'zero',
+        caffeinePer100ml: 30
+      },
+      { 
+        id: '65',
+        name: 'Ultra Citron',
+        img: 'Ultra Citron.png',
+        category: 'ultra',
+        sugaryOrZero: 'zero',
+        caffeinePer100ml: 30
+      },
+      {
+        id: '17',
+        name: 'Ultra Black',    
+        img: 'Ultra Black.png',  
+        category: 'ultra',
+        sugaryOrZero: 'zero', 
+        caffeinePer100ml: 30 
+      },
+      {
+        id: '18',
+        name: 'Ultra Fantasy Ruby Red',
+        img: 'Ultra Fantasy Ruby Red.png', 
+        category: 'ultra',
+        sugaryOrZero: 'zero',
+        caffeinePer100ml: 30 
+      },
+      {
+        id: '19',
+        name: 'Ultra Fiesta Mango', 
+        img: 'Ultra Fiesta Mango.png',    
+        category: 'ultra', 
+        sugaryOrZero: 'zero',
+        caffeinePer100ml: 30
+      },
+      {
+        id: '20', 
+        name: 'Ultra Golden Pineapple',
+        img: 'Ultra Golden Pineapple.png', 
+        category: 'ultra',
+        sugaryOrZero: 'zero',
+        caffeinePer100ml: 30
+      },
+      { 
+        id: '21',
+        name: 'Ultra Paradise',  
+        img: 'Ultra Paradise.png', 
+        category: 'ultra', 
+        sugaryOrZero: 'zero', 
+        caffeinePer100ml: 30 
+      },
+      {
+        id: '22', 
+        name: 'Ultra Peachy Keen',  
+        img: 'Ultra Peachy Keen.png',   
+        category: 'ultra',
+        sugaryOrZero: 'zero', 
+        caffeinePer100ml: 30 
+      },
+      {
+        id: '57',
+        name: 'Ultra Punk Punch', 
+        img: 'Ultra Punk Punch.png',  
+        category: 'ultra', 
+        sugaryOrZero: 'zero',
+        caffeinePer100ml: 30 
+      },
+      {
+        id: '32',
+        name: 'Ultra Red',  
+        img: 'Ultra Red.png',  
+        category: 'ultra',
+        sugaryOrZero: 'zero', 
+        caffeinePer100ml: 30 
+      },
+      { 
+        id: '33',
+        name: 'Ultra Red White & Blue Razz',   
+        img: 'Ultra Red White & Blue Razz.png',     
+        category: 'ultra',
+        sugaryOrZero: 'zero', 
+        caffeinePer100ml: 30
+      },
+      { 
+        id: '23',
+        name: 'Ultra Rosa',  
+        img: 'Ultra Rosa.png',     
+        category: 'ultra',
+        sugaryOrZero: 'zero',
+        caffeinePer100ml: 30
+      },
+      { 
+        id: '24', 
+        name: 'Ultra Strawberry Dreams',
+        img: 'Ultra Strawberry Dreams.png',
+        category: 'ultra',
+        sugaryOrZero: 'zero', 
+        caffeinePer100ml: 30 
+      },
+       {
+        id: '46',
+        name: 'Ultra Sunrise',   
+        img: 'Ultra Sunrise.png',   
+        category: 'ultra',
+        sugaryOrZero: 'zero', 
+        caffeinePer100ml: 30
+      },
+      {
+        id: '25',
+        name: 'Ultra Vice Guava',  
+        img: 'Ultra Vice Guava.png', 
+        category: 'ultra',
+        sugaryOrZero: 'zero', 
+        caffeinePer100ml: 30
+      },
+      {
+        id: '26',
+        name: 'Ultra Violet', 
+        img: 'Ultra Violet.png',  
+        category: 'ultra',
+        sugaryOrZero: 'zero', 
+        caffeinePer100ml: 30
+      },
+      {
+        id: '27',
+        name: 'Ultra Watermelon',     
+        img: 'Ultra Watermelon.png',  
+        category: 'ultra', 
+        sugaryOrZero: 'zero',
+        caffeinePer100ml: 30
+      },
+      { 
+        id: '59', 
+        name: 'Ultra Wild Passion',
+        img: 'Ultra Wild Passion.png',   
+        category: 'ultra',
+        sugaryOrZero: 'zero', 
+        caffeinePer100ml: 30
+      },
+      {
+        id: '28', 
+        name: 'Ultra Zero',  
+        img: 'Ultra Zero.png', 
+        category: 'ultra', 
+        sugaryOrZero: 'zero',
+        caffeinePer100ml: 30 
+      },
+      {
+        id: '29',
+        name: 'Viking Berry', 
+        img: 'Viking Berry.png',  
+        category: 'juiced',
+        sugaryOrZero: 'sugary', 
+        caffeinePer100ml: 32 
+      },
+      { 
+        id: '60',
+        name: 'Voodoo Grape',  
+        img: 'Voodoo Grape.png',
+        category: 'juiced', 
+        sugaryOrZero: 'sugary', 
+        caffeinePer100ml: 32
+      },
+      {
+        id: '30',
+        name: 'VR46 Doctor',   
+        img: 'VR46 Doctor.png',    
+        category: 'drivers',
+        sugaryOrZero: 'sugary',
+        caffeinePer100ml: 32
+      },
+      { 
+        id: '31',
+        name: 'VR46 Zero',    
+        img: 'VR46 Zero.png',  
+        category: 'drivers',
+        sugaryOrZero: 'zero', 
+        caffeinePer100ml: 32
+      },
+    ];
+
+    let currentMode = 5; 
+    let roomData = {};
+    let currentConnectionRef = null; 
+    
+    const categoryKeys = ['energy', 'ultra', 'juiced', 'rehab', 'java', 'nitro', 'reserve', 'drivers', 'beast', 'sugary', 'zero'];
+
+    let myData = {
+      5: products.map(p => ({ id: p.id, t: 0, p: 0 })),
+      10: products.map(p => ({ id: p.id, t: 0, p: 0 }))
+    };
+    categoryKeys.forEach(cat => {
+      myData[cat] = products.filter(p => cat === 'sugary' || cat === 'zero' ? p.sugaryOrZero === cat : p.category === cat).map(p => ({ id: p.id, t: 0, p: 0 }));
+    });
+
+    let myCollected = {}; 
+    let myPictures = []; 
+    let myCaffeineHistory = [];
+
+    let selectedProductId = null; 
+    let caffeineSelectedDrink = null;
+
+    let previousUnlockedAchievements = {};
+
+    const tierLevels5 = [
+      { level: 5, label: '5★', class: 'badge-5-5' }, 
+      { level: 4, label: '4★', class: 'badge-5-4' },
+      { level: 3, label: '3★', class: 'badge-5-3' }, 
+      { level: 2, label: '2★', class: 'badge-5-2' },
+      { level: 1, label: '1★', class: 'badge-5-1' }
+    ];
+
+    const tierLevels10 = [
+      { level: 10, label: '10★', class: 'badge-10-10' },
+      { level: 9,  label: '9★',  class: 'badge-10-9' },
+      { level: 8,  label: '8★',  class: 'badge-10-8' },
+      { level: 7,  label: '7★',  class: 'badge-10-7' },
+      { level: 6,  label: '6★',  class: 'badge-10-6' },
+      { level: 5,  label: '5★',  class: 'badge-10-5' },
+      { level: 4,  label: '4★',  class: 'badge-10-4' },
+      { level: 3,  label: '3★',  class: 'badge-10-3' },
+      { level: 2,  label: '2★',  class: 'badge-10-2' },
+      { level: 1,  label: '1★',  class: 'badge-10-1' }
+    ];
+
+    const tierLevels1 = [{ level: 1, label: '', class: '' }];
+
+    const categoryNames = {
+      energy: 'Energy', ultra: 'Ultra', juiced: 'Juiced',
+      rehab: 'Rehab', java: 'Java', nitro: 'Nitro', reserve: 'Reserve', drivers: 'Drivers', beast: 'Beast', sugary: 'Sugary', zero: 'Zero'
+    };
+
+    function getCurrentTierLevels() {
+      if (currentMode === 5) return tierLevels5;
+      if (currentMode === 10) return tierLevels10;
+      return tierLevels1;
+    }
+
+    function getActiveProducts() {
+      if (typeof currentMode === 'string' && categoryNames[currentMode]) {
+        return products.filter(p => currentMode === 'sugary' || currentMode === 'zero' ? p.sugaryOrZero === currentMode : p.category === currentMode);
+      }
+      return products;
+    }
+
+    function toggleDropdown(e) {
+      e.stopPropagation();
+      document.getElementById('dropdown-content').classList.toggle('show');
+      document.getElementById('dropdown-container').classList.toggle('open');
+    }
+
+    window.onclick = function(event) {
+      if (!event.target.matches('.dropdown-btn') && !event.target.closest('.dropdown-content') && !event.target.closest('.dropdown-btn *')) {
+        const dropdowns = document.getElementsByClassName("dropdown-content");
+        for (let i = 0; i < dropdowns.length; i++) {
+          let openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+            document.getElementById('dropdown-container').classList.remove('open');
+          }
+        }
+      }
+    }
+
+    function switchMode(mode) {
+      currentMode = mode;
+      selectedProductId = null;
+      
+      document.getElementById('mode-5-btn').classList.toggle('active', mode === 5);
+      document.getElementById('mode-10-btn').classList.toggle('active', mode === 10);
+      document.getElementById('mode-collected-btn').classList.toggle('active', mode === 'collected');
+      document.getElementById('mode-pictures-btn').classList.toggle('active', mode === 'pictures');
+      document.getElementById('mode-caffeine-btn').classList.toggle('active', mode === 'caffeine');
+      
+      const dropdownBtn = document.getElementById('dropdown-main-btn');
+      const isSub = typeof mode === 'string' && categoryNames[mode];
+      dropdownBtn.classList.toggle('active', isSub);
+      
+      const arrowSvg = '<svg class="arrow" viewBox="0 0 24 24"><path d="M4 16L12 8L20 16" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
+      dropdownBtn.innerHTML = isSub ? `${categoryNames[mode]} ${arrowSvg}` : `Categories ${arrowSvg}`;
+
+      document.querySelectorAll('.sub-mode-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('onclick').includes(`'${mode}'`)) btn.classList.add('active');
+      });
+
+      document.getElementById('dropdown-content').classList.remove('show');
+      document.getElementById('dropdown-container').classList.remove('open');
+
+      const tierTabsContainer = document.querySelector('.nav-tabs');
+      const unassignedSection = document.querySelector('.unassigned-section');
+
+      if (['pictures', 'collected', 'caffeine'].includes(mode)) {
+        tierTabsContainer.style.display = 'none';
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.getElementById(`tab-${mode}`).classList.add('active');
+        unassignedSection.style.display = 'none';
+        
+        if (mode === 'pictures') renderPicturesView();
+        if (mode === 'collected') renderCollectedView();
+        if (mode === 'caffeine') renderCaffeineView();
+      } else {
+        tierTabsContainer.style.display = 'flex';
+        const activeTierTabBtn = document.querySelector('.nav-tabs button.active');
+        if (activeTierTabBtn) {
+          if (activeTierTabBtn.getAttribute('onclick').includes('group')) switchTab('group', activeTierTabBtn);
+          else if (activeTierTabBtn.getAttribute('onclick').includes('my')) switchTab('my', activeTierTabBtn);
+          else if (activeTierTabBtn.getAttribute('onclick').includes('friends')) switchTab('friends', activeTierTabBtn);
+        } else {
+          switchTab('group', document.querySelector('.nav-tabs button:nth-child(1)'));
+        }
+      }
+    }
+
+    function renderActiveTab() {
+      if (['pictures', 'collected', 'caffeine'].includes(currentMode)) {
+        if (currentMode === 'pictures') renderPicturesView();
+        if (currentMode === 'collected') renderCollectedView();
+        if (currentMode === 'caffeine') renderCaffeineView();
+        return;
+      }
+      const activeTabEl = document.querySelector('.tab-content.active');
+      if (!activeTabEl) return;
+      const activeTab = activeTabEl.id;
+      if (activeTab === 'tab-group') renderGroupView();
+      if (activeTab === 'tab-my') renderMyView();
+      if (activeTab === 'tab-friends') renderFriendView();
+    }
+
+    function buildBoard(containerId, isInteractive = false) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = '';
+      getCurrentTierLevels().forEach(tl => {
+        const row = document.createElement('div');
+        row.className = 'tier-row';
+        let zoneAttrs = `class="tier-zone" data-tier="${tl.level}"`;
+        if (isInteractive) zoneAttrs += ` onclick="handleZoneClick(event, this)"`;
+        const badgeHtml = tl.label ? `<div class="tier-badge ${tl.class}">${tl.label}</div>` : '';
+        row.innerHTML = `${badgeHtml}<div ${zoneAttrs}></div>`;
+        container.appendChild(row);
+      });
+    }
+
+    function handleImageClick(e, clickedId) {
+      e.stopPropagation();
+      const currentList = myData[currentMode];
+      if (!selectedProductId) {
+        selectedProductId = clickedId;
+      } else if (selectedProductId === clickedId) {
+        selectedProductId = null;
+      } else {
+        const sourceIndex = currentList.findIndex(i => i.id === selectedProductId);
+        const targetIndex = currentList.findIndex(i => i.id === clickedId);
+        if (sourceIndex !== -1 && targetIndex !== -1) {
+          const sourceItem = currentList[sourceIndex];
+          sourceItem.t = currentList[targetIndex].t;
+          currentList.splice(sourceIndex, 1);
+          currentList.splice(currentList.findIndex(i => i.id === clickedId), 0, sourceItem);
+          updatePositions(currentMode);
+          saveToFirebase();
+        }
+        selectedProductId = null;
+      }
+      renderMyView();
+    }
+
+    function handleZoneClick(e, zone) {
+      if (!selectedProductId) return;
+      const targetTier = parseInt(zone.getAttribute('data-tier'), 10);
+      const currentList = myData[currentMode];
+      const sourceIndex = currentList.findIndex(i => i.id === selectedProductId);
+      if (sourceIndex === -1) return;
+
+      const sourceItem = currentList[sourceIndex];
+      sourceItem.t = targetTier;
+      currentList.splice(sourceIndex, 1);
+      
+      if (targetTier === 0) {
+        currentList.push(sourceItem);
+      } else {
+        let lastIndex = -1;
+        for (let i = 0; i < currentList.length; i++) {
+          if (currentList[i].t === targetTier) lastIndex = i;
+        }
+        if (lastIndex !== -1) currentList.splice(lastIndex + 1, 0, sourceItem);
+        else currentList.push(sourceItem);
+      }
+      updatePositions(currentMode);
+      selectedProductId = null;
+      saveToFirebase();
+      renderMyView();
+    }
+
+    function updatePositions(mode) {
+      const list = myData[mode];
+      if (!list) return;
+      const activeProds = (typeof mode === 'string' && categoryNames[mode]) ? products.filter(p => mode === 'sugary' || mode === 'zero' ? p.sugaryOrZero === mode : p.category === mode) : [];
+      const activeIds = activeProds.map(p => p.id);
+      const maxTier = mode === 5 ? 5 : (mode === 10 ? 10 : 1);
+      for (let tier = 0; tier <= maxTier; tier++) {
+        let pos = 1;
+        list.forEach(item => {
+          if ((activeIds.length === 0 || activeIds.includes(item.id)) && item.t === tier) {
+            item.p = tier === 0 ? 0 : pos++;
+          }
+        });
+      }
+    }
+
+    function createImgElement(productId, isInteractive = false, customClass = 'tier-img') {
+      const prod = products.find(p => p.id === productId);
+      if (!prod) return null;
+      const img = document.createElement('img');
+      img.src = prod.img; img.className = customClass; img.setAttribute('data-id', productId);
+      if (isInteractive) {
+        if (productId === selectedProductId) img.classList.add('selected');
+        img.onclick = (e) => handleImageClick(e, productId);
+      }
+      return img;
+    }
+
+    function ensureAllProductsExist(list, mode) {
+      if (!Array.isArray(list)) return;
+      const targetProds = (typeof mode === 'string' && categoryNames[mode]) ? products.filter(p => mode === 'sugary' || mode === 'zero' ? p.sugaryOrZero === mode : p.category === mode) : products;
+      targetProds.forEach(prod => {
+        if (!list.some(item => item.id === prod.id)) list.push({ id: prod.id, t: 0, p: 0 });
+      });
+    }
+
+    function connectToRoom() {
+      const room = document.getElementById('room-input').value.trim();
+      const userName = document.getElementById('name-input').value.trim();
+      if (!room || !userName) return;
+
+      localStorage.setItem('monster_room', room);
+      localStorage.setItem('monster_name', userName);
+
+      if (currentConnectionRef) currentConnectionRef.off();
+
+      currentConnectionRef = db.ref('rooms/' + room);
+      currentConnectionRef.on('value', (snapshot) => {
+        roomData = snapshot.val() || {};
+        let needsSave = false;
+
+        if (userName && roomData[userName]) {
+          const remoteData = roomData[userName];
+          if (remoteData.tierLists) {
+            const tl = remoteData.tierLists;
+            if (Array.isArray(tl)) {
+              myData[5] = tl; ensureAllProductsExist(myData[5], 5);
+            } else {
+              ['5', '10', ...categoryKeys].forEach(m => {
+                if (tl[m]) { myData[m] = tl[m]; ensureAllProductsExist(myData[m], m); }
+              });
+            }
+          }
+          if (remoteData.collected) myCollected = remoteData.collected;
+          if (remoteData.caffeineHistory) myCaffeineHistory = Array.isArray(remoteData.caffeineHistory) ? remoteData.caffeineHistory : [];
+        }
+
+        ['5', '10', ...categoryKeys].forEach(m => {
+          if (!myData[m]) {
+            myData[m] = (typeof m === 'string' && categoryNames[m]) ? products.filter(p => m === 'sugary' || m === 'zero' ? p.sugaryOrZero === m : p.category === m).map(p => ({ id: p.id, t: 0, p: 0 })) : products.map(p => ({ id: p.id, t: 0, p: 0 }));
+          }
+          const beforeLen = myData[m].length;
+          ensureAllProductsExist(myData[m], m);
+          if (myData[m].length !== beforeLen) needsSave = true;
+          updatePositions(m);
+        });
+
+        updateFriendDropdown();
+        updateFriendPicturesDropdown();
+        updateFriendCollectedDropdown();
+        updateFriendCaffeineDropdown();
+        renderActiveTab();
+
+        if (needsSave && userName) saveToFirebase();
+      });
+    }
+
+    function leaveRoom() {
+      if (currentConnectionRef) { currentConnectionRef.off(); currentConnectionRef = null; }
+      localStorage.removeItem('monster_room');
+      localStorage.removeItem('monster_name');
+      document.getElementById('room-input').value = ''; document.getElementById('name-input').value = '';
+      roomData = {}; selectedProductId = null; myCollected = {}; myCaffeineHistory = [];
+      myData = { 5: products.map(p => ({ id: p.id, t: 0, p: 0 })), 10: products.map(p => ({ id: p.id, t: 0, p: 0 })) };
+      categoryKeys.forEach(k => { myData[k] = products.filter(p => k === 'sugary' || k === 'zero' ? p.sugaryOrZero === k : p.category === k).map(p => ({ id: p.id, t: 0, p: 0 })); });
+      renderActiveTab();
+      updateFriendDropdown(); updateFriendPicturesDropdown(); updateFriendCollectedDropdown(); updateFriendCaffeineDropdown();
+      switchMode(5);
+    }
+
+    function saveToFirebase() {
+      const room = document.getElementById('room-input').value.trim();
+      const userName = document.getElementById('name-input').value.trim();
+      if (!room || !userName) return;
+
+      const tierListsSave = { '5': myData[5], '10': myData[10] };
+      categoryKeys.forEach(k => { tierListsSave[k] = myData[k]; });
+
+      db.ref(`rooms/${room}/${userName}`).set({
+        tierLists: tierListsSave,
+        collected: myCollected,
+        caffeineHistory: myCaffeineHistory
+      });
+    }
+
+    function getSubmissionsForMode(userObj, mode) {
+      if (!userObj) return null;
+      if (userObj.tierLists) {
+        const tl = userObj.tierLists;
+        if (Array.isArray(tl)) return mode === 5 ? tl : null;
+        return tl[mode] || null;
+      }
+      return userObj[mode] || null;
+    }
+
+    function getUserCollected(userObj) {
+      return (userObj && userObj.collected) ? userObj.collected : {};
+    }
+
+    function getUserCaffeine(userObj) {
+      if (!userObj || !userObj.caffeineHistory) return [];
+      return Array.isArray(userObj.caffeineHistory) ? userObj.caffeineHistory : [];
+    }
+
+    function updateFriendDropdown() {
+      const select = document.getElementById('friend-select');
+      const friendContainer = document.getElementById('friend-container');
+      const noFriendsMsg = document.getElementById('no-friends-msg');
+      const friendNames = Object.keys(roomData).filter(name => name !== document.getElementById('name-input').value.trim());
+
+      select.innerHTML = '';
+      if (friendNames.length === 0) {
+        if(friendContainer) friendContainer.style.display = 'none'; 
+        if(noFriendsMsg) noFriendsMsg.style.display = 'block';
+      } else {
+        if(friendContainer) friendContainer.style.display = 'block'; 
+        if(noFriendsMsg) noFriendsMsg.style.display = 'none';
+        friendNames.forEach(name => {
+          const opt = document.createElement('option'); opt.value = name; opt.innerText = name; select.appendChild(opt);
+        });
+        renderFriendView();
+      }
+    }
+
+    function updateFriendPicturesDropdown() {
+      const select = document.getElementById('friend-pictures-select');
+      const noFriendPicsMsg = document.getElementById('no-friend-pics-msg');
+      const friendNames = Object.keys(roomData).filter(name => name !== document.getElementById('name-input').value.trim());
+      select.innerHTML = '';
+      if (friendNames.length === 0) {
+        if(noFriendPicsMsg) noFriendPicsMsg.style.display = 'block';
+      } else {
+        if(noFriendPicsMsg) noFriendPicsMsg.style.display = 'none';
+        friendNames.forEach(name => {
+          const opt = document.createElement('option'); opt.value = name; opt.innerText = name; select.appendChild(opt);
+        });
+        renderFriendPicturesView();
+      }
+    }
+
+    function updateFriendCollectedDropdown() {
+      const select = document.getElementById('friend-collected-select');
+      const noFriendCollectedMsg = document.getElementById('no-friend-collected-msg');
+      const friendNames = Object.keys(roomData).filter(name => name !== document.getElementById('name-input').value.trim());
+      select.innerHTML = '';
+      if (friendNames.length === 0) {
+        if(noFriendCollectedMsg) noFriendCollectedMsg.style.display = 'block';
+      } else {
+        if(noFriendCollectedMsg) noFriendCollectedMsg.style.display = 'none';
+        friendNames.forEach(name => {
+          const opt = document.createElement('option'); opt.value = name; opt.innerText = name; select.appendChild(opt);
+        });
+        renderFriendCollectedView();
+      }
+    }
+
+    function updateFriendCaffeineDropdown() {
+      const select = document.getElementById('friend-caffeine-select');
+      const noFriendCaffeineMsg = document.getElementById('no-friend-caffeine-msg');
+      const friendNames = Object.keys(roomData).filter(name => name !== document.getElementById('name-input').value.trim());
+      select.innerHTML = '';
+      if (friendNames.length === 0) {
+        if(noFriendCaffeineMsg) noFriendCaffeineMsg.style.display = 'block';
+      } else {
+        if(noFriendCaffeineMsg) noFriendCaffeineMsg.style.display = 'none';
+        friendNames.forEach(name => {
+          const opt = document.createElement('option'); opt.value = name; opt.innerText = name; select.appendChild(opt);
+        });
+        renderFriendCaffeineView();
+      }
+    }
+
+    function switchCaffeineSubTab(subTabId, btn) {
+      document.querySelectorAll('#tab-caffeine .sub-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#tab-caffeine .sub-tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(`sub-tab-${subTabId}-caffeine`).classList.add('active');
+      if (subTabId === 'friends') renderFriendCaffeineView();
+    }
+
+    function filterDrinkMenu() {
+      const queryInput = document.getElementById('drink-search-input');
+      const query = queryInput ? queryInput.value.toLowerCase() : '';
+      const drinkMenu = document.getElementById('caffeine-drink-menu');
+      if(!drinkMenu) return;
+      drinkMenu.innerHTML = '';
+      
+      const filtered = products.filter(p => p.name.toLowerCase().includes(query));
+      filtered.forEach(prod => {
+        const card = document.createElement('div');
+        card.className = 'drink-menu-card';
+        card.onclick = () => openCaffeineModal(prod);
+        card.innerHTML = `<img src="${prod.img}" alt="${prod.name}"><span class="drink-title">${prod.name}</span><span class="drink-mg">${prod.caffeinePer100ml}mg/100ml</span>`;
+        drinkMenu.appendChild(card);
+      });
+    }
+
+    function updateCounterTheme(displayMg, ringProgress, totalValEl, lightningSvg, statusText) {
+      const maxLimit = 400;
+      const circumference = 418.4;
+      let offset = circumference - (Math.min(displayMg, maxLimit) / maxLimit) * circumference;
+      if(ringProgress) ringProgress.style.strokeDashoffset = offset;
+
+      let colorHex = '#30d158'; 
+      let glowRgba = 'rgba(48, 209, 88, 0.6)';
+
+      if (displayMg > 400) {
+        colorHex = 'var(--danger)';
+        glowRgba = 'rgba(255, 69, 58, 0.6)';
+        if(ringProgress) ringProgress.style.stroke = 'var(--danger)';
+        if(statusText) { statusText.style.color = 'var(--danger)'; statusText.innerText = 'High Limit Exceeded!'; }
+      } else if (displayMg > 200) {
+        colorHex = '#ffcc00';
+        glowRgba = 'rgba(255, 204, 0, 0.6)';
+        if(ringProgress) ringProgress.style.stroke = '#ffcc00';
+        if(statusText) { statusText.style.color = '#ffcc00'; statusText.innerText = 'Moderate Level'; }
+      } else {
+        colorHex = '#30d158';
+        glowRgba = 'rgba(48, 209, 88, 0.6)';
+        if(ringProgress) ringProgress.style.stroke = '#30d158';
+        if(statusText) { statusText.style.color = 'var(--accent)'; statusText.innerText = 'Safe Level'; }
+      }
+
+      if(ringProgress) ringProgress.style.stroke = colorHex;
+      if(totalValEl) { totalValEl.style.color = colorHex; totalValEl.style.textShadow = `0 0 10px ${glowRgba}`; }
+      if(lightningSvg) { lightningSvg.style.fill = colorHex; lightningSvg.style.filter = `drop-shadow(0 0 6px ${glowRgba})`; }
+    }
+
+    function renderCaffeineView() {
+      const totalValEl = document.getElementById('caffeine-total-val');
+      const allTimeValEl = document.getElementById('caffeine-alltime-val');
+      const ringProgress = document.getElementById('caffeine-ring-progress');
+      const lightningSvg = document.getElementById('caffeine-lightning-svg');
+      const statusText = document.getElementById('caffeine-status-text');
+      const historyList = document.getElementById('caffeine-history-list');
+
+      let allTimeTotalMg = 0;
+      myCaffeineHistory.forEach(item => { allTimeTotalMg += item.mg; });
+      if(allTimeValEl) allTimeValEl.innerText = `${allTimeTotalMg} mg`;
+
+      const now = Date.now();
+      const halfLifeMs = 5 * 60 * 60 * 1000;
+      let currentActiveMg = 0;
+
+      myCaffeineHistory.forEach(item => {
+        const elapsed = now - item.timestamp;
+        if (elapsed >= 0) {
+          const remaining = item.mg * Math.pow(0.5, elapsed / halfLifeMs);
+          if (remaining > 0) currentActiveMg += remaining;
+        }
+      });
+
+      const displayMg = Math.round(currentActiveMg);
+      if(totalValEl) totalValEl.innerText = displayMg;
+
+      updateCounterTheme(displayMg, ringProgress, totalValEl, lightningSvg, statusText);
+      filterDrinkMenu();
+
+      if(historyList) {
+        historyList.innerHTML = '';
+        if (myCaffeineHistory.length === 0) {
+          historyList.innerHTML = '<div class="empty-msg">No caffeine logged today.</div>';
+          return;
+        }
+
+        myCaffeineHistory.forEach((item, index) => {
+          const dateObj = new Date(item.timestamp);
+          const timeStr = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+          const row = document.createElement('div');
+          row.className = 'history-item';
+          row.innerHTML = `<span><strong>${item.name}</strong> (${item.ml} ml, <strong>${item.mg} mg</strong>) at ${timeStr}</span><button class="delete-history-btn" onclick="removeCaffeineLog(${index})">✕</button>`;
+          historyList.appendChild(row);
+        });
+      }
+    }
+
+    function renderFriendCaffeineView() {
+      const friendSelect = document.getElementById('friend-caffeine-select');
+      const friendName = friendSelect ? friendSelect.value : '';
+      const totalValEl = document.getElementById('friend-caffeine-total-val');
+      const allTimeValEl = document.getElementById('friend-caffeine-alltime-val');
+      const ringProgress = document.getElementById('friend-caffeine-ring-progress');
+      const lightningSvg = document.getElementById('friend-caffeine-lightning-svg');
+      const statusText = document.getElementById('friend-caffeine-status-text');
+      const historyList = document.getElementById('friend-caffeine-history-list');
+
+      if (!friendName || !roomData[friendName]) {
+        if(totalValEl) totalValEl.innerText = '0';
+        if(allTimeValEl) allTimeValEl.innerText = '0 mg';
+        if(ringProgress) ringProgress.style.strokeDashoffset = '418.4';
+        updateCounterTheme(0, ringProgress, totalValEl, lightningSvg, statusText);
+        if(historyList) historyList.innerHTML = '<div class="empty-msg">No caffeine logged today.</div>';
+        return;
+      }
+
+      const friendHistory = getUserCaffeine(roomData[friendName]);
+      let allTimeTotalMg = 0;
+      friendHistory.forEach(item => { allTimeTotalMg += item.mg; });
+      if(allTimeValEl) allTimeValEl.innerText = `${allTimeTotalMg} mg`;
+
+      const now = Date.now();
+      const halfLifeMs = 5 * 60 * 60 * 1000;
+      let currentActiveMg = 0;
+
+      friendHistory.forEach(item => {
+        const elapsed = now - item.timestamp;
+        if (elapsed >= 0) {
+          const remaining = item.mg * Math.pow(0.5, elapsed / halfLifeMs);
+          if (remaining > 0) currentActiveMg += remaining;
+        }
+      });
+
+      const displayMg = Math.round(currentActiveMg);
+      if(totalValEl) totalValEl.innerText = displayMg;
+
+      updateCounterTheme(displayMg, ringProgress, totalValEl, lightningSvg, statusText);
+
+      if(historyList) {
+        historyList.innerHTML = '';
+        if (friendHistory.length === 0) {
+          historyList.innerHTML = '<div class="empty-msg">No caffeine logged today.</div>';
+          return;
+        }
+
+        friendHistory.forEach(item => {
+          const dateObj = new Date(item.timestamp);
+          const timeStr = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+          const row = document.createElement('div');
+          row.className = 'history-item';
+          row.innerHTML = `<span><strong>${item.name}</strong> (${item.ml} ml, <strong>${item.mg} mg</strong>) at ${timeStr}</span>`;
+          historyList.appendChild(row);
+        });
+      }
+    }
+
+    function openCaffeineModal(prod) {
+      caffeineSelectedDrink = prod;
+      document.getElementById('caffeineModalImg').src = prod.img;
+      document.getElementById('caffeineModalName').innerText = prod.name;
+      
+      const now = new Date();
+      const timeString = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+      document.getElementById('caffeineInputTime').value = timeString;
+      document.getElementById('caffeineInputMl').value = 500;
+
+      document.getElementById('caffeineModal').classList.add('show');
+    }
+
+    function closeCaffeineModal() {
+      document.getElementById('caffeineModal').classList.remove('show');
+      caffeineSelectedDrink = null;
+    }
+
+    function confirmAddCaffeine() {
+      if (!caffeineSelectedDrink) return;
+      const timeStr = document.getElementById('caffeineInputTime').value;
+      const mlVal = parseInt(document.getElementById('caffeineInputMl').value, 10);
+      if (!timeStr || isNaN(mlVal) || mlVal <= 0) return;
+
+      const [hours, minutes] = timeStr.split(':').map(Number);
+      const now = new Date();
+      const drinkDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+      const mgVal = Math.round((mlVal / 100) * caffeineSelectedDrink.caffeinePer100ml);
+
+      myCaffeineHistory.unshift({
+        name: caffeineSelectedDrink.name,
+        ml: mlVal,
+        mg: mgVal,
+        timestamp: drinkDate.getTime()
+      });
+
+      saveToFirebase();
+      closeCaffeineModal();
+      renderCaffeineView();
+      checkAchievementsUpdate();
+    }
+
+    function removeCaffeineLog(index) {
+      myCaffeineHistory.splice(index, 1);
+      saveToFirebase();
+      renderCaffeineView();
+      checkAchievementsUpdate();
+    }
+
+    function renderMyView() {
+      if (['pictures', 'collected', 'caffeine'].includes(currentMode)) return;
+      buildBoard('my-board', true);
+      const unassignedZone = document.querySelector('.unassigned-zone');
+      if(!unassignedZone) return;
+      unassignedZone.innerHTML = '';
+
+      const isCategory = (typeof currentMode === 'string' && categoryNames[currentMode]);
+      const activeProds = getActiveProducts();
+      const activeIds = activeProds.map(p => p.id);
+      
+      if (!myData[currentMode]) {
+        myData[currentMode] = isCategory ? products.filter(p => currentMode === 'sugary' || currentMode === 'zero' ? p.sugaryOrZero === currentMode : p.category === currentMode).map(p => ({ id: p.id, t: 0, p: 0 })) : products.map(p => ({ id: p.id, t: 0, p: 0 }));
+      }
+      const sortedData = [...myData[currentMode]].filter(item => !isCategory || activeIds.includes(item.id)).sort((a, b) => a.t !== b.t ? a.t - b.t : a.p - b.p);
+
+      sortedData.filter(item => item.t === 0).forEach(item => {
+        const img = createImgElement(item.id, true);
+        if (img) unassignedZone.appendChild(img);
+      });
+
+      getCurrentTierLevels().forEach(tl => {
+        const zone = document.querySelector(`#my-board .tier-zone[data-tier="${tl.level}"]`);
+        if (zone) {
+          if (isCategory) {
+            activeIds.forEach((id, index) => {
+              const wrapper = document.createElement('div'); wrapper.className = 'slot-wrapper';
+              const slot = document.createElement('div'); slot.className = 'slot-cell';
+              const numBox = document.createElement('div'); numBox.className = 'slot-number-box'; numBox.innerText = index + 1;
+              wrapper.appendChild(slot); wrapper.appendChild(numBox); zone.appendChild(wrapper);
+            });
+          }
+          sortedData.filter(item => item.t === tl.level).forEach(item => {
+            const wrappers = zone.querySelectorAll('.slot-wrapper');
+            const emptyWrapper = Array.from(wrappers).find(w => !w.querySelector('.tier-img'));
+            const img = createImgElement(item.id, true);
+            if (emptyWrapper && img) {
+              emptyWrapper.querySelector('.slot-cell').classList.add('has-item');
+              emptyWrapper.querySelector('.slot-cell').appendChild(img);
+            } else if (img) zone.appendChild(img);
+          });
+        }
+      });
+    }
+
+    function renderFriendView() {
+      if (['pictures', 'collected', 'caffeine'].includes(currentMode)) return;
+      const friendSelect = document.getElementById('friend-select');
+      const name = friendSelect ? friendSelect.value : '';
+      if (!name || !roomData[name]) return;
+
+      const combinedTitle = document.getElementById('combined-title');
+      if(combinedTitle) combinedTitle.innerText = `Comparison with ${name}`;
+      
+      buildBoard('friend-board', false);
+      const userSubmissions = getSubmissionsForMode(roomData[name], currentMode);
+      if (!userSubmissions) return;
+
+      const isCategory = (typeof currentMode === 'string' && categoryNames[currentMode]);
+      const activeProds = getActiveProducts();
+      const activeIds = activeProds.map(p => p.id);
+      const levels = getCurrentTierLevels();
+
+      if (isCategory) {
+        levels.forEach(tl => {
+          const zone = document.querySelector(`#friend-board .tier-zone[data-tier="${tl.level}"]`);
+          if (zone) {
+            activeIds.forEach((id, index) => {
+              const wrapper = document.createElement('div'); wrapper.className = 'slot-wrapper';
+              const slot = document.createElement('div'); slot.className = 'slot-cell';
+              const numBox = document.createElement('div'); numBox.className = 'slot-number-box'; numBox.innerText = index + 1;
+              wrapper.appendChild(slot); wrapper.appendChild(numBox); zone.appendChild(wrapper);
+            });
+          }
+        });
+      }
+
+      const friendItems = [...userSubmissions].filter(item => !isCategory || activeIds.includes(item.id)).sort((a, b) => a.t !== b.t ? a.t - b.t : a.p - b.p);
+      const groupTiers = {};
+      levels.forEach(tl => groupTiers[tl.level] = []);
+      friendItems.forEach(item => { if (item.t > 0 && groupTiers[item.t]) groupTiers[item.t].push(item); });
+
+      Object.keys(groupTiers).forEach(tLevel => {
+        groupTiers[tLevel].sort((a, b) => a.p - b.p);
+        const zone = document.querySelector(`#friend-board .tier-zone[data-tier="${tLevel}"]`);
+        if (zone) {
+          groupTiers[tLevel].forEach(item => {
+            const wrappers = zone.querySelectorAll('.slot-wrapper');
+            const emptyWrapper = Array.from(wrappers).find(w => !w.querySelector('.tier-img'));
+            const img = createImgElement(item.id, false);
+            if (emptyWrapper && img) {
+              emptyWrapper.querySelector('.slot-cell').classList.add('has-item');
+              emptyWrapper.querySelector('.slot-cell').appendChild(img);
+            } else if (img) zone.appendChild(img);
+          });
+        }
+      });
+
+      buildBoard('combined-board', false);
+      const mySubmissions = getSubmissionsForMode({ tierLists: { '5': myData[5], '10': myData[10], ...Object.fromEntries(categoryKeys.map(k => [k, myData[k]])) } }, currentMode) || myData[currentMode];
+
+      if (isCategory) {
+        levels.forEach(tl => {
+          const zone = document.querySelector(`#combined-board .tier-zone[data-tier="${tl.level}"]`);
+          if (zone) {
+            activeIds.forEach((id, index) => {
+              const wrapper = document.createElement('div'); wrapper.className = 'slot-wrapper';
+              const slot = document.createElement('div'); slot.className = 'slot-cell';
+              const numBox = document.createElement('div'); numBox.className = 'slot-number-box'; numBox.innerText = index + 1;
+              wrapper.appendChild(slot); wrapper.appendChild(numBox); zone.appendChild(wrapper);
+            });
+          }
+        });
+      }
+
+      const combinedStats = {};
+      (isCategory ? activeProds : products).forEach(p => combinedStats[p.id] = { id: p.id, starSum: 0, posSum: 0, count: 0 });
+
+      [mySubmissions, userSubmissions].forEach(sub => {
+        if (Array.isArray(sub)) {
+          sub.forEach(item => {
+            if (combinedStats[item.id] && item.t > 0) {
+              combinedStats[item.id].starSum += item.t;
+              combinedStats[item.id].posSum += item.p;
+              combinedStats[item.id].count += 1;
+            }
+          });
+        }
+      });
+
+      const processedCombined = Object.values(combinedStats).filter(s => s.count > 0).map(s => ({
+        id: s.id, avgStars: s.starSum / s.count, avgPos: s.posSum / s.count, posPoints: s.posSum, count: s.count
+      }));
+
+      const combinedTiers = {};
+      levels.forEach(tl => combinedTiers[tl.level] = []);
+
+      processedCombined.forEach(i => {
+        if (currentMode === 5) {
+          if (i.avgStars >= 4.5) combinedTiers[5].push(i);
+          else if (i.avgStars >= 3.5) combinedTiers[4].push(i);
+          else if (i.avgStars >= 2.5) combinedTiers[3].push(i);
+          else if (i.avgStars >= 1.5) combinedTiers[2].push(i);
+          else combinedTiers[1].push(i);
+        } else if (currentMode === 10) {
+          let rounded = Math.round(i.avgStars);
+          if (rounded < 1) rounded = 1; if (rounded > 10) rounded = 10;
+          if (combinedTiers[rounded]) combinedTiers[rounded].push(i); else combinedTiers[1].push(i);
+        } else {
+          combinedTiers[1].push(i);
+        }
+      });
+
+      Object.keys(combinedTiers).forEach(tLevel => {
+        combinedTiers[tLevel].sort((a, b) => isCategory ? (a.avgPos - b.avgPos) : (a.posPoints - b.posPoints));
+        const zone = document.querySelector(`#combined-board .tier-zone[data-tier="${tLevel}"]`);
+        if (zone) {
+          combinedTiers[tLevel].forEach(item => {
+            const wrappers = zone.querySelectorAll('.slot-wrapper');
+            const emptyWrapper = Array.from(wrappers).find(w => !w.querySelector('.tier-img'));
+            const img = createImgElement(item.id, false);
+            if (emptyWrapper && img) {
+              emptyWrapper.querySelector('.slot-cell').classList.add('has-item');
+              emptyWrapper.querySelector('.slot-cell').appendChild(img);
+            } else if (img) zone.appendChild(img);
+          });
+        }
+      });
+
+      const combinedPodium = document.getElementById('combined-podium');
+      if(combinedPodium) {
+        combinedPodium.innerHTML = '';
+        const sortedCombinedItems = [];
+        levels.map(l => l.level).sort((a,b) => b - a).forEach(tLevel => {
+          if (combinedTiers[tLevel]) combinedTiers[tLevel].forEach(item => sortedCombinedItems.push(item));
+        });
+
+        sortedCombinedItems.slice(0, 5).forEach((item, originalIndex) => {
+          const col = document.createElement('div'); col.className = 'podium-column';
+          const img = createImgElement(item.id, false);
+          if (img) { img.className = 'tier-img podium-img'; col.appendChild(img); }
+          const step = document.createElement('div'); step.className = `podium-step step-${originalIndex + 1}`; step.innerText = `#${originalIndex + 1}`;
+          col.appendChild(step); combinedPodium.appendChild(col);
+        });
+      }
+    }
+
+    function renderGroupView() {
+      if (['pictures', 'collected', 'caffeine'].includes(currentMode)) return;
+      buildBoard('group-board', false);
+      const podium = document.getElementById('podium');
+      if(!podium) return;
+      podium.innerHTML = '';
+
+      const allSubmissions = [];
+      Object.values(roomData).forEach(userObj => {
+        const sub = getSubmissionsForMode(userObj, currentMode);
+        if (sub) allSubmissions.push(sub);
+      });
+      if (allSubmissions.length === 0) return;
+
+      const isCategory = (typeof currentMode === 'string' && categoryNames[currentMode]);
+      const activeProds = getActiveProducts();
+      const activeIds = activeProds.map(p => p.id);
+      const stats = {};
+      
+      (isCategory ? activeProds : products).forEach(p => stats[p.id] = { id: p.id, starSum: 0, posSum: 0, count: 0 });
+
+      allSubmissions.forEach(sub => {
+        if (!Array.isArray(sub)) return;
+        sub.forEach(item => {
+          if (stats[item.id] && item.t > 0) {
+            stats[item.id].starSum += item.t;
+            stats[item.id].posSum += item.p;
+            stats[item.id].count += 1;
+          }
+        });
+      });
+
+      const processed = Object.values(stats).filter(s => s.count > 0).map(s => ({
+        id: s.id, avgStars: s.starSum / s.count, avgPos: s.posSum / s.count, posPoints: s.posSum, count: s.count
+      }));
+
+      const groupTiers = {};
+      const levels = getCurrentTierLevels();
+      levels.forEach(tl => groupTiers[tl.level] = []);
+
+      processed.forEach(i => {
+        if (currentMode === 5) {
+          if (i.avgStars >= 4.5) groupTiers[5].push(i);
+          else if (i.avgStars >= 3.5) groupTiers[4].push(i);
+          else if (i.avgStars >= 2.5) groupTiers[3].push(i);
+          else if (i.avgStars >= 1.5) groupTiers[2].push(i);
+          else groupTiers[1].push(i);
+        } else if (currentMode === 10) {
+          let rounded = Math.round(i.avgStars);
+          if (rounded < 1) rounded = 1; if (rounded > 10) rounded = 10;
+          if (groupTiers[rounded]) groupTiers[rounded].push(i); else groupTiers[1].push(i);
+        } else {
+          groupTiers[1].push(i);
+        }
+      });
+
+      Object.keys(groupTiers).forEach(tLevel => {
+        groupTiers[tLevel].sort((a, b) => isCategory ? (a.avgPos - b.avgPos) : (a.posPoints - b.posPoints));
+        const zone = document.querySelector(`#group-board .tier-zone[data-tier="${tLevel}"]`);
+        if (zone) {
+          if (isCategory) {
+            activeIds.forEach((id, index) => {
+              const wrapper = document.createElement('div'); wrapper.className = 'slot-wrapper';
+              const slot = document.createElement('div'); slot.className = 'slot-cell';
+              const numBox = document.createElement('div'); numBox.className = 'slot-number-box'; numBox.innerText = index + 1;
+              wrapper.appendChild(slot); wrapper.appendChild(numBox); zone.appendChild(wrapper);
+            });
+          }
+          groupTiers[tLevel].forEach(item => {
+            const wrappers = zone.querySelectorAll('.slot-wrapper');
+            const emptyWrapper = Array.from(wrappers).find(w => !w.querySelector('.tier-img'));
+            const img = createImgElement(item.id, false);
+            if (emptyWrapper && img) {
+              emptyWrapper.querySelector('.slot-cell').classList.add('has-item');
+              emptyWrapper.querySelector('.slot-cell').appendChild(img);
+            } else if (img) zone.appendChild(img);
+          });
+        }
+      });
+
+      const sortedGroupItems = [];
+      levels.map(l => l.level).sort((a,b) => b - a).forEach(tLevel => {
+        if (groupTiers[tLevel]) groupTiers[tLevel].forEach(item => sortedGroupItems.push(item));
+      });
+
+      sortedGroupItems.slice(0, 5).forEach((item, originalIndex) => {
+        const col = document.createElement('div'); col.className = 'podium-column';
+        const img = createImgElement(item.id, false);
+        if (img) { img.className = 'tier-img podium-img'; col.appendChild(img); }
+        const step = document.createElement('div'); step.className = `podium-step step-${originalIndex + 1}`; step.innerText = `#${originalIndex + 1}`;
+        col.appendChild(step); podium.appendChild(col);
+      });
+    }
+
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      if(btn) btn.classList.add('active');
+      const targetTab = document.getElementById(`tab-${tabId}`);
+      if(targetTab) targetTab.classList.add('active');
+      const unassignedSec = document.querySelector('.unassigned-section');
+      if(unassignedSec) unassignedSec.style.display = (tabId === 'my' && !['pictures', 'collected', 'caffeine'].includes(currentMode)) ? 'block' : 'none';
+      renderActiveTab();
+    }
+
+    function switchCollectedSubTab(subTabId, btn) {
+      document.querySelectorAll('#tab-collected .sub-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#tab-collected .sub-tab-content').forEach(c => c.classList.remove('active'));
+      if(btn) btn.classList.add('active');
+      const friendCol = document.getElementById(`sub-tab-friends-collected`);
+      const myCol = document.getElementById(`sub-tab-my-collected`);
+      if(friendCol) friendCol.style.display = (subTabId === 'friends') ? 'block' : 'none';
+      if(myCol) myCol.style.display = (subTabId === 'my') ? 'block' : 'none';
+      const targetSub = document.getElementById(`sub-tab-${subTabId}-collected`);
+      if(targetSub) targetSub.classList.add('active');
+      if (subTabId === 'friends') renderFriendCollectedView();
+    }
+
+    function renderCollectedView() {
+      const grid = document.getElementById('my-collected-grid');
+      if(!grid) return;
+      grid.innerHTML = '';
+      const countEl = document.getElementById('my-collection-count');
+      if(countEl) countEl.innerText = `${Object.values(myCollected).filter(val => val === true).length} / ${products.length}`;
+
+      [...products].sort((a, b) => (myCollected[b.id] ? 1 : 0) - (myCollected[a.id] ? 1 : 0)).forEach(prod => {
+        const row = document.createElement('div'); row.className = 'collected-item-row';
+        const info = document.createElement('div'); info.className = 'collected-item-info'; info.onclick = () => openActionModal(prod);
+        info.innerHTML = `<img src="${prod.img}" class="collected-item-img"><div class="collected-item-name">${prod.name}</div>`;
+        const dot = document.createElement('div'); dot.className = 'status-dot' + (myCollected[prod.id] ? ' active' : '');
+        row.appendChild(info); row.appendChild(dot); grid.appendChild(row);
+      });
+    }
+
+    function renderFriendCollectedView() {
+      const friendSelect = document.getElementById('friend-collected-select');
+      const friendName = friendSelect ? friendSelect.value : '';
+      const grid = document.getElementById('friend-collected-grid');
+      if(!grid) return;
+      grid.innerHTML = '';
+      const countEl = document.getElementById('friend-collection-count');
+
+      if (!friendName || !roomData[friendName]) { if(countEl) countEl.innerText = `0 / ${products.length}`; return; }
+      const friendCollected = getUserCollected(roomData[friendName]);
+      if(countEl) countEl.innerText = `${Object.values(friendCollected).filter(val => val === true).length} / ${products.length}`;
+
+      [...products].sort((a, b) => (friendCollected[b.id] ? 1 : 0) - (friendCollected[a.id] ? 1 : 0)).forEach(prod => {
+        const row = document.createElement('div'); row.className = 'collected-item-row';
+        row.innerHTML = `<div class="collected-item-info"><img src="${prod.img}" class="collected-item-img"><div class="collected-item-name">${prod.name}</div></div><div class="status-dot${friendCollected[prod.id] ? ' active' : ''}"></div>`;
+        grid.appendChild(row);
+      });
+    }
+
+    function openActionModal(prod) {
+      document.getElementById('modalProductImg').src = prod.img;
+      document.getElementById('modalProductName').innerText = prod.name;
+      const isCollected = !!myCollected[prod.id];
+      document.getElementById('modalProductStatus').innerText = isCollected ? 'Status: Tasted' : 'Status: Not tasted';
+      
+      const modalBtns = document.getElementById('modalActionButtons');
+      modalBtns.innerHTML = `<button class="action-modal-btn ${isCollected ? 'btn-remove' : 'btn-add'}" onclick="toggleCollectStatus('${prod.id}', ${!isCollected})">${isCollected ? 'Remove' : 'Add'}</button>`;
+      document.getElementById('actionModal').classList.add('show');
+    }
+
+    function toggleCollectStatus(productId, status) {
+      myCollected[productId] = status;
+      saveToFirebase();
+      closeActionModal();
+      renderCollectedView();
+      checkAchievementsUpdate();
+    }
+
+    function closeActionModal() { document.getElementById('actionModal').classList.remove('show'); }
+
+    function switchPictureSubTab(subTabId, btn) {
+      document.querySelectorAll('#tab-pictures .sub-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#tab-pictures .sub-tab-content').forEach(c => c.classList.remove('active'));
+      if(btn) btn.classList.add('active');
+      const targetSub = document.getElementById(`sub-tab-${subTabId}-pictures`);
+      if(targetSub) targetSub.classList.add('active');
+      if (subTabId === 'friends') renderFriendPicturesView();
+    }
+
+    function getAchievementsList(collectedObj, caffeineHistoryArr) {
+      const tastedCount = Object.values(collectedObj || {}).filter(val => val === true).length;
+      let allTimeCaffeine = 0;
+      (caffeineHistoryArr || []).forEach(item => { allTimeCaffeine += item.mg; });
+
+      const achievements = [];
+      
+      for (let i = 1; i <= 10; i++) {
+        const target = i * 10;
+        achievements.push({
+          id: `taste_${target}`,
+          title: `Taste ${target} Monsters`,
+          desc: `Taste a total of ${target} different Monster Energy drinks.`,
+          unlocked: tastedCount >= target,
+          progress: `${Math.min(tastedCount, target)} / ${target}`
+        });
+      }
+
+      categoryKeys.forEach(catKey => {
+        const catProds = products.filter(p => catKey === 'sugary' || catKey === 'zero' ? p.sugaryOrZero === catKey : p.category === catKey);
+        const hasTastedCat = catProds.some(p => collectedObj && collectedObj[p.id] === true);
+        const catDisplayName = categoryNames[catKey] || catKey;
+
+        achievements.push({
+          id: `category_${catKey}`,
+          title: `Taste a ${catDisplayName}`,
+          desc: `Taste at least one drink from the ${catDisplayName} category.`,
+          unlocked: hasTastedCat,
+          progress: hasTastedCat ? '1 / 1' : '0 / 1'
+        });
+      });
+
+      for (let i = 1; i <= 10; i++) {
+        const targetMg = i * 1000;
+        achievements.push({
+          id: `caffeine_${targetMg}`,
+          title: `${targetMg} mg Caffeine`,
+          desc: `Consume a cumulative total of ${targetMg} mg of caffeine across all logs.`,
+          unlocked: allTimeCaffeine >= targetMg,
+          progress: `${Math.min(allTimeCaffeine, targetMg)} / ${targetMg} mg`
+        });
+      }
+
+      achievements.sort((a, b) => {
+        if (a.unlocked === b.unlocked) return 0;
+        return a.unlocked ? 1 : -1;
+      });
+
+      return achievements;
+    }
+
+    function playAchievementSound() {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+
+        const notes = [523.25, 659.25, 783.99, 1046.50];
+        notes.forEach((freq, index) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+
+          osc.type = 'triangle';
+          osc.frequency.value = freq;
+
+          const startTime = ctx.currentTime + index * 0.08;
+          const duration = 0.25;
+
+          gain.gain.setValueAtTime(0.15, startTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc.start(startTime);
+          osc.stop(startTime + duration);
+        });
+      } catch (e) {
+        console.log("Audio not allowed or supported", e);
+      }
+    }
+
+    function showAchievementToast(title) {
+      playAchievementSound();
+      const toast = document.getElementById('achievement-toast');
+      document.getElementById('toast-title-text').innerText = title;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 4000);
+    }
+
+    function checkAchievementsUpdate() {
+      const currentList = getAchievementsList(myCollected, myCaffeineHistory);
+      currentList.forEach(ach => {
+        if (ach.unlocked && !previousUnlockedAchievements[ach.id]) {
+          showAchievementToast(ach.title);
+        }
+      });
+      previousUnlockedAchievements = {};
+      currentList.forEach(ach => {
+        if (ach.unlocked) previousUnlockedAchievements[ach.id] = true;
+      });
+    }
+
+    function renderPicturesView() {
+      const listContainer = document.getElementById('my-achievement-list');
+      if(!listContainer) return;
+      listContainer.innerHTML = '';
+      
+      const achievements = getAchievementsList(myCollected, myCaffeineHistory);
+      
+      previousUnlockedAchievements = {};
+      achievements.forEach(ach => {
+        if (ach.unlocked) previousUnlockedAchievements[ach.id] = true;
+      });
+
+      achievements.forEach(ach => {
+        const card = document.createElement('div');
+        card.className = `achievement-card${ach.unlocked ? ' unlocked' : ''}`;
+        card.innerHTML = `
+          <div class="achievement-info">
+            <div class="achievement-title">${ach.title}</div>
+            <div class="achievement-desc">${ach.desc}</div>
+          </div>
+          <div class="achievement-badge">${ach.progress}</div>
+        `;
+        listContainer.appendChild(card);
+      });
+    }
+
+    function renderFriendPicturesView() {
+      const friendSelect = document.getElementById('friend-pictures-select');
+      const friendName = friendSelect ? friendSelect.value : '';
+      const listContainer = document.getElementById('friend-achievement-list');
+      if(!listContainer) return;
+      listContainer.innerHTML = '';
+      if (!friendName || !roomData[friendName]) return;
+
+      const friendCollected = getUserCollected(roomData[friendName]);
+      const friendCaffeine = getUserCaffeine(roomData[friendName]);
+      const achievements = getAchievementsList(friendCollected, friendCaffeine);
+      achievements.forEach(ach => {
+        const card = document.createElement('div');
+        card.className = `achievement-card${ach.unlocked ? ' unlocked' : ''}`;
+        card.innerHTML = `
+          <div class="achievement-info">
+            <div class="achievement-title">${ach.title}</div>
+            <div class="achievement-desc">${ach.desc}</div>
+          </div>
+          <div class="achievement-badge">${ach.progress}</div>
+        `;
+        listContainer.appendChild(card);
+      });
+    }
+
+    window.connectToRoom = connectToRoom;
+    window.leaveRoom = leaveRoom;
+    window.switchMode = switchMode;
+    window.toggleDropdown = toggleDropdown;
+    window.switchTab = switchTab;
+    window.switchCollectedSubTab = switchCollectedSubTab;
+    window.renderFriendCollectedView = renderFriendCollectedView;
+    window.switchPictureSubTab = switchPictureSubTab;
+    window.renderFriendPicturesView = renderFriendPicturesView;
+    window.switchCaffeineSubTab = switchCaffeineSubTab;
+    window.filterDrinkMenu = filterDrinkMenu;
+    window.renderFriendCaffeineView = renderFriendCaffeineView;
+    window.openCaffeineModal = openCaffeineModal;
+    window.closeCaffeineModal = closeCaffeineModal;
+    window.confirmAddCaffeine = confirmAddCaffeine;
+    window.removeCaffeineLog = removeCaffeineLog;
+    window.handleZoneClick = handleZoneClick;
+    window.closeActionModal = closeActionModal;
+    window.toggleCollectStatus = toggleCollectStatus;
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedRoom = localStorage.getItem('monster_room');
+      const savedName = localStorage.getItem('monster_name');
+      
+      if (savedRoom && savedName) {
+        document.getElementById('room-input').value = savedRoom;
+        document.getElementById('name-input').value = savedName;
+        connectToRoom();
+      }
+
+      switchTab('group', document.querySelector('.nav-tabs button:nth-child(1)'));
+    });
+  </script>
+</body>
+</html>
